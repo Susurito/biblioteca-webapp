@@ -1,0 +1,123 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
+  <a class="navbar-brand fw-bold" href="#">BibliApp</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item"><a class="nav-link" routerLink="/">Inicio</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/catalogo">Catálogo</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Formulario de registro -->
+<div class="container d-flex justify-content-center my-5">
+  <div class="card shadow p-4 w-100" style="max-width: 500px;">
+    <h3 class="text-center mb-4">Registro de Usuario</h3>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+      <!-- Tipo de usuario -->
+      <mat-form-field class="w-100 mb-3" appearance="fill">
+        <mat-label>Tipo de usuario</mat-label>
+        <mat-select formControlName="tipo">
+          <mat-option *ngFor="let tipo of tiposUsuario" [value]="tipo">{{ tipo }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="registerForm.get('tipo')?.hasError('required')">Seleccione un tipo de usuario</mat-error>
+      </mat-form-field>
+
+     <!-- Nombre -->
+<mat-form-field class="w-100 mb-3" appearance="fill">
+  <mat-label>Nombre(s)</mat-label>
+  <input matInput type="text" formControlName="nombre" (keypress)="soloLetras($event)">
+  <mat-error *ngIf="registerForm.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+  <mat-error *ngIf="registerForm.get('nombre')?.hasError('pattern')">Solo se permiten letras</mat-error>
+</mat-form-field>
+
+<!-- Apellido Paterno -->
+<mat-form-field class="w-100 mb-3" appearance="fill">
+  <mat-label>Apellido Paterno</mat-label>
+  <input matInput type="text" formControlName="apellido_paterno" (keypress)="soloLetras($event)">
+  <mat-error *ngIf="registerForm.get('apellido_paterno')?.hasError('required')">El apellido paterno es obligatorio</mat-error>
+  <mat-error *ngIf="registerForm.get('apellido_paterno')?.hasError('pattern')">Solo se permiten letras</mat-error>
+</mat-form-field>
+
+<!-- Apellido Materno -->
+<mat-form-field class="w-100 mb-3" appearance="fill">
+  <mat-label>Apellido Materno</mat-label>
+  <input matInput type="text" formControlName="apellido_materno" (keypress)="soloLetras($event)">
+  <mat-error *ngIf="registerForm.get('apellido_materno')?.hasError('required')">El apellido materno es obligatorio</mat-error>
+  <mat-error *ngIf="registerForm.get('apellido_materno')?.hasError('pattern')">Solo se permiten letras</mat-error>
+</mat-form-field>
+
+<!-- Matrícula -->
+<mat-form-field class="w-100 mb-3" appearance="fill">
+  <mat-label>Número de Matrícula</mat-label>
+  <input matInput type="text" formControlName="matricula" (keypress)="soloNumeros($event)" maxlength="9">
+  <mat-error *ngIf="registerForm.get('matricula')?.hasError('required')">La matrícula es obligatoria</mat-error>
+  <mat-error *ngIf="registerForm.get('matricula')?.hasError('pattern')">Solo se permiten números</mat-error>
+</mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field class="w-100 mb-3" appearance="fill">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="email">
+        <mat-error *ngIf="registerForm.get('email')?.hasError('required')">El correo es obligatorio</mat-error>
+        <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Ingrese un correo válido</mat-error>
+      </mat-form-field>
+
+      <!-- Contraseña -->
+      <mat-form-field class="w-100 mb-3" appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="registerForm.get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
+        <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">Mínimo 6 caracteres</mat-error>
+      </mat-form-field>
+
+      <!-- Confirmar contraseña -->
+      <mat-form-field class="w-100 mb-3" appearance="fill">
+        <mat-label>Confirmar contraseña</mat-label>
+        <input matInput [type]="hideConfirm ? 'password' : 'text'" formControlName="confirmPassword">
+        <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" type="button">
+          <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="registerForm.hasError('notMatching')">Las contraseñas no coinciden</mat-error>
+      </mat-form-field>
+
+      <!-- Aceptar términos -->
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" formControlName="terminos" id="terminosCheck">
+        <label class="form-check-label" for="terminosCheck">
+          Acepto los <a href="#">términos y condiciones</a>
+        </label>
+        <div class="text-danger" *ngIf="registerForm.get('terminos')?.hasError('required')">Debes aceptar los términos</div>
+      </div>
+
+      <!-- Botón -->
+      <button mat-raised-button color="primary" class="w-100" [disabled]="registerForm.invalid">
+        Registrarse
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center p-4 mt-5">
+  <div class="container">
+    <p class="mb-1">Contacto: +52 123 456 7890</p>
+    <p class="mb-2">Email: contacto@biblioteca.com</p>
+    <div>
+      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+    </div>
+  </div>
+</footer>

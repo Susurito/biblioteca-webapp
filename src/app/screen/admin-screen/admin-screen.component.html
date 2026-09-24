@@ -1,0 +1,88 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
+  <a class="navbar-brand fw-bold" href="#">BibliApp</a>
+
+  <!-- Botón colapsable para móvil -->
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarContent">
+
+    <!-- Menú de navegación -->
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" routerLink="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/catalogo">Catálogo</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/contacto">Contacto</a>
+      </li>
+    </ul>
+
+    <!-- Barra de búsqueda -->
+    <form class="d-flex me-3" (ngSubmit)="onSearch()">
+      <input class="form-control me-2" type="search" 
+             placeholder="Buscar libros..." 
+             [(ngModel)]="searchTerm" name="search">
+      <button class="btn btn-outline-primary" type="submit">Buscar</button>
+    </form>
+
+    <!-- Botón de cuenta -->
+    <div>
+      <a class="btn btn-primary" routerLink="/cuenta">Cuenta</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
+  <div class="row w-100 h-100 d-flex justify-content-center align-items-center">
+    <div class="col-12 col-md-10 col-lg-8 d-flex flex-column justify-content-center align-items-center">
+
+      <!-- Carrusel más grande -->
+      <div id="carouselExampleIndicators" class="carousel slide w-100 mb-4" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner rounded-3 shadow-lg" style="max-height: 500px;">
+          <div class="carousel-item active">
+            <img src="assets/images/Car2.png" class="d-block w-100" alt="Imagen 1">
+          </div>
+          <div class="carousel-item">
+            <img src="assets/images/Car1.jpg" class="d-block w-100" alt="Imagen 2">
+          </div>
+          <div class="carousel-item">
+            <img src="assets/images/Car3.jpg" class="d-block w-100" alt="Imagen 3">
+          </div>
+        </div>
+      </div>
+
+      <!-- Texto debajo del carrusel -->
+      <h3 class="text-center fw-bold text-primary">
+        Bienvenido a nuestra Biblioteca Digital 
+      </h3>
+      <p class="text-center mt-2 text-secondary">
+        Explora, busca y disfruta de miles de libros en línea.  
+        Inicia sesión o regístrate para comenzar tu viaje de lectura.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<footer class="bg-dark text-white text-center p-4 mt-5">
+  <div class="container">
+    <p class="mb-1">Contacto: +52 123 456 7890</p>
+    <p class="mb-2">Email: contacto@biblioteca.com</p>
+    <div>
+      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+    </div>
+  </div>
+</footer>

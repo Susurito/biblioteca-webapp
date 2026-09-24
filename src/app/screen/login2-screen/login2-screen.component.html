@@ -1,0 +1,34 @@
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div class="card shadow p-4" style="width: 400px;">
+    <h3 class="text-center mb-3 text-primary">Iniciar Sesión</h3>
+
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <!-- Usuario -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input type="email" id="email" class="form-control" required
+       [(ngModel)]="email" name="email">
+      </div>
+
+      <!-- Contraseña -->
+      <div class="mb-3 position-relative">
+        <label for="password" class="form-label">Contraseña</label>
+        <input [type]="showPassword ? 'text' : 'password'" id="password" class="form-control"
+               required [(ngModel)]="password" name="password">
+        <i (click)="togglePassword()" class="bi"
+           [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"
+           style="position:absolute; right:10px; top:38px; cursor:pointer;"></i>
+      </div>
+
+      <button class="btn btn-primary w-100" type="submit" [disabled]="!loginForm.form.valid">
+        Iniciar Sesión
+      </button>
+
+      <button type="button" class="btn btn-secondary w-100 mt-2" (click)="volver()">
+        Volver
+      </button>
+
+      <p class="mt-2 text-danger" *ngIf="errorMsg">{{ errorMsg }}</p>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
+  <a class="navbar-brand fw-bold" routerLink="/">BibliApp</a>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarContent">
+
+    <!-- Menú de navegación -->
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/catalogo">Catálogo</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" routerLink="/contacto">Contacto</a>
+      </li>
+    </ul>
+
+    <!-- Botones de sesión dinámicos -->
+    <div>
+      <ng-container *ngIf="!isLoggedIn">
+        <a class="btn btn-outline-secondary me-2" routerLink="/login">Iniciar Sesión</a>
+        <a class="btn btn-primary" routerLink="/registro">Registrarse</a>
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn">
+        <a class="btn btn-primary me-2" routerLink="/cuenta">Cuenta</a>
+        <button class="btn btn-outline-danger" (click)="logout()">Cerrar Sesión</button>
+      </ng-container>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container my-5">
+  <h2 class="text-primary text-center mb-4">Contáctanos</h2>
+
+  <!-- Descripción breve de la biblioteca digital -->
+  <div class="mb-5 text-center">
+    <p class="fs-5 text-secondary">
+      Bienvenido a <strong>BibliApp</strong>, tu biblioteca digital de confianza. Explora miles de libros en línea, 
+      descubre autores y géneros variados, y disfruta de la lectura desde cualquier lugar.  
+      Nuestro objetivo es acercar la lectura y la cultura a todos los usuarios de forma fácil y segura.
+    </p>
+  </div>
+
+  <!-- Formulario -->
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8">
+      <form (ngSubmit)="sendMessage()" #contactForm="ngForm">
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre</label>
+          <input type="text" id="name" class="form-control" required [(ngModel)]="name" name="name">
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <input type="email" id="email" class="form-control" required [(ngModel)]="email" name="email">
+        </div>
+
+        <div class="mb-3">
+          <label for="message" class="form-label">Mensaje</label>
+          <textarea id="message" rows="5" class="form-control" required [(ngModel)]="message" name="message"></textarea>
+        </div>
+
+        <button class="btn btn-primary w-100" type="submit" [disabled]="!contactForm.form.valid">
+          Enviar Mensaje
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Información de contacto -->
+  <div class="mt-5 text-center">
+    <h5 class="fw-bold">Información de la Biblioteca</h5>
+    <p class="mb-1">Teléfono: +52 123 456 7890</p>
+    <p class="mb-2">Email: contacto@biblioteca.com</p>
+    <p>Síguenos en nuestras redes sociales:</p>
+    <div>
+      <a href="#" class="text-primary me-3"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-primary me-3"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="text-primary me-3"><i class="bi bi-instagram"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center p-4 mt-5">
+  <div class="container">
+    <p class="mb-1">Contacto: +52 123 456 7890</p>
+    <p class="mb-2">Email: contacto@biblioteca.com</p>
+    <div>
+      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+    </div>
+  </div>
+</footer>

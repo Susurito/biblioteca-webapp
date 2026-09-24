@@ -1,0 +1,289 @@
+/* ====== REGISTRO — BiblioNexus ====== */
+
+.registro-page {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  background: var(--bg);
+}
+
+/* ---- Panel Izquierdo decorativo ---- */
+.registro-left {
+  flex: 0 0 40%;
+  overflow: hidden;
+
+  .registro-deco {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .registro-deco-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+
+    &.orb1 {
+      width: 350px; height: 350px;
+      background: var(--secondary);
+      top: -100px; right: -100px;
+    }
+    &.orb2 {
+      width: 250px; height: 250px;
+      background: var(--accent);
+      bottom: 50px; left: -80px;
+    }
+    &.orb3 {
+      width: 180px; height: 180px;
+      background: var(--primary-light);
+      top: 40%; right: 20%;
+    }
+  }
+
+  .registro-info-content {
+    position: relative;
+    z-index: 1;
+    padding: 3rem;
+    color: white;
+    max-width: 380px;
+
+    .registro-brand {
+      width: 70px;
+      height: 70px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+
+      em {
+        font-style: italic;
+        color: var(--secondary-light);
+      }
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  .registro-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+
+      .step-num {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(200,135,58,0.4);
+      }
+
+      strong {
+        display: block;
+        font-size: 0.9rem;
+        color: white;
+        margin-bottom: 0.15rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.6);
+        margin: 0;
+      }
+    }
+  }
+}
+
+/* ---- Panel Derecho formulario ---- */
+.registro-right {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 2rem;
+  overflow-y: auto;
+
+  .registro-form-wrap {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  .registro-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+  }
+}
+
+/* ---- Errors de campo ---- */
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin-top: 0.35rem;
+  font-weight: 500;
+
+  i { font-size: 0.75rem; }
+}
+
+/* ---- Password Toggle ---- */
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: calc(50% + 13px);
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+  transition: var(--transition);
+  z-index: 2;
+
+  &:hover { color: var(--primary); }
+}
+
+/* ---- Términos y condiciones ---- */
+.terminos-check {
+  margin-bottom: 1.25rem;
+
+  .check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+
+    input[type="checkbox"] {
+      display: none;
+
+      &:checked + .check-box {
+        background: var(--primary);
+        border-color: var(--primary);
+
+        &::after { opacity: 1; }
+      }
+    }
+
+    .check-box {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      background: var(--surface);
+      transition: var(--transition);
+      position: relative;
+      margin-top: 1px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 2px;
+        width: 7px;
+        height: 11px;
+        border: 2px solid white;
+        border-top: none;
+        border-left: none;
+        transform: rotate(45deg);
+        opacity: 0;
+        transition: var(--transition);
+      }
+    }
+
+    .terminos-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover { color: var(--secondary); }
+    }
+  }
+}
+
+/* ---- CTA Login ---- */
+.registro-login-cta {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+
+    &:hover { color: var(--secondary); }
+  }
+}
+
+/* ---- Footer mínimo ---- */
+.registro-footer {
+  background: var(--primary-dark);
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+
+  p { margin: 0; }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .registro-page { flex-direction: column; }
+  .registro-right {
+    padding: 2rem 1.25rem;
+    align-items: flex-start;
+  }
+}

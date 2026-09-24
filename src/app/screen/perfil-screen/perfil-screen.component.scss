@@ -1,20 +1,437 @@
-.nav-tabs .nav-link {
-  color: #6c757d;
-  font-weight: 500;
-  
-  &.active {
-    color: #0d6efd;
-    font-weight: 600;
-    border-bottom: 3px solid #0d6efd;
+/* ====== PERFIL — BiblioNexus ====== */
+
+/* Loading */
+.perfil-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Breadcrumb */
+.perfil-breadcrumb {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--primary);
+      background: rgba(44,74,110,0.06);
+    }
   }
 }
 
-.badge {
-  font-size: 0.75em;
+/* Layout principal */
+.perfil-page {
+  background: var(--bg);
+  min-height: 100vh;
 }
 
-.table th {
-  border-top: none;
+.perfil-container {
+  padding: 2rem 1.5rem 4rem;
+
+  @media (max-width: 768px) { padding: 1.5rem 1rem; }
+}
+
+/* Alert de error */
+.bn-alert-danger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.2);
+  color: var(--danger);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ---- CARD USUARIO (izquierda) ---- */
+.perfil-card-usuario {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: sticky;
+  top: 80px;
+
+  .perfil-avatar {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    padding: 2.5rem 1.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+
+    .avatar-circle {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      color: rgba(255,255,255,0.9);
+      margin: 0 auto 1rem;
+    }
+
+    .perfil-rol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.85rem;
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(4px);
+
+      &.admin-badge {
+        background: rgba(200,135,58,0.3);
+        border-color: rgba(200,135,58,0.5);
+        color: var(--secondary-light);
+      }
+    }
+  }
+
+  .perfil-info-personal {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+
+    .perfil-nombre {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .perfil-email,
+    .perfil-matricula {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+
+      i { opacity: 0.6; }
+    }
+  }
+
+  .perfil-quick-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1.25rem;
+    gap: 1.5rem;
+
+    .quick-stat {
+      text-align: center;
+
+      .qs-num {
+        display: block;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--primary);
+        line-height: 1;
+      }
+
+      .qs-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+    }
+
+    .qs-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+    }
+  }
+}
+
+/* ---- PANEL PRINCIPAL (derecha) ---- */
+.perfil-panel {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+
+  &.admin-panel {
+    border-top: 3px solid var(--secondary);
+  }
+
+  .panel-header {
+    padding: 1.75rem 2rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+
+    .panel-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--secondary);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0;
+    }
+
+    &.admin-header {
+      background: linear-gradient(135deg, rgba(200,135,58,0.04), rgba(44,74,110,0.04));
+    }
+  }
+}
+
+/* ---- TABS ---- */
+.bn-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  padding: 0 1.5rem;
+  gap: 0.25rem;
+  overflow-x: auto;
+
+  .bn-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 1rem 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+    margin-bottom: -1px;
+
+    &:hover { color: var(--primary); }
+
+    &.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 700;
+    }
+
+    .tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+
+      &.success { background: rgba(74,124,89,0.12); color: var(--accent); }
+      &.warning  { background: rgba(200,135,58,0.15); color: var(--secondary); }
+      &.muted    { background: var(--bg-alt); color: var(--text-muted); }
+    }
+  }
+}
+
+/* ---- CONTENIDO DE TAB ---- */
+.tab-content-panel {
+  padding: 2rem;
+  animation: fadeInUp 0.3s ease both;
+
+  .panel-section-header {
+    margin-bottom: 1.5rem;
+
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+  }
+}
+
+/* ---- TABLA ---- */
+.tabla-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.bn-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  thead tr {
+    background: var(--bg-alt);
+
+    th {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+  }
+
+  .tabla-row {
+    border-bottom: 1px solid var(--border);
+    transition: var(--transition);
+
+    td {
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: rgba(44,74,110,0.03); }
+  }
+
+  .tabla-id {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .tabla-usuario {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    .user-avatar-sm {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+  }
+}
+
+/* ---- ESTADO BADGES ---- */
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-xl);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  &.badge-success { background: rgba(74,124,89,0.12); color: var(--accent); }
+  &.badge-warning { background: rgba(200,135,58,0.12); color: var(--secondary); }
+  &.badge-danger  { background: rgba(192,57,43,0.12); color: var(--danger); }
+  &.badge-info    { background: rgba(44,74,110,0.10); color: var(--primary); }
+}
+
+/* ---- BOTONES DE ACCIÓN ---- */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: #495057;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+
+  &.aprobar {
+    background: rgba(74,124,89,0.12);
+    color: var(--accent);
+    &:hover { background: var(--accent); color: white; transform: translateY(-1px); }
+  }
+
+  &.rechazar {
+    background: rgba(192,57,43,0.10);
+    color: var(--danger);
+    &:hover { background: var(--danger); color: white; transform: translateY(-1px); }
+  }
+
+  &.devolver {
+    background: rgba(200,135,58,0.12);
+    color: var(--secondary);
+    &:hover { background: var(--secondary); color: white; transform: translateY(-1px); }
+  }
+}
+
+/* ---- EMPTY STATE ---- */
+.panel-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+
+  i {
+    font-size: 3rem;
+    color: var(--border);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  h5 {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
 }

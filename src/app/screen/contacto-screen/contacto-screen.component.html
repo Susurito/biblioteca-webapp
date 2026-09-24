@@ -1,105 +1,246 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-  <a class="navbar-brand fw-bold" routerLink="/">BibliApp</a>
-
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarContent">
-
-    <!-- Menú de navegación -->
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/">Inicio</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/catalogo">Catálogo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" routerLink="/contacto">Contacto</a>
-      </li>
-    </ul>
-
-    <!-- Botones de sesión dinámicos -->
-    <div>
-      <ng-container *ngIf="!isLoggedIn">
-        <a class="btn btn-outline-secondary me-2" routerLink="/login">Iniciar Sesión</a>
-        <a class="btn btn-primary" routerLink="/registro">Registrarse</a>
-      </ng-container>
-
-      <ng-container *ngIf="isLoggedIn">
-        <a class="btn btn-primary me-2" routerLink="/cuenta">Cuenta</a>
-        <button class="btn btn-outline-danger" (click)="logout()">Cerrar Sesión</button>
-      </ng-container>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg bn-navbar">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+      BiblioNexus
+    </a>
+    <button class="navbar-toggler border-0" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navContacto">
+      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navContacto">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/"><i class="bi bi-house me-1"></i>Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/catalogo"><i class="bi bi-grid me-1"></i>Catálogo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a>
+        </li>
+      </ul>
+      <div class="d-flex gap-2">
+        <ng-container *ngIf="!isLoggedIn">
+          <a class="btn btn-bn-secondary btn-sm" routerLink="/login" id="nav-btn-login">Iniciar Sesión</a>
+          <a class="btn btn-bn-primary btn-sm" routerLink="/registro" id="nav-btn-registro">Registrarse</a>
+        </ng-container>
+        <ng-container *ngIf="isLoggedIn">
+          <a class="btn btn-bn-primary btn-sm" routerLink="/cuenta" id="nav-btn-cuenta">
+            <i class="bi bi-person-circle me-1"></i>Mi Cuenta
+          </a>
+          <button class="btn btn-bn-danger btn-sm" (click)="logout()" id="nav-btn-cerrar-sesion">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+        </ng-container>
+      </div>
     </div>
-
   </div>
 </nav>
 
-<!-- Contenido principal -->
-<div class="container my-5">
-  <h2 class="text-primary text-center mb-4">Contáctanos</h2>
-
-  <!-- Descripción breve de la biblioteca digital -->
-  <div class="mb-5 text-center">
-    <p class="fs-5 text-secondary">
-      Bienvenido a <strong>BibliApp</strong>, tu biblioteca digital de confianza. Explora miles de libros en línea, 
-      descubre autores y géneros variados, y disfruta de la lectura desde cualquier lugar.  
-      Nuestro objetivo es acercar la lectura y la cultura a todos los usuarios de forma fácil y segura.
-    </p>
-  </div>
-
-  <!-- Formulario -->
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8">
-      <form (ngSubmit)="sendMessage()" #contactForm="ngForm">
-
-        <div class="mb-3">
-          <label for="name" class="form-label">Nombre</label>
-          <input type="text" id="name" class="form-control" required [(ngModel)]="name" name="name">
-        </div>
-
-        <div class="mb-3">
-          <label for="email" class="form-label">Correo electrónico</label>
-          <input type="email" id="email" class="form-control" required [(ngModel)]="email" name="email">
-        </div>
-
-        <div class="mb-3">
-          <label for="message" class="form-label">Mensaje</label>
-          <textarea id="message" rows="5" class="form-control" required [(ngModel)]="message" name="message"></textarea>
-        </div>
-
-        <button class="btn btn-primary w-100" type="submit" [disabled]="!contactForm.form.valid">
-          Enviar Mensaje
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Información de contacto -->
-  <div class="mt-5 text-center">
-    <h5 class="fw-bold">Información de la Biblioteca</h5>
-    <p class="mb-1">Teléfono: +52 123 456 7890</p>
-    <p class="mb-2">Email: contacto@biblioteca.com</p>
-    <p>Síguenos en nuestras redes sociales:</p>
-    <div>
-      <a href="#" class="text-primary me-3"><i class="bi bi-facebook"></i></a>
-      <a href="#" class="text-primary me-3"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="text-primary me-3"><i class="bi bi-instagram"></i></a>
-    </div>
+<!-- ====== HERO ====== -->
+<div class="contacto-hero">
+  <div class="contacto-hero-bg"></div>
+  <div class="contacto-hero-content anim-fade-up">
+    <span class="hero-eyebrow-contacto">Estamos aquí para ayudarte</span>
+    <h1>Contáctanos</h1>
+    <p>¿Tienes dudas, sugerencias o necesitas apoyo? Escríbenos y te responderemos a la brevedad.</p>
   </div>
 </div>
 
-<!-- Footer -->
-<footer class="bg-dark text-white text-center p-4 mt-5">
+<!-- ====== TARJETAS DE CONTACTO ====== -->
+<section class="contacto-cards-section">
   <div class="container">
-    <p class="mb-1">Contacto: +52 123 456 7890</p>
-    <p class="mb-2">Email: contacto@biblioteca.com</p>
-    <div>
-      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+    <div class="row g-4 justify-content-center">
+      <div class="col-12 col-md-4 anim-fade-up delay-1">
+        <div class="contacto-info-card">
+          <div class="contacto-card-icon" style="--c: var(--primary)">
+            <i class="bi bi-telephone-fill"></i>
+          </div>
+          <h5>Teléfono</h5>
+          <p>+52 123 456 7890</p>
+          <p class="contacto-horario">Lunes a Viernes, 9am – 6pm</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 anim-fade-up delay-2">
+        <div class="contacto-info-card featured">
+          <div class="contacto-card-icon" style="--c: var(--secondary)">
+            <i class="bi bi-envelope-fill"></i>
+          </div>
+          <h5>Correo Electrónico</h5>
+          <p>contacto@biblionexus.mx</p>
+          <p class="contacto-horario">Respuesta en menos de 24 horas</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 anim-fade-up delay-3">
+        <div class="contacto-info-card">
+          <div class="contacto-card-icon" style="--c: var(--accent)">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <h5>Ubicación</h5>
+          <p>BUAP, Puebla, México</p>
+          <p class="contacto-horario">Campus Central, Edificio Rectoría</p>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ====== FORMULARIO + INFO ====== -->
+<section class="contacto-main-section bn-section">
+  <div class="container">
+    <div class="row g-5 align-items-start">
+
+      <!-- Formulario -->
+      <div class="col-12 col-lg-7 anim-slide-l">
+        <div class="contacto-form-card">
+          <div class="contacto-form-header">
+            <span class="form-eyebrow">Formulario de Contacto</span>
+            <h2>Envíanos un Mensaje</h2>
+            <p>Describe tu consulta y nos pondremos en contacto contigo.</p>
+          </div>
+
+          <form (ngSubmit)="sendMessage()" #contactForm="ngForm" id="contacto-form">
+
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="bn-input-group">
+                  <label for="contact-name">Nombre Completo</label>
+                  <i class="bi bi-person input-icon"></i>
+                  <input type="text" id="contact-name" name="name"
+                         [(ngModel)]="name" required
+                         placeholder="Tu nombre completo">
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="bn-input-group">
+                  <label for="contact-email">Correo Electrónico</label>
+                  <i class="bi bi-envelope input-icon"></i>
+                  <input type="email" id="contact-email" name="email"
+                         [(ngModel)]="email" required
+                         placeholder="tu@correo.com">
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="bn-input-group no-icon">
+                  <label for="contact-message">Mensaje</label>
+                  <textarea id="contact-message" name="message"
+                            [(ngModel)]="message" required
+                            rows="6"
+                            placeholder="Escribe tu consulta, sugerencia o comentario aquí..."
+                            style="padding-left:1rem; resize:vertical"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-bn-primary w-100 py-3 mt-2"
+                    [disabled]="!contactForm.form.valid"
+                    id="btn-enviar-mensaje">
+              <i class="bi bi-send me-2"></i>
+              Enviar Mensaje
+            </button>
+
+            <p class="contacto-privacidad">
+              <i class="bi bi-shield-check me-1"></i>
+              Tu información es privada y no será compartida con terceros.
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Panel lateral con info + sociales -->
+      <div class="col-12 col-lg-5 anim-slide-r">
+        <div class="contacto-side-info">
+          <h3>¿Por qué contactarnos?</h3>
+          <p>En BiblioNexus queremos brindarte la mejor experiencia de biblioteca digital. Nuestro equipo está listo para ayudarte con:</p>
+
+          <div class="contacto-reasons">
+            <div class="reason-item">
+              <i class="bi bi-question-circle-fill"></i>
+              <span>Dudas sobre el sistema de préstamos</span>
+            </div>
+            <div class="reason-item">
+              <i class="bi bi-person-plus-fill"></i>
+              <span>Problemas con tu cuenta o registro</span>
+            </div>
+            <div class="reason-item">
+              <i class="bi bi-book-fill"></i>
+              <span>Sugerencias de nuevos títulos</span>
+            </div>
+            <div class="reason-item">
+              <i class="bi bi-bug-fill"></i>
+              <span>Reportar errores o problemas técnicos</span>
+            </div>
+            <div class="reason-item">
+              <i class="bi bi-chat-dots-fill"></i>
+              <span>Comentarios y retroalimentación general</span>
+            </div>
+          </div>
+
+          <!-- Redes sociales -->
+          <div class="contacto-social">
+            <h6>Síguenos en redes</h6>
+            <div class="social-links">
+              <a href="#" class="social-link facebook" id="link-facebook" aria-label="Facebook">
+                <i class="bi bi-facebook"></i>
+                <span>Facebook</span>
+              </a>
+              <a href="#" class="social-link twitter" id="link-twitter" aria-label="Twitter">
+                <i class="bi bi-twitter-x"></i>
+                <span>Twitter / X</span>
+              </a>
+              <a href="#" class="social-link instagram" id="link-instagram" aria-label="Instagram">
+                <i class="bi bi-instagram"></i>
+                <span>Instagram</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="bn-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-12 col-md-4 mb-3">
+        <div class="footer-brand"><i class="bi bi-book-half me-2"></i>BiblioNexus</div>
+        <p class="footer-tagline">Tu biblioteca digital de confianza.<br>Conocimiento sin fronteras.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6>Navegación</h6>
+        <a routerLink="/">Inicio</a>
+        <a routerLink="/catalogo">Catálogo</a>
+        <a routerLink="/contacto">Contacto</a>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6>Acceso</h6>
+        <a routerLink="/login">Iniciar Sesión</a>
+        <a routerLink="/registro">Registrarse</a>
+        <a routerLink="/cuenta">Mi Cuenta</a>
+      </div>
+      <div class="col-12 col-md-4">
+        <h6>Contacto</h6>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.875rem; line-height:1.7">
+          <i class="bi bi-telephone me-2" style="color:var(--secondary-light)"></i>+52 123 456 7890<br>
+          <i class="bi bi-envelope me-2" style="color:var(--secondary-light)"></i>contacto@biblionexus.mx<br>
+          <i class="bi bi-geo-alt me-2" style="color:var(--secondary-light)"></i>BUAP, Puebla, México
+        </p>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <p class="footer-bottom">© 2026 BiblioNexus — Todos los derechos reservados.</p>
   </div>
 </footer>

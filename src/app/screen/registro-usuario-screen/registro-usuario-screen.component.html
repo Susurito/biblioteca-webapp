@@ -1,123 +1,230 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-  <a class="navbar-brand fw-bold" href="#">BibliApp</a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<!-- ====== REGISTRO DE USUARIO — BiblioNexus ====== -->
 
-  <div class="collapse navbar-collapse" id="navbarContent">
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item"><a class="nav-link" routerLink="/">Inicio</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/catalogo">Catálogo</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/contacto">Contacto</a></li>
-    </ul>
+<!-- Navbar mínima -->
+<nav class="navbar navbar-expand-lg bn-navbar">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+      BiblioNexus
+    </a>
+
   </div>
 </nav>
 
-<!-- Formulario de registro -->
-<div class="container d-flex justify-content-center my-5">
-  <div class="card shadow p-4 w-100" style="max-width: 500px;">
-    <h3 class="text-center mb-4">Registro de Usuario</h3>
+<!-- Contenido principal -->
+<div class="registro-page">
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <!-- Panel izquierdo info -->
+  <div class="registro-left d-none d-lg-flex anim-slide-l">
+    <div class="registro-deco">
+      <div class="registro-deco-orb orb1"></div>
+      <div class="registro-deco-orb orb2"></div>
+      <div class="registro-deco-orb orb3"></div>
 
-      <!-- Tipo de usuario -->
-      <mat-form-field class="w-100 mb-3" appearance="fill">
-        <mat-label>Tipo de usuario</mat-label>
-        <mat-select formControlName="tipo">
-          <mat-option *ngFor="let tipo of tiposUsuario" [value]="tipo">{{ tipo }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="registerForm.get('tipo')?.hasError('required')">Seleccione un tipo de usuario</mat-error>
-      </mat-form-field>
+      <div class="registro-info-content">
+        <div class="registro-brand mb-4">
+          <i class="bi bi-person-plus-fill"></i>
+        </div>
+        <h2>Únete a<br><em>BiblioNexus</em></h2>
+        <p>Crea tu cuenta y comienza a explorar nuestra biblioteca digital sin límites.</p>
 
-     <!-- Nombre -->
-<mat-form-field class="w-100 mb-3" appearance="fill">
-  <mat-label>Nombre(s)</mat-label>
-  <input matInput type="text" formControlName="nombre" (keypress)="soloLetras($event)">
-  <mat-error *ngIf="registerForm.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
-  <mat-error *ngIf="registerForm.get('nombre')?.hasError('pattern')">Solo se permiten letras</mat-error>
-</mat-form-field>
-
-<!-- Apellido Paterno -->
-<mat-form-field class="w-100 mb-3" appearance="fill">
-  <mat-label>Apellido Paterno</mat-label>
-  <input matInput type="text" formControlName="apellido_paterno" (keypress)="soloLetras($event)">
-  <mat-error *ngIf="registerForm.get('apellido_paterno')?.hasError('required')">El apellido paterno es obligatorio</mat-error>
-  <mat-error *ngIf="registerForm.get('apellido_paterno')?.hasError('pattern')">Solo se permiten letras</mat-error>
-</mat-form-field>
-
-<!-- Apellido Materno -->
-<mat-form-field class="w-100 mb-3" appearance="fill">
-  <mat-label>Apellido Materno</mat-label>
-  <input matInput type="text" formControlName="apellido_materno" (keypress)="soloLetras($event)">
-  <mat-error *ngIf="registerForm.get('apellido_materno')?.hasError('required')">El apellido materno es obligatorio</mat-error>
-  <mat-error *ngIf="registerForm.get('apellido_materno')?.hasError('pattern')">Solo se permiten letras</mat-error>
-</mat-form-field>
-
-<!-- Matrícula -->
-<mat-form-field class="w-100 mb-3" appearance="fill">
-  <mat-label>Número de Matrícula</mat-label>
-  <input matInput type="text" formControlName="matricula" (keypress)="soloNumeros($event)" maxlength="9">
-  <mat-error *ngIf="registerForm.get('matricula')?.hasError('required')">La matrícula es obligatoria</mat-error>
-  <mat-error *ngIf="registerForm.get('matricula')?.hasError('pattern')">Solo se permiten números</mat-error>
-</mat-form-field>
-
-      <!-- Email -->
-      <mat-form-field class="w-100 mb-3" appearance="fill">
-        <mat-label>Correo electrónico</mat-label>
-        <input matInput type="email" formControlName="email">
-        <mat-error *ngIf="registerForm.get('email')?.hasError('required')">El correo es obligatorio</mat-error>
-        <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Ingrese un correo válido</mat-error>
-      </mat-form-field>
-
-      <!-- Contraseña -->
-      <mat-form-field class="w-100 mb-3" appearance="fill">
-        <mat-label>Contraseña</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="registerForm.get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
-        <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">Mínimo 6 caracteres</mat-error>
-      </mat-form-field>
-
-      <!-- Confirmar contraseña -->
-      <mat-form-field class="w-100 mb-3" appearance="fill">
-        <mat-label>Confirmar contraseña</mat-label>
-        <input matInput [type]="hideConfirm ? 'password' : 'text'" formControlName="confirmPassword">
-        <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" type="button">
-          <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="registerForm.hasError('notMatching')">Las contraseñas no coinciden</mat-error>
-      </mat-form-field>
-
-      <!-- Aceptar términos -->
-      <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" formControlName="terminos" id="terminosCheck">
-        <label class="form-check-label" for="terminosCheck">
-          Acepto los <a href="#">términos y condiciones</a>
-        </label>
-        <div class="text-danger" *ngIf="registerForm.get('terminos')?.hasError('required')">Debes aceptar los términos</div>
+        <div class="registro-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <strong>Completa tu perfil</strong>
+              <p>Ingresa tus datos personales y de contacto.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <strong>Activa tu cuenta</strong>
+              <p>Confirmación inmediata con tus credenciales.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <strong>¡Explora libros!</strong>
+              <p>Accede al catálogo y solicita préstamos.</p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <!-- Botón -->
-      <button mat-raised-button color="primary" class="w-100" [disabled]="registerForm.invalid">
-        Registrarse
-      </button>
-
-    </form>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer class="bg-dark text-white text-center p-4 mt-5">
-  <div class="container">
-    <p class="mb-1">Contacto: +52 123 456 7890</p>
-    <p class="mb-2">Email: contacto@biblioteca.com</p>
-    <div>
-      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
     </div>
   </div>
+
+  <!-- Panel derecho formulario -->
+  <div class="registro-right anim-slide-r">
+    <div class="registro-form-wrap">
+      <div class="registro-header">
+        <h2>Crear Cuenta</h2>
+        <p>Completa el formulario para registrarte en BiblioNexus.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" id="registro-form">
+
+        <!-- Tipo de usuario -->
+        <div class="bn-input-group no-icon">
+          <label>Tipo de Usuario</label>
+          <select formControlName="tipo" id="select-tipo" class="bn-input-plain">
+            <option value="">Selecciona una opción...</option>
+            <option *ngFor="let tipo of tiposUsuario" [value]="tipo">{{ tipo }}</option>
+          </select>
+          <div class="field-error" *ngIf="registerForm.get('tipo')?.invalid && registerForm.get('tipo')?.touched">
+            <i class="bi bi-exclamation-circle"></i> Selecciona un tipo de usuario
+          </div>
+        </div>
+
+        <!-- Nombre + Apellido Paterno en fila -->
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="bn-input-group">
+              <label for="nombre-input">Nombre(s)</label>
+              <i class="bi bi-person input-icon"></i>
+              <input type="text" id="nombre-input" formControlName="nombre" placeholder="Tu nombre"
+                (keypress)="soloLetras($event)">
+              <div class="field-error"
+                *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+                <i class="bi bi-exclamation-circle"></i>
+                <span *ngIf="registerForm.get('nombre')?.hasError('required')">Nombre obligatorio</span>
+                <span *ngIf="registerForm.get('nombre')?.hasError('pattern')">Solo letras</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="bn-input-group">
+              <label for="ap-input">Apellido Paterno</label>
+              <i class="bi bi-person input-icon"></i>
+              <input type="text" id="ap-input" formControlName="apellido_paterno" placeholder="Apellido paterno"
+                (keypress)="soloLetras($event)">
+              <div class="field-error"
+                *ngIf="registerForm.get('apellido_paterno')?.invalid && registerForm.get('apellido_paterno')?.touched">
+                <i class="bi bi-exclamation-circle"></i>
+                <span *ngIf="registerForm.get('apellido_paterno')?.hasError('required')">Obligatorio</span>
+                <span *ngIf="registerForm.get('apellido_paterno')?.hasError('pattern')">Solo letras</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apellido Materno + Matrícula en fila -->
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="bn-input-group">
+              <label for="am-input">Apellido Materno</label>
+              <i class="bi bi-person input-icon"></i>
+              <input type="text" id="am-input" formControlName="apellido_materno" placeholder="Apellido materno"
+                (keypress)="soloLetras($event)">
+              <div class="field-error"
+                *ngIf="registerForm.get('apellido_materno')?.invalid && registerForm.get('apellido_materno')?.touched">
+                <i class="bi bi-exclamation-circle"></i>
+                <span *ngIf="registerForm.get('apellido_materno')?.hasError('required')">Obligatorio</span>
+                <span *ngIf="registerForm.get('apellido_materno')?.hasError('pattern')">Solo letras</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="bn-input-group">
+              <label for="matricula-input">Matrícula</label>
+              <i class="bi bi-hash input-icon"></i>
+              <input type="text" id="matricula-input" formControlName="matricula" placeholder="000000000" maxlength="9"
+                (keypress)="soloNumeros($event)">
+              <div class="field-error"
+                *ngIf="registerForm.get('matricula')?.invalid && registerForm.get('matricula')?.touched">
+                <i class="bi bi-exclamation-circle"></i>
+                <span *ngIf="registerForm.get('matricula')?.hasError('required')">Obligatorio</span>
+                <span *ngIf="registerForm.get('matricula')?.hasError('pattern')">Solo números</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="bn-input-group">
+          <label for="email-reg-input">Correo Electrónico</label>
+          <i class="bi bi-envelope input-icon"></i>
+          <input type="email" id="email-reg-input" formControlName="email" placeholder="tu@correo.com">
+          <div class="field-error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            <i class="bi bi-exclamation-circle"></i>
+            <span *ngIf="registerForm.get('email')?.hasError('required')">Correo obligatorio</span>
+            <span *ngIf="registerForm.get('email')?.hasError('email')">Correo inválido</span>
+          </div>
+        </div>
+
+        <!-- Password + Confirm en fila -->
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="bn-input-group">
+              <label for="pwd-input">Contraseña</label>
+              <i class="bi bi-lock input-icon"></i>
+              <input [type]="hidePassword ? 'password' : 'text'" id="pwd-input" formControlName="password"
+                placeholder="Mín. 6 caracteres" class="pe-5">
+              <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword" id="btn-toggle-pwd">
+                <i [class]="hidePassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+              </button>
+              <div class="field-error"
+                *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                <i class="bi bi-exclamation-circle"></i>
+                <span *ngIf="registerForm.get('password')?.hasError('required')">Contraseña obligatoria</span>
+                <span *ngIf="registerForm.get('password')?.hasError('minlength')">Mínimo 6 caracteres</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="bn-input-group">
+              <label for="confirm-pwd-input">Confirmar Contraseña</label>
+              <i class="bi bi-lock-fill input-icon"></i>
+              <input [type]="hideConfirm ? 'password' : 'text'" id="confirm-pwd-input" formControlName="confirmPassword"
+                placeholder="Repite tu contraseña" class="pe-5">
+              <button type="button" class="password-toggle" (click)="hideConfirm = !hideConfirm"
+                id="btn-toggle-confirm">
+                <i [class]="hideConfirm ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+              </button>
+              <div class="field-error"
+                *ngIf="registerForm.hasError('notMatching') && registerForm.get('confirmPassword')?.touched">
+                <i class="bi bi-exclamation-circle"></i> Las contraseñas no coinciden
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Términos y condiciones -->
+        <div class="terminos-check">
+          <label class="check-label">
+            <input type="checkbox" formControlName="terminos" id="check-terminos">
+            <span class="check-box"></span>
+            Acepto los <a href="#" class="terminos-link">términos y condiciones</a>
+            de BiblioNexus
+          </label>
+          <div class="field-error"
+            *ngIf="registerForm.get('terminos')?.invalid && registerForm.get('terminos')?.touched">
+            <i class="bi bi-exclamation-circle"></i> Debes aceptar los términos
+          </div>
+        </div>
+
+        <!-- Botón enviar -->
+        <button type="submit" class="btn btn-bn-primary w-100 py-3 mt-2" [disabled]="registerForm.invalid"
+          id="btn-registro-submit">
+          <i class="bi bi-person-check me-2"></i>
+          Crear mi Cuenta
+        </button>
+
+        <hr class="bn-divider mt-4 mb-3">
+
+        <p class="registro-login-cta">
+          ¿Ya tienes cuenta?
+          <a routerLink="/login" id="link-ir-login">Inicia sesión →</a>
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer mínimo -->
+<footer class="registro-footer">
+  <p>© 2026 BiblioNexus — Todos los derechos reservados.</p>
 </footer>

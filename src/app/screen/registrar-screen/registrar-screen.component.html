@@ -1,31 +1,174 @@
-<div class="container mt-4">
-  <h2>Registrar Libro</h2>
-  <form [formGroup]="libroForm" (ngSubmit)="registrarLibro()">
-    <div class="mb-3">
-      <label class="form-label">Título</label>
-      <input type="text" class="form-control" formControlName="titulo">
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg bn-navbar">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+      BiblioNexus
+    </a>
+    <div class="d-flex gap-2 ms-auto">
+      <a class="btn btn-bn-secondary btn-sm" routerLink="/catalogo" id="nav-btn-catalogo">
+        <i class="bi bi-grid me-1"></i>Catálogo
+      </a>
+      <a class="btn btn-bn-primary btn-sm" routerLink="/cuenta" id="nav-btn-cuenta-admin">
+        <i class="bi bi-person-circle me-1"></i>Mi Cuenta
+      </a>
     </div>
+  </div>
+</nav>
 
-    <div class="mb-3">
-      <label class="form-label">Autor</label>
-      <input type="text" class="form-control" formControlName="autor">
+<!-- ====== LAYOUT PRINCIPAL ====== -->
+<div class="registrar-page">
+
+  <!-- Panel izquierdo info admin -->
+  <div class="registrar-left d-none d-lg-flex anim-slide-l">
+    <div class="registrar-deco">
+      <div class="registrar-orb orb1"></div>
+      <div class="registrar-orb orb2"></div>
+
+      <div class="registrar-info">
+        <div class="admin-icon-wrap">
+          <i class="bi bi-book-fill"></i>
+        </div>
+        <h2>Registrar<br><em>Nuevo Libro</em></h2>
+        <p>Agrega libros al catálogo de BiblioNexus para que los alumnos puedan explorarlos y solicitarlos en préstamo.</p>
+
+        <div class="registrar-tips">
+          <div class="tip-item">
+            <i class="bi bi-lightbulb-fill"></i>
+            <span>Completa todos los campos obligatorios</span>
+          </div>
+          <div class="tip-item">
+            <i class="bi bi-tag-fill"></i>
+            <span>Indica el género correctamente para los filtros</span>
+          </div>
+          <div class="tip-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Activa "Disponible" para que sea visible en préstamos</span>
+          </div>
+        </div>
+
+        <!-- Acceso rápido -->
+        <div class="registrar-quick-links">
+          <a routerLink="/catalogo" class="quick-link" id="link-ver-catalogo">
+            <i class="bi bi-grid"></i>
+            <span>Ver Catálogo</span>
+            <i class="bi bi-arrow-right ms-auto"></i>
+          </a>
+          <a routerLink="/cuenta" class="quick-link" id="link-ver-cuenta">
+            <i class="bi bi-person-circle"></i>
+            <span>Mi Cuenta</span>
+            <i class="bi bi-arrow-right ms-auto"></i>
+          </a>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="mb-3">
-      <label class="form-label">Género</label>
-      <input type="text" class="form-control" formControlName="genero">
+  <!-- Panel derecho formulario -->
+  <div class="registrar-right anim-slide-r">
+    <div class="registrar-form-wrap">
+
+      <div class="registrar-header">
+        <span class="registrar-eyebrow">
+          <i class="bi bi-shield-fill me-1"></i>Acceso Admin
+        </span>
+        <h2>Registrar Libro</h2>
+        <p>Completa el formulario para agregar un nuevo libro al catálogo.</p>
+      </div>
+
+      <form [formGroup]="libroForm" (ngSubmit)="registrarLibro()" id="form-registrar-libro">
+
+        <!-- Título -->
+        <div class="bn-input-group">
+          <label for="titulo-input">Título del Libro *</label>
+          <i class="bi bi-journal-text input-icon"></i>
+          <input type="text" id="titulo-input" formControlName="titulo"
+                 placeholder="Ej. El Quijote de la Mancha">
+          <div class="field-error" *ngIf="libroForm.get('titulo')?.invalid && libroForm.get('titulo')?.touched">
+            <i class="bi bi-exclamation-circle"></i> El título es obligatorio
+          </div>
+        </div>
+
+        <!-- Autor -->
+        <div class="bn-input-group">
+          <label for="autor-input">Autor *</label>
+          <i class="bi bi-person-fill input-icon"></i>
+          <input type="text" id="autor-input" formControlName="autor"
+                 placeholder="Nombre del autor">
+          <div class="field-error" *ngIf="libroForm.get('autor')?.invalid && libroForm.get('autor')?.touched">
+            <i class="bi bi-exclamation-circle"></i> El autor es obligatorio
+          </div>
+        </div>
+
+        <!-- Género -->
+        <div class="bn-input-group">
+          <label for="genero-input">Género Literario *</label>
+          <i class="bi bi-tag input-icon"></i>
+          <input type="text" id="genero-input" formControlName="genero"
+                 placeholder="Ej. Novela, Ciencia Ficción, Historia...">
+          <div class="field-error" *ngIf="libroForm.get('genero')?.invalid && libroForm.get('genero')?.touched">
+            <i class="bi bi-exclamation-circle"></i> El género es obligatorio
+          </div>
+        </div>
+
+        <!-- Detalles -->
+        <div class="bn-input-group no-icon">
+          <label for="detalles-input">Descripción / Detalles</label>
+          <textarea id="detalles-input" formControlName="detalles"
+                    rows="4"
+                    placeholder="Breve descripción del libro, sinopsis, notas adicionales..."
+                    style="padding-left:1rem; resize:vertical; min-height:100px"></textarea>
+        </div>
+
+        <!-- Toggle disponible -->
+        <div class="disponible-toggle">
+          <div class="toggle-info">
+            <label class="toggle-label">Estado de Disponibilidad</label>
+            <p class="toggle-desc">
+              Activa esta opción para que el libro sea visible y solicitable en el catálogo.
+            </p>
+          </div>
+          <label class="toggle-switch" for="toggle-disponible">
+            <input type="checkbox" id="toggle-disponible" formControlName="disponible">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <p class="disponible-status">
+          <i class="bi me-1"
+             [class.bi-check-circle-fill]="libroForm.get('disponible')?.value"
+             [class.bi-x-circle-fill]="!libroForm.get('disponible')?.value"
+             [style.color]="libroForm.get('disponible')?.value ? 'var(--accent)' : 'var(--danger)'"></i>
+          El libro está
+          <strong [style.color]="libroForm.get('disponible')?.value ? 'var(--accent)' : 'var(--danger)'">
+            {{ libroForm.get('disponible')?.value ? 'disponible' : 'no disponible' }}
+          </strong>
+        </p>
+
+        <!-- Botones -->
+        <div class="d-flex gap-3 mt-4">
+          <button
+            type="submit"
+            class="btn btn-bn-primary flex-grow-1 py-3"
+            [disabled]="libroForm.invalid"
+            id="btn-guardar-libro">
+            <i class="bi bi-plus-circle me-2"></i>
+            Registrar Libro
+          </button>
+          <button
+            type="button"
+            class="btn btn-bn-secondary py-3 px-4"
+            (click)="libroForm.reset({disponible: true})"
+            id="btn-limpiar-form">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+
+      </form>
     </div>
-
-    <div class="mb-3">
-      <label class="form-label">Detalles</label>
-      <textarea class="form-control" formControlName="detalles"></textarea>
-    </div>
-
-    <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" formControlName="disponible">
-      <label class="form-check-label">Disponible</label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Registrar Libro</button>
-  </form>
+  </div>
 </div>
+
+<!-- Footer mínimo -->
+<footer style="background:var(--primary-dark); color:rgba(255,255,255,0.4); text-align:center; padding:1rem; font-size:0.8rem;">
+  <p style="margin:0">© 2026 BiblioNexus — Panel de Administración</p>
+</footer>

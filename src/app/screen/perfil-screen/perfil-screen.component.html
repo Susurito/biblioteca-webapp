@@ -1,339 +1,427 @@
-<!-- Navbar (mantén tu navbar existente) -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-  <a class="navbar-brand fw-bold" routerLink="/">BibliApp</a>
-
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarContent">
-
-    <!-- Menú de navegación -->
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" routerLink="/">Inicio</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/catalogo">Catálogo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/contacto">Contacto</a>
-      </li>
-    </ul>
-
-    <!-- Barra de búsqueda -->
-    <form class="d-flex me-3" (ngSubmit)="onSearch()">
-      <input class="form-control me-2" type="search" 
-             placeholder="Buscar libros..." 
-             [(ngModel)]="searchTerm" name="search">
-      <button class="btn btn-outline-primary" type="submit">Buscar</button>
-    </form>
-
-    <!-- Botones de cuenta y admin -->
-    <div>
-      <a class="btn btn-primary me-2" routerLink="/cuenta" *ngIf="isLoggedIn">Cuenta</a>
-      <!-- Solo aparece si es admin -->
-      <a class="btn btn-success me-2" routerLink="/registrar-libro" *ngIf="isAdmin">Registrar Libro</a>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg bn-navbar">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+      BiblioNexus
+    </a>
+    <button class="navbar-toggler border-0" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navPerfil">
+      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navPerfil">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/"><i class="bi bi-house me-1"></i>Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/catalogo"><i class="bi bi-grid me-1"></i>Catálogo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a>
+        </li>
+      </ul>
+      <div class="d-flex gap-2">
+        <a class="btn btn-bn-primary btn-sm active" routerLink="/cuenta" *ngIf="isLoggedIn" id="nav-btn-cuenta">
+          <i class="bi bi-person-circle me-1"></i>Mi Cuenta
+        </a>
+        <a class="btn btn-bn-gold btn-sm" routerLink="/registrar-libro" *ngIf="isAdmin" id="nav-btn-registrar-admin">
+          <i class="bi bi-plus-circle me-1"></i>Registrar Libro
+        </a>
+      </div>
     </div>
-
   </div>
 </nav>
 
-<div class="container mt-4" *ngIf="!isLoading; else loading">
-  
-  <!-- 🔧 BOTÓN PARA VOLVER -->
-  <div class="mb-3">
-    <button class="btn btn-outline-secondary" routerLink="/">
-      <i class="bi bi-arrow-left"></i> Volver al Inicio
-    </button>
+<!-- ====== LOADING ====== -->
+<ng-template #loading>
+  <div class="perfil-loading">
+    <div class="bn-spinner"></div>
+    <p>Cargando tu perfil...</p>
   </div>
+</ng-template>
 
-  <h2 class="mb-4 text-primary">Perfil de Usuario</h2>
+<!-- ====== CONTENIDO PRINCIPAL ====== -->
+<div class="perfil-page" *ngIf="!isLoading; else loading">
 
-  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
-  <!-- Información del perfil (SIEMPRE VISIBLE) -->
-  <div *ngIf="perfil" class="card shadow-sm p-4 mb-4">
-    <h4 class="card-title text-secondary mb-3">Información Personal</h4>
-    <p *ngIf="perfil.nombre"><strong>Nombre:</strong> {{ perfil.nombre }} {{ perfil.apellido_paterno }} {{ perfil.apellido_materno }}</p>
-    <p><strong>Email:</strong> {{ perfil.email }}</p>
-    <p *ngIf="perfil.matricula"><strong>Matrícula:</strong> {{ perfil.matricula }}</p>
-    <p><strong>Rol:</strong> {{ perfil.rol }}</p>
-  </div>
-
-  <!-- PANEL DE ADMINISTRACIÓN (SOLO PARA ADMINS) -->
-  <div *ngIf="esAdministrador()" class="card shadow-sm mb-4">
-    
-    <!-- Navegación de pestañas PARA ADMIN -->
-    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" 
-                [class.active]="activeTab === 'pendientes'" 
-                (click)="cambiarTab('pendientes')"
-                type="button">
-          📋 Solicitudes Pendientes
-          <span class="badge bg-warning ms-1" *ngIf="prestamosPendientes.length > 0">
-            {{ prestamosPendientes.length }}
-          </span>
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" 
-                [class.active]="activeTab === 'historial'" 
-                (click)="cambiarTab('historial')"
-                type="button">
-          📊 Historial Completo
-          <span class="badge bg-secondary ms-1" *ngIf="historialPrestamos.length > 0">
-            {{ historialPrestamos.length }}
-          </span>
-        </button>
-      </li>
-    </ul>
-
-    <!-- Contenido de las pestañas PARA ADMIN -->
-    <div class="tab-content p-4">
-      
-      <!-- Pestaña de Solicitudes Pendientes (ADMIN) -->
-      <div *ngIf="activeTab === 'pendientes'">
-        <h4 class="text-primary mb-3">📋 Solicitudes de Préstamos Pendientes</h4>
-        <p class="text-muted mb-4">Solicitudes que requieren tu revisión</p>
-        
-        <div *ngIf="prestamosPendientes.length > 0" class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th>
-                <th>Alumno</th>
-                <th>Libro</th>
-                <th>Autor</th>
-                <th>Fecha Solicitud</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let p of prestamosPendientes">
-                <td><small class="text-muted">#{{ p.id }}</small></td>
-                <td>
-                  <strong>{{ p.alumno_nombre || 'Alumno ' + p.alumno }}</strong>
-                </td>
-                <td>{{ p.libro_titulo }}</td>
-                <td>{{ p.libro_autor }}</td>
-                <td>{{ p.fecha_solicitud | date:'mediumDate' }}</td>
-                <td>
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-success btn-sm" 
-                            (click)="revisarPrestamo(p, 'aprobar')">
-                      <i class="bi bi-check-lg"></i> Aprobar
-                    </button>
-                    <button class="btn btn-danger btn-sm" 
-                            (click)="revisarPrestamo(p, 'rechazar')">
-                      <i class="bi bi-x-lg"></i> Rechazar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div *ngIf="prestamosPendientes.length === 0" class="text-center text-muted py-5">
-          <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-          <h5 class="mt-3">No hay solicitudes pendientes</h5>
-          <p>Todas las solicitudes han sido procesadas.</p>
-        </div>
-      </div>
-
-      <!-- Pestaña de Historial Completo (ADMIN) -->
-      <div *ngIf="activeTab === 'historial'">
-        <h4 class="text-primary mb-3">📊 Historial Completo de Préstamos</h4>
-        <p class="text-muted mb-4">Todos los préstamos del sistema</p>
-        
-        <div *ngIf="historialPrestamos.length > 0" class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>Alumno</th>
-                <th>Libro</th>
-                <th>Autor</th>
-                <th>Fecha Solicitud</th>
-                <th>Fecha Devolución</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let p of historialPrestamos">
-                <td>
-                  <strong>{{ p.alumno_nombre || 'Alumno ' + p.alumno }}</strong>
-                </td>
-                <td>{{ p.libro_titulo }}</td>
-                <td>{{ p.libro_autor }}</td>
-                <td>{{ p.fecha_solicitud | date:'mediumDate' }}</td>
-                <td>
-                  <span *ngIf="p.fecha_devolucion; else sinDevolucion">
-                    {{ p.fecha_devolucion | date:'mediumDate' }}
-                  </span>
-                  <ng-template #sinDevolucion>
-                    <span class="text-muted">-</span>
-                  </ng-template>
-                </td>
-                <td>
-                  <span [class]="obtenerClaseEstado(obtenerEstadoPrestamo(p))" class="badge">
-                    {{ obtenerEstadoPrestamo(p) }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div *ngIf="historialPrestamos.length === 0" class="text-center text-muted py-5">
-          <i class="bi bi-clock-history" style="font-size: 3rem;"></i>
-          <h5 class="mt-3">No hay historial de préstamos</h5>
-          <p>No se han procesado préstamos en el sistema.</p>
-        </div>
-      </div>
+  <!-- Breadcrumb -->
+  <div class="perfil-breadcrumb">
+    <div class="container-xl">
+      <button class="btn-back" routerLink="/" id="btn-volver-inicio">
+        <i class="bi bi-arrow-left"></i>
+        <span>Volver al Inicio</span>
+      </button>
     </div>
   </div>
 
-  <!-- Pestañas de Préstamos (SOLO PARA ALUMNOS - NO ADMIN) -->
-  <div *ngIf="!esAdministrador()" class="card shadow-sm">
-    <!-- Navegación de pestañas PARA ALUMNOS -->
-    <ul class="nav nav-tabs" id="prestamosTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" 
-                [class.active]="activeTab === 'activos'" 
-                (click)="cambiarTab('activos')"
-                type="button">
-          📚 Préstamos Activos
-          <span class="badge bg-success ms-1" *ngIf="prestamosActivos.length > 0">
-            {{ prestamosActivos.length }}
-          </span>
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" 
-                [class.active]="activeTab === 'historial'" 
-                (click)="cambiarTab('historial')"
-                type="button">
-          📖 Historial Completo
-          <span class="badge bg-secondary ms-1" *ngIf="historialCompleto.length > 0">
-            {{ historialCompleto.length }}
-          </span>
-        </button>
-      </li>
-    </ul>
+  <div class="container-xl perfil-container">
 
-    <!-- Contenido de las pestañas PARA ALUMNOS -->
-    <div class="tab-content p-4">
-      
-      <!-- Pestaña de Préstamos Activos (ALUMNOS) -->
-      <div *ngIf="activeTab === 'activos'">
-        <h4 class="text-secondary mb-3">📚 Mis Préstamos Activos</h4>
-        
-        <div *ngIf="prestamosActivos.length > 0" class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Libro</th>
-                <th>Autor</th>
-                <th>Fecha de Préstamo</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let prestamo of prestamosActivos">
-                <td>{{ prestamo.libro_titulo }}</td>
-                <td>{{ prestamo.libro_autor }}</td>
-                <td>{{ prestamo.fecha_solicitud | date:'mediumDate' }}</td>
-                <td>
-                  <span [class]="obtenerClaseEstado(obtenerEstadoPrestamo(prestamo))">
-                    {{ obtenerEstadoPrestamo(prestamo) }}
-                  </span>
-                </td>
-                <td>
-                  <button 
-                    class="btn btn-warning btn-sm"
-                    (click)="devolverLibro(prestamo.id, prestamo.libro_titulo)">
-                    Devolver Libro
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- Alert de error -->
+    <div class="bn-alert-danger anim-fade-up" *ngIf="errorMessage">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      {{ errorMessage }}
+    </div>
 
-        <div *ngIf="prestamosActivos.length === 0" class="text-center text-muted py-4">
-          <i class="bi bi-book" style="font-size: 3rem;"></i>
-          <p class="mt-2">No tienes préstamos activos en este momento.</p>
+    <div class="row g-4">
+
+      <!-- ---- COLUMNA IZQUIERDA: Card de Perfil ---- -->
+      <div class="col-12 col-lg-3">
+        <div class="perfil-card-usuario anim-slide-l" *ngIf="perfil">
+
+          <!-- Avatar -->
+          <div class="perfil-avatar">
+            <div class="avatar-circle">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="perfil-rol-badge" [class.admin-badge]="esAdministrador()">
+              <i class="bi" [class.bi-shield-fill]="esAdministrador()" [class.bi-mortarboard-fill]="!esAdministrador()"></i>
+              {{ esAdministrador() ? 'Administrador' : 'Alumno' }}
+            </div>
+          </div>
+
+          <!-- Info personal -->
+          <div class="perfil-info-personal">
+            <h3 class="perfil-nombre" *ngIf="perfil.nombre">
+              {{ perfil.nombre }} {{ perfil.apellido_paterno }} {{ perfil.apellido_materno }}
+            </h3>
+            <p class="perfil-email">
+              <i class="bi bi-envelope me-1"></i>{{ perfil.email }}
+            </p>
+            <p class="perfil-matricula" *ngIf="perfil.matricula">
+              <i class="bi bi-hash me-1"></i>Mat: {{ perfil.matricula }}
+            </p>
+          </div>
+
+          <!-- Stats rápidas solo para alumnos -->
+          <div class="perfil-quick-stats" *ngIf="!esAdministrador()">
+            <div class="quick-stat">
+              <span class="qs-num">{{ prestamosActivos.length }}</span>
+              <span class="qs-label">Activos</span>
+            </div>
+            <div class="qs-divider"></div>
+            <div class="quick-stat">
+              <span class="qs-num">{{ historialCompleto.length }}</span>
+              <span class="qs-label">Historial</span>
+            </div>
+          </div>
+
+          <!-- Stats admin -->
+          <div class="perfil-quick-stats" *ngIf="esAdministrador()">
+            <div class="quick-stat">
+              <span class="qs-num" style="color:var(--secondary)">{{ prestamosPendientes.length }}</span>
+              <span class="qs-label">Pendientes</span>
+            </div>
+            <div class="qs-divider"></div>
+            <div class="quick-stat">
+              <span class="qs-num">{{ historialPrestamos.length }}</span>
+              <span class="qs-label">Total</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Pestaña de Historial Completo (ALUMNOS) -->
-      <div *ngIf="activeTab === 'historial'">
-        <h4 class="text-secondary mb-3">📖 Historial de Préstamos</h4>
-        
-        <div *ngIf="historialCompleto.length > 0" class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Libro</th>
-                <th>Autor</th>
-                <th>Fecha Solicitud</th>
-                <th>Fecha Devolución</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let prestamo of historialCompleto">
-                <td>{{ prestamo.libro_titulo }}</td>
-                <td>{{ prestamo.libro_autor }}</td>
-                <td>{{ prestamo.fecha_solicitud | date:'mediumDate' }}</td>
-                <td>
-                  <span *ngIf="prestamo.fecha_devolucion; else sinDevolucion">
-                    {{ prestamo.fecha_devolucion | date:'mediumDate' }}
-                  </span>
-                  <ng-template #sinDevolucion>
-                    <span class="text-muted">-</span>
-                  </ng-template>
-                </td>
-                <td>
-                  <span [class]="obtenerClaseEstado(obtenerEstadoPrestamo(prestamo))">
-                    {{ obtenerEstadoPrestamo(prestamo) }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- ---- COLUMNA DERECHA: Panel de préstamos ---- -->
+      <div class="col-12 col-lg-9 anim-slide-r">
+
+        <!-- ===== PANEL ADMIN ===== -->
+        <div *ngIf="esAdministrador()" class="perfil-panel admin-panel">
+          <div class="panel-header admin-header">
+            <div>
+              <span class="panel-eyebrow">Panel de Control</span>
+              <h2><i class="bi bi-shield-fill me-2"></i>Administración</h2>
+            </div>
+          </div>
+
+          <!-- Tabs Admin -->
+          <div class="bn-tabs">
+            <button class="bn-tab" [class.active]="activeTab === 'pendientes'"
+                    (click)="cambiarTab('pendientes')" id="tab-pendientes">
+              <i class="bi bi-clock me-1"></i>Solicitudes Pendientes
+              <span class="tab-badge warning" *ngIf="prestamosPendientes.length > 0">
+                {{ prestamosPendientes.length }}
+              </span>
+            </button>
+            <button class="bn-tab" [class.active]="activeTab === 'historial'"
+                    (click)="cambiarTab('historial')" id="tab-historial-admin">
+              <i class="bi bi-bar-chart me-1"></i>Historial Completo
+              <span class="tab-badge muted" *ngIf="historialPrestamos.length > 0">
+                {{ historialPrestamos.length }}
+              </span>
+            </button>
+          </div>
+
+          <!-- Tab: Pendientes (Admin) -->
+          <div class="tab-content-panel" *ngIf="activeTab === 'pendientes'">
+            <div class="panel-section-header">
+              <h4>Solicitudes de Préstamos</h4>
+              <p>Solicitudes que requieren tu aprobación</p>
+            </div>
+
+            <div class="tabla-wrapper" *ngIf="prestamosPendientes.length > 0">
+              <table class="bn-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Alumno</th>
+                    <th>Libro</th>
+                    <th>Autor</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of prestamosPendientes" class="tabla-row">
+                    <td><span class="tabla-id">#{{ p.id }}</span></td>
+                    <td>
+                      <div class="tabla-usuario">
+                        <div class="user-avatar-sm">{{ (p.alumno_nombre || 'A')[0] }}</div>
+                        <span>{{ p.alumno_nombre || 'Alumno ' + p.alumno }}</span>
+                      </div>
+                    </td>
+                    <td><strong>{{ p.libro_titulo }}</strong></td>
+                    <td>{{ p.libro_autor }}</td>
+                    <td>{{ p.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <button class="btn-action aprobar"
+                                (click)="revisarPrestamo(p, 'aprobar')"
+                                [id]="'btn-aprobar-' + p.id">
+                          <i class="bi bi-check-lg"></i> Aprobar
+                        </button>
+                        <button class="btn-action rechazar"
+                                (click)="revisarPrestamo(p, 'rechazar')"
+                                [id]="'btn-rechazar-' + p.id">
+                          <i class="bi bi-x-lg"></i> Rechazar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel-empty" *ngIf="prestamosPendientes.length === 0">
+              <i class="bi bi-inbox"></i>
+              <h5>Sin solicitudes pendientes</h5>
+              <p>Todas las solicitudes han sido procesadas.</p>
+            </div>
+          </div>
+
+          <!-- Tab: Historial completo (Admin) -->
+          <div class="tab-content-panel" *ngIf="activeTab === 'historial'">
+            <div class="panel-section-header">
+              <h4>Historial de Préstamos</h4>
+              <p>Todos los préstamos registrados en el sistema</p>
+            </div>
+
+            <div class="tabla-wrapper" *ngIf="historialPrestamos.length > 0">
+              <table class="bn-table">
+                <thead>
+                  <tr>
+                    <th>Alumno</th>
+                    <th>Libro</th>
+                    <th>Autor</th>
+                    <th>Solicitud</th>
+                    <th>Devolución</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of historialPrestamos" class="tabla-row">
+                    <td>
+                      <div class="tabla-usuario">
+                        <div class="user-avatar-sm">{{ (p.alumno_nombre || 'A')[0] }}</div>
+                        <span>{{ p.alumno_nombre || 'Alumno ' + p.alumno }}</span>
+                      </div>
+                    </td>
+                    <td><strong>{{ p.libro_titulo }}</strong></td>
+                    <td>{{ p.libro_autor }}</td>
+                    <td>{{ p.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                      <span *ngIf="p.fecha_devolucion">{{ p.fecha_devolucion | date:'dd/MM/yyyy' }}</span>
+                      <span *ngIf="!p.fecha_devolucion" class="text-muted">—</span>
+                    </td>
+                    <td>
+                      <span class="estado-badge" [class]="obtenerClaseEstado(obtenerEstadoPrestamo(p))">
+                        {{ obtenerEstadoPrestamo(p) }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel-empty" *ngIf="historialPrestamos.length === 0">
+              <i class="bi bi-clock-history"></i>
+              <h5>Sin historial</h5>
+              <p>No se han registrado préstamos en el sistema.</p>
+            </div>
+          </div>
         </div>
 
-        <div *ngIf="historialCompleto.length === 0" class="text-center text-muted py-4">
-          <i class="bi bi-clock-history" style="font-size: 3rem;"></i>
-          <p class="mt-2">No hay historial de préstamos.</p>
+        <!-- ===== PANEL ALUMNO ===== -->
+        <div *ngIf="!esAdministrador()" class="perfil-panel">
+          <div class="panel-header">
+            <div>
+              <span class="panel-eyebrow">Mi Biblioteca</span>
+              <h2><i class="bi bi-book me-2"></i>Mis Préstamos</h2>
+            </div>
+          </div>
+
+          <!-- Tabs Alumno -->
+          <div class="bn-tabs">
+            <button class="bn-tab" [class.active]="activeTab === 'activos'"
+                    (click)="cambiarTab('activos')" id="tab-activos">
+              <i class="bi bi-book me-1"></i>Préstamos Activos
+              <span class="tab-badge success" *ngIf="prestamosActivos.length > 0">
+                {{ prestamosActivos.length }}
+              </span>
+            </button>
+            <button class="bn-tab" [class.active]="activeTab === 'historial'"
+                    (click)="cambiarTab('historial')" id="tab-historial-alumno">
+              <i class="bi bi-clock-history me-1"></i>Historial
+              <span class="tab-badge muted" *ngIf="historialCompleto.length > 0">
+                {{ historialCompleto.length }}
+              </span>
+            </button>
+          </div>
+
+          <!-- Tab: Préstamos activos (Alumno) -->
+          <div class="tab-content-panel" *ngIf="activeTab === 'activos'">
+            <div class="panel-section-header">
+              <h4>Libros en préstamo activo</h4>
+              <p>Los libros que tienes actualmente</p>
+            </div>
+
+            <div class="tabla-wrapper" *ngIf="prestamosActivos.length > 0">
+              <table class="bn-table">
+                <thead>
+                  <tr>
+                    <th>Libro</th>
+                    <th>Autor</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let prestamo of prestamosActivos" class="tabla-row">
+                    <td><strong>{{ prestamo.libro_titulo }}</strong></td>
+                    <td>{{ prestamo.libro_autor }}</td>
+                    <td>{{ prestamo.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                      <span class="estado-badge" [class]="obtenerClaseEstado(obtenerEstadoPrestamo(prestamo))">
+                        {{ obtenerEstadoPrestamo(prestamo) }}
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn-action devolver"
+                              (click)="devolverLibro(prestamo.id, prestamo.libro_titulo)"
+                              [id]="'btn-devolver-' + prestamo.id">
+                        <i class="bi bi-arrow-return-left me-1"></i>Devolver
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel-empty" *ngIf="prestamosActivos.length === 0">
+              <i class="bi bi-book"></i>
+              <h5>Sin préstamos activos</h5>
+              <p>Ve al catálogo y solicita tu próximo libro.</p>
+              <a routerLink="/catalogo" class="btn btn-bn-primary mt-3" id="link-ir-catalogo">
+                <i class="bi bi-grid me-2"></i>Explorar Catálogo
+              </a>
+            </div>
+          </div>
+
+          <!-- Tab: Historial (Alumno) -->
+          <div class="tab-content-panel" *ngIf="activeTab === 'historial'">
+            <div class="panel-section-header">
+              <h4>Historial de Lecturas</h4>
+              <p>Todos tus préstamos anteriores</p>
+            </div>
+
+            <div class="tabla-wrapper" *ngIf="historialCompleto.length > 0">
+              <table class="bn-table">
+                <thead>
+                  <tr>
+                    <th>Libro</th>
+                    <th>Autor</th>
+                    <th>Solicitud</th>
+                    <th>Devolución</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let prestamo of historialCompleto" class="tabla-row">
+                    <td><strong>{{ prestamo.libro_titulo }}</strong></td>
+                    <td>{{ prestamo.libro_autor }}</td>
+                    <td>{{ prestamo.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                      <span *ngIf="prestamo.fecha_devolucion">{{ prestamo.fecha_devolucion | date:'dd/MM/yyyy' }}</span>
+                      <span *ngIf="!prestamo.fecha_devolucion" class="text-muted">—</span>
+                    </td>
+                    <td>
+                      <span class="estado-badge" [class]="obtenerClaseEstado(obtenerEstadoPrestamo(prestamo))">
+                        {{ obtenerEstadoPrestamo(prestamo) }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel-empty" *ngIf="historialCompleto.length === 0">
+              <i class="bi bi-clock-history"></i>
+              <h5>Sin historial</h5>
+              <p>Aún no tienes préstamos registrados.</p>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
 </div>
 
-<ng-template #loading>
-  <div class="text-center mt-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p class="mt-2">Cargando información del perfil...</p>
-  </div>
-</ng-template>
-
-<!-- Footer -->
-<footer class="bg-dark text-white text-center p-4 mt-5">
+<!-- ====== FOOTER ====== -->
+<footer class="bn-footer">
   <div class="container">
-    <p class="mb-1">Contacto: +52 123 456 7890</p>
-    <p class="mb-2">Email: contacto@biblioteca.com</p>
-    <div>
-      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+    <div class="row g-4">
+      <div class="col-12 col-md-4 mb-3">
+        <div class="footer-brand"><i class="bi bi-book-half me-2"></i>BiblioNexus</div>
+        <p class="footer-tagline">Tu biblioteca digital de confianza.<br>Conocimiento sin fronteras.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6>Navegación</h6>
+        <a routerLink="/">Inicio</a>
+        <a routerLink="/catalogo">Catálogo</a>
+        <a routerLink="/contacto">Contacto</a>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6>Acceso</h6>
+        <a routerLink="/login">Iniciar Sesión</a>
+        <a routerLink="/registro">Registrarse</a>
+        <a routerLink="/cuenta">Mi Cuenta</a>
+      </div>
+      <div class="col-12 col-md-4">
+        <h6>Contacto</h6>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.875rem; line-height:1.7">
+          <i class="bi bi-telephone me-2" style="color:var(--secondary-light)"></i>+52 123 456 7890<br>
+          <i class="bi bi-envelope me-2" style="color:var(--secondary-light)"></i>contacto@biblionexus.mx<br>
+          <i class="bi bi-geo-alt me-2" style="color:var(--secondary-light)"></i>BUAP, Puebla, México
+        </p>
+      </div>
     </div>
+    <hr class="footer-divider">
+    <p class="footer-bottom">© 2026 BiblioNexus — Todos los derechos reservados.</p>
   </div>
 </footer>

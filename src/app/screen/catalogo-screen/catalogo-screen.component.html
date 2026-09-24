@@ -1,117 +1,228 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-  <a class="navbar-brand fw-bold" routerLink="/">BibliApp</a>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg bn-navbar">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+      BiblioNexus
+    </a>
 
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <button class="navbar-toggler border-0" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navCatalogo">
+      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarContent">
+    <div class="collapse navbar-collapse" id="navCatalogo">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/"><i class="bi bi-house me-1"></i>Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/catalogo"><i class="bi bi-grid me-1"></i>Catálogo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a>
+        </li>
+      </ul>
 
-    <!-- Menú de navegación -->
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/">Inicio</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" routerLink="/catalogo">Catálogo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/contacto">Contacto</a>
-      </li>
-    </ul>
+      <!-- Búsqueda -->
+      <form class="d-flex align-items-center me-3 bn-search" (ngSubmit)="onSearch()">
+        <i class="bi bi-search search-icon"></i>
+        <input type="search" placeholder="Buscar título, autor..."
+               [(ngModel)]="searchTerm" name="search">
+      </form>
 
-    <!-- Barra de búsqueda -->
-    <form class="d-flex me-3" (ngSubmit)="onSearch()">
-      <input class="form-control me-2" type="search" placeholder="Buscar libros..." [(ngModel)]="searchTerm" name="search">
-      <button class="btn btn-outline-primary" type="submit">Buscar</button>
-    </form>
-
-    <!-- Botones de cuenta y admin -->
-    <div>
-      <a class="btn btn-primary me-2" routerLink="/cuenta" *ngIf="isLoggedIn">Cuenta</a>
-      <a class="btn btn-success me-2" routerLink="/registrar-libro" *ngIf="isAdmin">Registrar Libro</a>
+      <!-- Botones -->
+      <div class="d-flex gap-2">
+        <a class="btn btn-bn-primary btn-sm" routerLink="/cuenta" *ngIf="isLoggedIn" id="nav-btn-cuenta">
+          <i class="bi bi-person-circle me-1"></i>Mi Cuenta
+        </a>
+        <a class="btn btn-bn-gold btn-sm" routerLink="/registrar-libro" *ngIf="isAdmin" id="nav-btn-registrar">
+          <i class="bi bi-plus-circle me-1"></i>Registrar Libro
+        </a>
+      </div>
     </div>
-
   </div>
 </nav>
 
-<!-- Contenedor principal -->
-<div class="container-fluid mt-4">
-  <div class="row">
-    <!-- Filtro lateral -->
-    <aside class="col-12 col-md-3 col-lg-2 bg-light border-end p-3 vh-100 overflow-auto">
-      <h5 class="fw-bold mb-3">Filtro</h5>
-      
-      <div class="mb-3">
-        <label class="form-label">Género</label>
-        <select class="form-select" [(ngModel)]="selectedGenero" (change)="aplicarFiltro()">
-          <option value="Todos">Todos</option>
-          <option *ngFor="let g of generos">{{ g }}</option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Autor</label>
-        <input type="text" class="form-control" [(ngModel)]="autorBusqueda" placeholder="Nombre del autor" (input)="aplicarFiltro()">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Disponibilidad</label>
-        <select class="form-select" [(ngModel)]="disponibilidad" (change)="aplicarFiltro()">
-          <option>Todos</option>
-          <option>Disponible</option>
-          <option>No disponible</option>
-        </select>
-      </div>
-
-      <button class="btn btn-primary w-100 mt-2" (click)="aplicarFiltro()">Aplicar filtros</button>
-    </aside>
-
-    <!-- Contenido principal -->
-    <main class="col-12 col-md-9 col-lg-10 p-4">
-      <h2 class="text-center mb-4 text-primary fw-bold">Catálogo de Libros</h2>
-
-      <div class="row g-4">
-        <div class="col-12 col-md-6 col-lg-4" *ngFor="let libro of librosFiltrados">
-          <div class="card h-100 shadow-sm">
-            <img [src]="getPortada(libro)" class="card-img-top" style="max-height: 300px; object-fit: cover;">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{{ libro.titulo }}</h5>
-              <p class="card-text">Autor: {{ libro.autor }}</p>
-              <p class="card-text">Género: {{ libro.genero }}</p>
-
-              <button class="btn btn-outline-primary mt-auto" (click)="verDetalles(libro)">
-                Ver Detalles
-              </button>
-
-              <button 
-                class="btn btn-success mt-2" 
-                [disabled]="!libro.disponible || libro.id === undefined"
-                (click)="libro.id !== undefined && solicitarPrestamo(libro.id)">
-                Solicitar Préstamo
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <p *ngIf="librosFiltrados.length === 0" class="text-center mt-5 text-secondary">
-        No se encontraron libros.
-      </p>
-    </main>
+<!-- ====== HERO PEQUEÑO ====== -->
+<div class="catalogo-hero">
+  <div class="catalogo-hero-overlay"></div>
+  <div class="catalogo-hero-content anim-fade-up">
+    <span class="hero-eyebrow-cat">Nuestra Colección</span>
+    <h1>Catálogo de Libros</h1>
+    <p>Explora, filtra y encuentra tu próxima lectura favorita.</p>
   </div>
 </div>
 
-<!-- Footer -->
-<footer class="bg-dark text-white text-center p-4 mt-5">
-  <div class="container">
-    <p class="mb-1">Contacto: +52 123 456 7890</p>
-    <p class="mb-2">Email: contacto@biblioteca.com</p>
-    <div>
-      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+<!-- ====== LAYOUT PRINCIPAL ====== -->
+<div class="catalogo-layout">
+
+  <!-- ---- SIDEBAR FILTROS ---- -->
+  <aside class="catalogo-sidebar anim-slide-l">
+
+    <div class="sidebar-header">
+      <h5><i class="bi bi-funnel-fill me-2"></i>Filtros</h5>
+      <button class="btn-reset-filters" (click)="selectedGenero='Todos'; autorBusqueda=''; disponibilidad='Todos'; aplicarFiltro()" id="btn-limpiar-filtros">
+        <i class="bi bi-x-circle me-1"></i>Limpiar
+      </button>
     </div>
+
+    <!-- Filtro por Género -->
+    <div class="filter-group">
+      <label class="filter-label">
+        <i class="bi bi-bookmark me-2"></i>Género
+      </label>
+      <select class="bn-input-plain" [(ngModel)]="selectedGenero" (change)="aplicarFiltro()" id="select-genero">
+        <option value="Todos">Todos los géneros</option>
+        <option *ngFor="let g of generos">{{ g }}</option>
+      </select>
+    </div>
+
+    <!-- Filtro por Autor -->
+    <div class="filter-group">
+      <label class="filter-label">
+        <i class="bi bi-person me-2"></i>Autor
+      </label>
+      <div style="position:relative">
+        <input type="text" class="bn-input-plain ps-4"
+               style="padding-left:2.4rem"
+               [(ngModel)]="autorBusqueda"
+               placeholder="Nombre del autor..."
+               (input)="aplicarFiltro()"
+               id="input-autor">
+        <i class="bi bi-search" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.85rem;pointer-events:none"></i>
+      </div>
+    </div>
+
+    <!-- Filtro por Disponibilidad -->
+    <div class="filter-group">
+      <label class="filter-label">
+        <i class="bi bi-check-circle me-2"></i>Disponibilidad
+      </label>
+      <div class="disponibilidad-options">
+        <label class="disp-option" [class.selected]="disponibilidad === 'Todos'">
+          <input type="radio" name="disp" value="Todos" [(ngModel)]="disponibilidad" (change)="aplicarFiltro()">
+          <span>Todos</span>
+        </label>
+        <label class="disp-option" [class.selected]="disponibilidad === 'Disponible'">
+          <input type="radio" name="disp" value="Disponible" [(ngModel)]="disponibilidad" (change)="aplicarFiltro()">
+          <i class="bi bi-circle-fill" style="color:var(--accent);font-size:0.5rem"></i>
+          <span>Disponible</span>
+        </label>
+        <label class="disp-option" [class.selected]="disponibilidad === 'No disponible'">
+          <input type="radio" name="disp" value="No disponible" [(ngModel)]="disponibilidad" (change)="aplicarFiltro()">
+          <i class="bi bi-circle-fill" style="color:var(--danger);font-size:0.5rem"></i>
+          <span>No disponible</span>
+        </label>
+      </div>
+    </div>
+
+    <button class="btn btn-bn-primary w-100 mt-3" (click)="aplicarFiltro()" id="btn-aplicar-filtros">
+      <i class="bi bi-funnel me-2"></i>Aplicar Filtros
+    </button>
+
+    <!-- Contador de resultados -->
+    <div class="filter-results-count">
+      <i class="bi bi-grid me-1"></i>
+      <span>{{ librosFiltrados.length }} libro{{ librosFiltrados.length !== 1 ? 's' : '' }} encontrado{{ librosFiltrados.length !== 1 ? 's' : '' }}</span>
+    </div>
+  </aside>
+
+  <!-- ---- GRID DE LIBROS ---- -->
+  <main class="catalogo-main">
+
+    <!-- Grid de libros -->
+    <div class="libros-grid" *ngIf="librosFiltrados.length > 0">
+      <div class="libro-card anim-fade-up" *ngFor="let libro of librosFiltrados; let i = index"
+           [style.animation-delay]="(i % 6 * 0.07) + 's'">
+
+        <!-- Portada -->
+        <div class="libro-portada">
+          <img [src]="getPortada(libro)" [alt]="libro.titulo"
+               (error)="$any($event.target).src='assets/images/libro.jpg'">
+          <!-- Badge disponibilidad -->
+          <span class="disponibilidad-badge" [class.disponible]="libro.disponible" [class.no-disponible]="!libro.disponible">
+            <i class="bi" [class.bi-check-circle-fill]="libro.disponible" [class.bi-x-circle-fill]="!libro.disponible"></i>
+            {{ libro.disponible ? 'Disponible' : 'No disponible' }}
+          </span>
+        </div>
+
+        <!-- Info -->
+        <div class="libro-info">
+          <div class="libro-genero">{{ libro.genero }}</div>
+          <h3 class="libro-titulo">{{ libro.titulo }}</h3>
+          <p class="libro-autor"><i class="bi bi-person me-1"></i>{{ libro.autor }}</p>
+
+          <!-- Acciones -->
+          <div class="libro-acciones">
+            <button class="btn btn-bn-secondary btn-sm w-100 mb-2"
+                    (click)="verDetalles(libro)"
+                    [id]="'btn-detalles-' + libro.id">
+              <i class="bi bi-eye me-1"></i>Ver Detalles
+            </button>
+            <button class="btn btn-prestamo btn-sm w-100"
+                    [class.disponible-btn]="libro.disponible"
+                    [class.no-disponible-btn]="!libro.disponible"
+                    [disabled]="!libro.disponible || libro.id === undefined"
+                    (click)="libro.id !== undefined && solicitarPrestamo(libro.id)"
+                    [id]="'btn-prestamo-' + libro.id">
+              <i class="bi me-1" [class.bi-arrow-left-right]="libro.disponible" [class.bi-lock-fill]="!libro.disponible"></i>
+              {{ libro.disponible ? 'Solicitar Préstamo' : 'No Disponible' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="catalogo-empty anim-fade-up" *ngIf="librosFiltrados.length === 0">
+      <div class="empty-icon"><i class="bi bi-search"></i></div>
+      <h3>Sin resultados</h3>
+      <p>No encontramos libros con los filtros seleccionados.<br>Intenta con otros criterios de búsqueda.</p>
+      <button class="btn btn-bn-primary mt-3"
+              (click)="selectedGenero='Todos'; autorBusqueda=''; disponibilidad='Todos'; aplicarFiltro()"
+              id="btn-limpiar-empty">
+        <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar Filtros
+      </button>
+    </div>
+  </main>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer class="bn-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-12 col-md-4 mb-3">
+        <div class="footer-brand"><i class="bi bi-book-half me-2"></i>BiblioNexus</div>
+        <p class="footer-tagline">Tu biblioteca digital de confianza.<br>Conocimiento sin fronteras.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6>Navegación</h6>
+        <a routerLink="/">Inicio</a>
+        <a routerLink="/catalogo">Catálogo</a>
+        <a routerLink="/contacto">Contacto</a>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6>Acceso</h6>
+        <a routerLink="/login">Iniciar Sesión</a>
+        <a routerLink="/registro">Registrarse</a>
+        <a routerLink="/cuenta">Mi Cuenta</a>
+      </div>
+      <div class="col-12 col-md-4">
+        <h6>Contacto</h6>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.875rem; line-height:1.7">
+          <i class="bi bi-telephone me-2" style="color:var(--secondary-light)"></i>+52 123 456 7890<br>
+          <i class="bi bi-envelope me-2" style="color:var(--secondary-light)"></i>contacto@biblionexus.mx<br>
+          <i class="bi bi-geo-alt me-2" style="color:var(--secondary-light)"></i>BUAP, Puebla, México
+        </p>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <p class="footer-bottom">© 2026 BiblioNexus — Todos los derechos reservados.</p>
   </div>
 </footer>

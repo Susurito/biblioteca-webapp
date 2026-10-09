@@ -190,6 +190,10 @@
   &:hover { color: var(--primary); }
 }
 
+.bn-input-wrapper .password-toggle {
+  top: 50%;
+}
+
 /* ---- Términos y condiciones ---- */
 .terminos-check {
   margin-bottom: 1.25rem;

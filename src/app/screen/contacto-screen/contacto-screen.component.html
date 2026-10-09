@@ -1,43 +1,4 @@
-<!-- ====== NAVBAR ====== -->
-<nav class="navbar navbar-expand-lg bn-navbar">
-  <div class="container-fluid px-3">
-    <a class="navbar-brand" routerLink="/">
-      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
-      BiblioNexus
-    </a>
-    <button class="navbar-toggler border-0" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navContacto">
-      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navContacto">
-      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="bi bi-house me-1"></i>Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/catalogo"><i class="bi bi-grid me-1"></i>Catálogo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" routerLink="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a>
-        </li>
-      </ul>
-      <div class="d-flex gap-2">
-        <ng-container *ngIf="!isLoggedIn">
-          <a class="btn btn-bn-secondary btn-sm" routerLink="/login" id="nav-btn-login">Iniciar Sesión</a>
-          <a class="btn btn-bn-primary btn-sm" routerLink="/registro" id="nav-btn-registro">Registrarse</a>
-        </ng-container>
-        <ng-container *ngIf="isLoggedIn">
-          <a class="btn btn-bn-primary btn-sm" routerLink="/cuenta" id="nav-btn-cuenta">
-            <i class="bi bi-person-circle me-1"></i>Mi Cuenta
-          </a>
-          <button class="btn btn-bn-danger btn-sm" (click)="logout()" id="nav-btn-cerrar-sesion">
-            <i class="bi bi-box-arrow-right"></i>
-          </button>
-        </ng-container>
-      </div>
-    </div>
-  </div>
-</nav>
+<app-navbar></app-navbar>
 
 <!-- ====== HERO ====== -->
 <div class="contacto-hero">
@@ -108,9 +69,8 @@
                 <div class="bn-input-group">
                   <label for="contact-name">Nombre Completo</label>
                   <i class="bi bi-person input-icon"></i>
-                  <input type="text" id="contact-name" name="name"
-                         [(ngModel)]="name" required
-                         placeholder="Tu nombre completo">
+                  <input type="text" id="contact-name" name="name" [(ngModel)]="name" required
+                    placeholder="Tu nombre completo">
                 </div>
               </div>
 
@@ -118,28 +78,23 @@
                 <div class="bn-input-group">
                   <label for="contact-email">Correo Electrónico</label>
                   <i class="bi bi-envelope input-icon"></i>
-                  <input type="email" id="contact-email" name="email"
-                         [(ngModel)]="email" required
-                         placeholder="tu@correo.com">
+                  <input type="email" id="contact-email" name="email" [(ngModel)]="email" required
+                    placeholder="tu@correo.com">
                 </div>
               </div>
 
               <div class="col-12">
                 <div class="bn-input-group no-icon">
                   <label for="contact-message">Mensaje</label>
-                  <textarea id="contact-message" name="message"
-                            [(ngModel)]="message" required
-                            rows="6"
-                            placeholder="Escribe tu consulta, sugerencia o comentario aquí..."
-                            style="padding-left:1rem; resize:vertical"></textarea>
+                  <textarea id="contact-message" name="message" [(ngModel)]="message" required rows="6"
+                    placeholder="Escribe tu consulta, sugerencia o comentario aquí..."
+                    style="padding-left:1rem; resize:vertical"></textarea>
                 </div>
               </div>
             </div>
 
-            <button type="submit"
-                    class="btn btn-bn-primary w-100 py-3 mt-2"
-                    [disabled]="!contactForm.form.valid"
-                    id="btn-enviar-mensaje">
+            <button type="submit" class="btn btn-bn-primary w-100 py-3 mt-2" [disabled]="!contactForm.form.valid"
+              id="btn-enviar-mensaje">
               <i class="bi bi-send me-2"></i>
               Enviar Mensaje
             </button>
@@ -156,7 +111,8 @@
       <div class="col-12 col-lg-5 anim-slide-r">
         <div class="contacto-side-info">
           <h3>¿Por qué contactarnos?</h3>
-          <p>En BiblioNexus queremos brindarte la mejor experiencia de biblioteca digital. Nuestro equipo está listo para ayudarte con:</p>
+          <p>En BiblioNexus queremos brindarte la mejor experiencia de biblioteca digital. Nuestro equipo está listo
+            para ayudarte con:</p>
 
           <div class="contacto-reasons">
             <div class="reason-item">

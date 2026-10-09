@@ -8,8 +8,6 @@ import { Router } from '@angular/router';
 })
 export class ContactoScreenComponent implements OnInit {
 
-  isLoggedIn: boolean = false;
-
   name: string = '';
   email: string = '';
   message: string = '';
@@ -17,15 +15,9 @@ export class ContactoScreenComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Validar si hay sesión
-    this.isLoggedIn = !!localStorage.getItem('token');
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    this.isLoggedIn = false;
-    this.router.navigate(['/']);
-  }
+
 
   sendMessage() {
     console.log('Mensaje enviado:', { name: this.name, email: this.email, message: this.message });

@@ -30,7 +30,7 @@ export class AdminScreenComponent implements OnInit {
   loading: boolean = false;
   activeTab: string = 'pendientes';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.checkLogin();
@@ -45,10 +45,10 @@ export class AdminScreenComponent implements OnInit {
 
     if (this.token) {
       this.isLoggedIn = true;
-      this.isAdmin = rol === 'administrador' || 
-                     rol === 'admin' || 
-                     rol === 'administradores' ||
-                     rol === 'administrator';
+      this.isAdmin = rol === 'administrador' ||
+        rol === 'admin' ||
+        rol === 'administradores' ||
+        rol === 'administrator';
     }
   }
 
@@ -80,7 +80,7 @@ export class AdminScreenComponent implements OnInit {
         next: (res) => {
           const prestamosPagina = res.results || [];
           const todosLosPrestamos = [...prestamosAcumulados, ...prestamosPagina];
-          
+
           if (res.next) {
             this.cargarPrestamosPagina(res.next, headers, todosLosPrestamos)
               .then(resolve)
@@ -99,30 +99,30 @@ export class AdminScreenComponent implements OnInit {
   procesarPrestamos(todosLosPrestamos: Prestamo[]) {
     this.prestamosPendientes = todosLosPrestamos.filter((p: Prestamo) => {
       const estado = p.estado?.toLowerCase() || '';
-      const esPendiente = estado === 'pendiente' || 
-                         estado === 'solicitado' ||
-                         estado === 'pendiente de revisión' ||
-                         (!p.devuelto && 
-                          !estado.includes('aceptado') && 
-                          !estado.includes('aprobado') && 
-                          !estado.includes('rechazado') &&
-                          !estado.includes('cancelado'));
+      const esPendiente = estado === 'pendiente' ||
+        estado === 'solicitado' ||
+        estado === 'pendiente de revisión' ||
+        (!p.devuelto &&
+          !estado.includes('aceptado') &&
+          !estado.includes('aprobado') &&
+          !estado.includes('rechazado') &&
+          !estado.includes('cancelado'));
       return esPendiente;
     });
 
-    this.prestamosPendientes.sort((a: Prestamo, b: Prestamo) => 
+    this.prestamosPendientes.sort((a: Prestamo, b: Prestamo) =>
       new Date(b.fecha_solicitud).getTime() - new Date(a.fecha_solicitud).getTime()
     );
-    
+
     this.historialPrestamos = todosLosPrestamos.filter((p: Prestamo) => {
       const estado = p.estado?.toLowerCase() || '';
-      return !(estado === 'pendiente' || 
-               estado === 'solicitado' || 
-               estado === 'pendiente de revisión');
-    }).sort((a: Prestamo, b: Prestamo) => 
+      return !(estado === 'pendiente' ||
+        estado === 'solicitado' ||
+        estado === 'pendiente de revisión');
+    }).sort((a: Prestamo, b: Prestamo) =>
       new Date(b.fecha_solicitud).getTime() - new Date(a.fecha_solicitud).getTime()
     );
-    
+
     if (this.prestamosPendientes.length > 0) {
       this.activeTab = 'pendientes';
     }
@@ -134,7 +134,7 @@ export class AdminScreenComponent implements OnInit {
 
   obtenerEstadoPrestamo(prestamo: Prestamo): string {
     const estado = prestamo.estado?.toLowerCase() || '';
-    
+
     if (estado.includes('rechazado')) {
       return 'Rechazado';
     } else if (prestamo.devuelto) {
@@ -146,7 +146,7 @@ export class AdminScreenComponent implements OnInit {
     } else if (estado.includes('devuelto')) {
       return 'Devuelto';
     }
-    
+
     return prestamo.estado || 'Desconocido';
   }
 
@@ -168,7 +168,7 @@ export class AdminScreenComponent implements OnInit {
     }
 
     const accionTexto = accion === 'aprobar' ? 'aprobar' : 'rechazar';
-    
+
     if (!confirm(`¿Estás seguro de que quieres ${accionTexto} el préstamo de "${prestamo.libro_titulo}" solicitado por ${prestamo.alumno_nombre}?`)) {
       return;
     }

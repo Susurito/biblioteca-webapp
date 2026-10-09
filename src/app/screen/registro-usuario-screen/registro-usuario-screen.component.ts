@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-usuario-screen',
@@ -13,8 +14,9 @@ export class RegistroUsuarioScreenComponent {
   tiposUsuario: string[] = ['Alumno','Administrador'];
   hidePassword = true;
   hideConfirm = true;
+  mostrarModalExito = false;
 
- constructor(private fb: FormBuilder, private http: HttpClient) {
+ constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
   this.registerForm = this.fb.group({
     tipo: ['', Validators.required],
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
@@ -41,7 +43,7 @@ export class RegistroUsuarioScreenComponent {
       this.http.post(url, this.registerForm.value).subscribe({
         next: (res) => {
           console.log('Registro exitoso:', res);
-          alert('Usuario registrado correctamente');
+          this.mostrarModalExito = true;
           this.registerForm.reset();
         },
         error: (err) => {
@@ -56,6 +58,11 @@ export class RegistroUsuarioScreenComponent {
 
   get f() {
     return this.registerForm.controls;
+  }
+
+  irAlLogin() {
+    this.mostrarModalExito = false;
+    this.router.navigate(['/login']);
   }
 
   // Permitir solo letras

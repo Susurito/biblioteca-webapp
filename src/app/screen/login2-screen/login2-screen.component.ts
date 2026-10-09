@@ -15,7 +15,7 @@ export class Login2ScreenComponent {
 
   private apiUrl = 'http://127.0.0.1:8000';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) { }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -30,15 +30,15 @@ export class Login2ScreenComponent {
 
         // CORREGIDO: Guardar token Y rol en localStorage
         localStorage.setItem('token', usuario.token);
-        
+
         // Normalizar rol y guardarlo
         let rol = usuario.rol?.toLowerCase().trim();
         if (rol === 'alumnos') rol = 'alumno';
         if (rol === 'administradores') rol = 'administrador';
-        
+
         //  ESTA LÍNEA FALTABA - GUARDAR EL ROL
         localStorage.setItem('rol', rol);
-        
+
         console.log(' Token guardado:', usuario.token);
         console.log(' Rol guardado:', rol);
 

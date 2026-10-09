@@ -490,6 +490,16 @@ button {
     }
   }
 
+  .bn-input-wrapper {
+    position: relative;
+    width: 100%;
+    
+    .input-icon,
+    .password-toggle {
+      top: 50%;
+    }
+  }
+
   .input-icon {
     position: absolute;
     left: 1rem;

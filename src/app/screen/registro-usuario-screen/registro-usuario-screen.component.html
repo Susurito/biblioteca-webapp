@@ -1,15 +1,7 @@
 <!-- ====== REGISTRO DE USUARIO — BiblioNexus ====== -->
 
 <!-- Navbar mínima -->
-<nav class="navbar navbar-expand-lg bn-navbar">
-  <div class="container-fluid px-3">
-    <a class="navbar-brand" routerLink="/">
-      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
-      BiblioNexus
-    </a>
-
-  </div>
-</nav>
+<app-navbar></app-navbar>
 
 <!-- Contenido principal -->
 <div class="registro-page">
@@ -82,9 +74,11 @@
           <div class="col-12 col-md-6">
             <div class="bn-input-group">
               <label for="nombre-input">Nombre(s)</label>
-              <i class="bi bi-person input-icon"></i>
-              <input type="text" id="nombre-input" formControlName="nombre" placeholder="Tu nombre"
-                (keypress)="soloLetras($event)">
+              <div class="bn-input-wrapper">
+                <i class="bi bi-person input-icon"></i>
+                <input type="text" id="nombre-input" formControlName="nombre" placeholder="Tu nombre"
+                  (keypress)="soloLetras($event)">
+              </div>
               <div class="field-error"
                 *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
                 <i class="bi bi-exclamation-circle"></i>
@@ -96,9 +90,11 @@
           <div class="col-12 col-md-6">
             <div class="bn-input-group">
               <label for="ap-input">Apellido Paterno</label>
-              <i class="bi bi-person input-icon"></i>
-              <input type="text" id="ap-input" formControlName="apellido_paterno" placeholder="Apellido paterno"
-                (keypress)="soloLetras($event)">
+              <div class="bn-input-wrapper">
+                <i class="bi bi-person input-icon"></i>
+                <input type="text" id="ap-input" formControlName="apellido_paterno" placeholder="Apellido paterno"
+                  (keypress)="soloLetras($event)">
+              </div>
               <div class="field-error"
                 *ngIf="registerForm.get('apellido_paterno')?.invalid && registerForm.get('apellido_paterno')?.touched">
                 <i class="bi bi-exclamation-circle"></i>
@@ -114,9 +110,11 @@
           <div class="col-12 col-md-6">
             <div class="bn-input-group">
               <label for="am-input">Apellido Materno</label>
-              <i class="bi bi-person input-icon"></i>
-              <input type="text" id="am-input" formControlName="apellido_materno" placeholder="Apellido materno"
-                (keypress)="soloLetras($event)">
+              <div class="bn-input-wrapper">
+                <i class="bi bi-person input-icon"></i>
+                <input type="text" id="am-input" formControlName="apellido_materno" placeholder="Apellido materno"
+                  (keypress)="soloLetras($event)">
+              </div>
               <div class="field-error"
                 *ngIf="registerForm.get('apellido_materno')?.invalid && registerForm.get('apellido_materno')?.touched">
                 <i class="bi bi-exclamation-circle"></i>
@@ -128,9 +126,11 @@
           <div class="col-12 col-md-6">
             <div class="bn-input-group">
               <label for="matricula-input">Matrícula</label>
-              <i class="bi bi-hash input-icon"></i>
-              <input type="text" id="matricula-input" formControlName="matricula" placeholder="000000000" maxlength="9"
-                (keypress)="soloNumeros($event)">
+              <div class="bn-input-wrapper">
+                <i class="bi bi-hash input-icon"></i>
+                <input type="text" id="matricula-input" formControlName="matricula" placeholder="000000000" maxlength="9"
+                  (keypress)="soloNumeros($event)">
+              </div>
               <div class="field-error"
                 *ngIf="registerForm.get('matricula')?.invalid && registerForm.get('matricula')?.touched">
                 <i class="bi bi-exclamation-circle"></i>
@@ -144,8 +144,10 @@
         <!-- Email -->
         <div class="bn-input-group">
           <label for="email-reg-input">Correo Electrónico</label>
-          <i class="bi bi-envelope input-icon"></i>
-          <input type="email" id="email-reg-input" formControlName="email" placeholder="tu@correo.com">
+          <div class="bn-input-wrapper">
+            <i class="bi bi-envelope input-icon"></i>
+            <input type="email" id="email-reg-input" formControlName="email" placeholder="tu@correo.com">
+          </div>
           <div class="field-error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
             <i class="bi bi-exclamation-circle"></i>
             <span *ngIf="registerForm.get('email')?.hasError('required')">Correo obligatorio</span>
@@ -158,12 +160,14 @@
           <div class="col-12 col-md-6">
             <div class="bn-input-group">
               <label for="pwd-input">Contraseña</label>
-              <i class="bi bi-lock input-icon"></i>
-              <input [type]="hidePassword ? 'password' : 'text'" id="pwd-input" formControlName="password"
-                placeholder="Mín. 6 caracteres" class="pe-5">
-              <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword" id="btn-toggle-pwd">
-                <i [class]="hidePassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
-              </button>
+              <div class="bn-input-wrapper">
+                <i class="bi bi-lock input-icon"></i>
+                <input [type]="hidePassword ? 'password' : 'text'" id="pwd-input" formControlName="password"
+                  placeholder="Mín. 6 caracteres" class="pe-5">
+                <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword" id="btn-toggle-pwd">
+                  <i [class]="hidePassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+                </button>
+              </div>
               <div class="field-error"
                 *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
                 <i class="bi bi-exclamation-circle"></i>
@@ -175,13 +179,15 @@
           <div class="col-12 col-md-6">
             <div class="bn-input-group">
               <label for="confirm-pwd-input">Confirmar Contraseña</label>
-              <i class="bi bi-lock-fill input-icon"></i>
-              <input [type]="hideConfirm ? 'password' : 'text'" id="confirm-pwd-input" formControlName="confirmPassword"
-                placeholder="Repite tu contraseña" class="pe-5">
-              <button type="button" class="password-toggle" (click)="hideConfirm = !hideConfirm"
-                id="btn-toggle-confirm">
-                <i [class]="hideConfirm ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
-              </button>
+              <div class="bn-input-wrapper">
+                <i class="bi bi-lock-fill input-icon"></i>
+                <input [type]="hideConfirm ? 'password' : 'text'" id="confirm-pwd-input" formControlName="confirmPassword"
+                  placeholder="Repite tu contraseña" class="pe-5">
+                <button type="button" class="password-toggle" (click)="hideConfirm = !hideConfirm"
+                  id="btn-toggle-confirm">
+                  <i [class]="hideConfirm ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+                </button>
+              </div>
               <div class="field-error"
                 *ngIf="registerForm.hasError('notMatching') && registerForm.get('confirmPassword')?.touched">
                 <i class="bi bi-exclamation-circle"></i> Las contraseñas no coinciden
@@ -228,3 +234,26 @@
 <footer class="registro-footer">
   <p>© 2026 BiblioNexus — Todos los derechos reservados.</p>
 </footer>
+
+<!-- Modal de Registro Exitoso -->
+<div class="modal-backdrop fade show" *ngIf="mostrarModalExito"></div>
+<div class="modal fade show d-block" tabindex="-1" *ngIf="mostrarModalExito" aria-labelledby="registroModalLabel" aria-hidden="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bn-card-glass border-0">
+      <div class="modal-header border-0 text-center flex-column pb-0">
+        <div class="modal-icon text-accent-bn mb-3" style="font-size: 3rem;">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h4 class="modal-title font-display w-100" id="registroModalLabel">¡Usuario Registrado!</h4>
+      </div>
+      <div class="modal-body text-center pt-2">
+        <p class="text-muted">Tu cuenta ha sido creada exitosamente. Ya puedes acceder a la biblioteca digital sin límites.</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center pt-0 pb-4">
+        <button type="button" class="btn btn-bn-primary px-5" (click)="irAlLogin()">
+          Ir a Iniciar Sesión <i class="bi bi-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

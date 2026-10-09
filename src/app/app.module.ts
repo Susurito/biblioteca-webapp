@@ -28,6 +28,7 @@ import { RegistroScreenComponent } from './screen/registrar-screen/registrar-scr
 import { PerfilScreenComponent } from './screen/perfil-screen/perfil-screen.component';
 
 import { DatePipe } from '@angular/common';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { DatePipe } from '@angular/common';
     Login2ScreenComponent,
     ContactoScreenComponent,
     RegistroScreenComponent,
-    PerfilScreenComponent
+    PerfilScreenComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

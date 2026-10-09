@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 
 interface Perfil {
   nombre?: string;
@@ -41,12 +42,17 @@ export class PerfilScreenComponent implements OnInit {
   activeTab: string = 'pendientes';
   token: string | null = null;
   
-  // Propiedades para el navbar
-  isLoggedIn: boolean = true;
-  isAdmin: boolean = false;
-  searchTerm: string = '';
+  // Propiedades para Ajustes
+  perfilForm!: FormGroup;
+  mostrarToastExito: boolean = false;
+  isSaving: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private route: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -54,11 +60,36 @@ export class PerfilScreenComponent implements OnInit {
     if (!this.token) {
       this.errorMessage = 'No has iniciado sesión.';
       this.isLoading = false;
-      this.isLoggedIn = false;
       return;
     }
 
+    this.initForm();
     this.cargarPerfil(this.token);
+
+    // Revisar si venimos con un fragmento o query para abrir ajustes por defecto
+    this.route.fragment.subscribe(fragment => {
+      if (fragment === 'ajustes') {
+        this.activeTab = 'ajustes';
+      }
+    });
+  }
+
+  initForm() {
+    this.perfilForm = this.fb.group({
+      nombre: ['', [Validators.required]],
+      apellido_paterno: ['', [Validators.required]],
+      apellido_materno: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: [''],
+      confirmPassword: ['']
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    if (!password) return null; // Si no hay contraseña nueva, no validamos coincidencia
+    return password === confirmPassword ? null : { notMatching: true };
   }
 
   cargarPerfil(token: string) {
@@ -71,16 +102,22 @@ export class PerfilScreenComponent implements OnInit {
         next: (res) => {
           this.perfil = res;
           console.log('✅ Perfil cargado:', res);
+
+          // Rellenar formulario
+          this.perfilForm.patchValue({
+            nombre: res.nombre || '',
+            apellido_paterno: res.apellido_paterno || '',
+            apellido_materno: res.apellido_materno || '',
+            email: res.email || ''
+          });
           
-          // Actualizar isAdmin basado en el rol
-          this.isAdmin = this.esAdministrador();
           
           const esAdmin = this.esAdministrador();
           
           console.log('🔍 Rol detectado:', res.rol, 'Es admin:', esAdmin);
           
-          // Si NO es admin, cambiar a pestaña de activos
-          if (!esAdmin) {
+          // Si NO es admin, por defecto activos (a menos que la ruta diga ajustes)
+          if (!esAdmin && this.activeTab !== 'ajustes') {
             this.activeTab = 'activos';
           }
           
@@ -289,16 +326,38 @@ export class PerfilScreenComponent implements OnInit {
     return rol === 'administrador' || rol === 'admin' || rol === 'administradores' || rol === 'administrator';
   }
 
-  // Función para búsqueda
-  onSearch() {
-    console.log('Buscando:', this.searchTerm);
-    // Aquí puedes implementar la lógica de búsqueda si es necesario
-  }
+  // Guardar Ajustes
+  guardarAjustes() {
+    if (this.perfilForm.invalid) {
+      this.perfilForm.markAllAsTouched();
+      return;
+    }
 
-  // Función para cerrar sesión
-  cerrarSesion() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('rol');
-    this.router.navigate(['/login']);
+    this.isSaving = true;
+    
+    // Aquí simulamos la petición HTTP para guardar
+    // Como el endpoint real podría ser distinto, por ahora es una simulación visual
+    setTimeout(() => {
+      this.isSaving = false;
+      this.mostrarToastExito = true;
+      
+      // Actualizar el perfil visualmente
+      const val = this.perfilForm.value;
+      if (this.perfil) {
+        this.perfil.nombre = val.nombre;
+        this.perfil.apellido_paterno = val.apellido_paterno;
+        this.perfil.apellido_materno = val.apellido_materno;
+        this.perfil.email = val.email;
+      }
+      
+      // Limpiar las contraseñas
+      this.perfilForm.get('password')?.setValue('');
+      this.perfilForm.get('confirmPassword')?.setValue('');
+
+      // Ocultar toast después de 3 segundos
+      setTimeout(() => {
+        this.mostrarToastExito = false;
+      }, 3000);
+    }, 1000);
   }
 }

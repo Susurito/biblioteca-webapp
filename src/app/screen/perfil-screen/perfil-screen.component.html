@@ -1,37 +1,4 @@
-<!-- ====== NAVBAR ====== -->
-<nav class="navbar navbar-expand-lg bn-navbar">
-  <div class="container-fluid px-3">
-    <a class="navbar-brand" routerLink="/">
-      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
-      BiblioNexus
-    </a>
-    <button class="navbar-toggler border-0" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navPerfil">
-      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navPerfil">
-      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="bi bi-house me-1"></i>Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/catalogo"><i class="bi bi-grid me-1"></i>Catálogo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a>
-        </li>
-      </ul>
-      <div class="d-flex gap-2">
-        <a class="btn btn-bn-primary btn-sm active" routerLink="/cuenta" *ngIf="isLoggedIn" id="nav-btn-cuenta">
-          <i class="bi bi-person-circle me-1"></i>Mi Cuenta
-        </a>
-        <a class="btn btn-bn-gold btn-sm" routerLink="/registrar-libro" *ngIf="isAdmin" id="nav-btn-registrar-admin">
-          <i class="bi bi-plus-circle me-1"></i>Registrar Libro
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+<app-navbar></app-navbar>
 
 <!-- ====== LOADING ====== -->
 <ng-template #loading>
@@ -149,6 +116,10 @@
                 {{ historialPrestamos.length }}
               </span>
             </button>
+            <button class="bn-tab" [class.active]="activeTab === 'ajustes'"
+                    (click)="cambiarTab('ajustes')" id="tab-ajustes-admin">
+              <i class="bi bi-gear me-1"></i>Ajustes
+            </button>
           </div>
 
           <!-- Tab: Pendientes (Admin) -->
@@ -258,6 +229,12 @@
               <p>No se han registrado préstamos en el sistema.</p>
             </div>
           </div>
+
+          <!-- Tab: Ajustes (Admin) -->
+          <ng-container *ngIf="activeTab === 'ajustes'">
+            <ng-container *ngTemplateOutlet="ajustesTabContent"></ng-container>
+          </ng-container>
+
         </div>
 
         <!-- ===== PANEL ALUMNO ===== -->
@@ -284,6 +261,10 @@
               <span class="tab-badge muted" *ngIf="historialCompleto.length > 0">
                 {{ historialCompleto.length }}
               </span>
+            </button>
+            <button class="bn-tab" [class.active]="activeTab === 'ajustes'"
+                    (click)="cambiarTab('ajustes')" id="tab-ajustes-alumno">
+              <i class="bi bi-gear me-1"></i>Ajustes
             </button>
           </div>
 
@@ -380,12 +361,106 @@
               <p>Aún no tienes préstamos registrados.</p>
             </div>
           </div>
+
+          <!-- Tab: Ajustes (Alumno) -->
+          <ng-container *ngIf="activeTab === 'ajustes'">
+            <ng-container *ngTemplateOutlet="ajustesTabContent"></ng-container>
+          </ng-container>
         </div>
 
       </div>
     </div>
   </div>
 </div>
+
+<!-- ====== NG TEMPLATE AJUSTES ====== -->
+<ng-template #ajustesTabContent>
+  <div class="tab-content-panel">
+    <div class="panel-section-header mb-4 border-bottom pb-3">
+      <h4><i class="bi bi-gear-fill text-primary me-2"></i>Ajustes de Perfil</h4>
+      <p>Modifica tu información personal y credenciales</p>
+    </div>
+
+    <!-- Toast de éxito (Success Alert temporal) -->
+    <div class="alert alert-success d-flex align-items-center mb-4 anim-fade-up" role="alert" *ngIf="mostrarToastExito">
+      <i class="bi bi-check-circle-fill flex-shrink-0 me-2 fs-4"></i>
+      <div>Tus datos han sido actualizados correctamente.</div>
+    </div>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarAjustes()" *ngIf="perfilForm">
+      <div class="row g-4">
+        <!-- Columna Izquierda: Datos Personales -->
+        <div class="col-12 col-md-6">
+          <h6 class="fw-bold mb-3 text-secondary">Datos Personales</h6>
+          
+          <div class="bn-input-group mb-3">
+            <label class="form-label text-muted small fw-bold">NOMBRE</label>
+            <div class="position-relative bn-input-wrapper">
+              <i class="bi bi-person position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="nombre" placeholder="Tu nombre">
+            </div>
+          </div>
+
+          <div class="bn-input-group mb-3">
+            <label class="form-label text-muted small fw-bold">APELLIDO PATERNO</label>
+            <div class="position-relative bn-input-wrapper">
+              <i class="bi bi-person-lines-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="apellido_paterno" placeholder="Apellido Paterno">
+            </div>
+          </div>
+
+          <div class="bn-input-group mb-3">
+            <label class="form-label text-muted small fw-bold">APELLIDO MATERNO</label>
+            <div class="position-relative bn-input-wrapper">
+              <i class="bi bi-person-lines-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="apellido_materno" placeholder="Apellido Materno">
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Credenciales y Seguridad -->
+        <div class="col-12 col-md-6">
+          <h6 class="fw-bold mb-3 text-secondary">Credenciales</h6>
+
+          <div class="bn-input-group mb-3">
+            <label class="form-label text-muted small fw-bold">CORREO ELECTRÓNICO</label>
+            <div class="position-relative bn-input-wrapper">
+              <i class="bi bi-envelope position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="email" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="email" placeholder="correo@ejemplo.com">
+            </div>
+          </div>
+
+          <div class="bn-input-group mb-3">
+            <label class="form-label text-muted small fw-bold">CAMBIAR CONTRASEÑA <span class="fw-normal text-muted">(Opcional)</span></label>
+            <div class="position-relative bn-input-wrapper">
+              <i class="bi bi-lock position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="password" placeholder="Nueva contraseña">
+            </div>
+          </div>
+
+          <div class="bn-input-group mb-4">
+            <label class="form-label text-muted small fw-bold">CONFIRMAR CONTRASEÑA</label>
+            <div class="position-relative bn-input-wrapper">
+              <i class="bi bi-lock-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="confirmPassword" placeholder="Confirma nueva contraseña">
+            </div>
+            <div class="text-danger small mt-1" *ngIf="perfilForm.errors?.['notMatching'] && (perfilForm.get('confirmPassword')?.touched || perfilForm.get('password')?.touched)">
+              Las contraseñas no coinciden.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer del Formulario -->
+      <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
+        <button type="submit" class="btn btn-bn-primary px-5 py-2 fw-bold" [disabled]="perfilForm.invalid || isSaving">
+          <span *ngIf="!isSaving"><i class="bi bi-save me-2"></i>Guardar Cambios</span>
+          <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
 
 <!-- ====== FOOTER ====== -->
 <footer class="bn-footer">

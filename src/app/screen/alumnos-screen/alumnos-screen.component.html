@@ -1,88 +1,146 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-  <a class="navbar-brand fw-bold" href="#">BibliApp</a>
+<app-navbar></app-navbar>
 
-  <!-- Botón colapsable para móvil -->
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarContent">
-
-    <!-- Menú de navegación -->
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" routerLink="/">Inicio</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/catalogo">Catálogo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/contacto">Contacto</a>
-      </li>
-    </ul>
-
-    <!-- Barra de búsqueda -->
-    <form class="d-flex me-3" (ngSubmit)="onSearch()">
-      <input class="form-control me-2" type="search" 
-             placeholder="Buscar libros..." 
-             [(ngModel)]="searchTerm" name="search">
-      <button class="btn btn-outline-primary" type="submit">Buscar</button>
-    </form>
-
-    <!-- Botón de cuenta -->
-    <div>
-      <a class="btn btn-primary" routerLink="/cuenta">Cuenta</a>
+<!-- Dashboard Main Content -->
+<div class="dashboard-page bg-bn min-vh-100 py-4">
+  <div class="container-fluid px-4">
+    
+    <!-- Header del Dashboard (Hero) -->
+    <div class="dashboard-hero position-relative rounded-4 overflow-hidden mb-5 anim-fade-up shadow-sm">
+      <div class="hero-bg"></div>
+      <div class="hero-content p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between align-items-md-center position-relative z-1 text-white">
+        <div>
+          <span class="badge bg-white text-primary mb-2 fw-bold px-3 py-2 rounded-pill">
+            <i class="bi bi-calendar-event me-1"></i> {{ defaultDate | date:'fullDate' }}
+          </span>
+          <h1 class="font-display fw-bold display-5 mb-1 text-shadow">¡Hola de nuevo, {{ usuario.nombre.split(' ')[0] }}!</h1>
+          <p class="fs-5 opacity-75 mb-0 text-shadow">Listo para continuar tu viaje literario hoy?</p>
+        </div>
+        <button class="btn btn-light text-primary btn-lg mt-4 mt-md-0 shadow-sm fw-bold px-4 rounded-pill" routerLink="/catalogo">
+          <i class="bi bi-compass me-2"></i> Descubrir Libros
+        </button>
+      </div>
     </div>
-  </div>
-</nav>
 
-<!-- Contenido principal -->
-<div class="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
-  <div class="row w-100 h-100 d-flex justify-content-center align-items-center">
-    <div class="col-12 col-md-10 col-lg-8 d-flex flex-column justify-content-center align-items-center">
+    <!-- Layout Asimétrico (Grid / Bento-box) -->
+    <div class="row g-4 anim-fade-up delay-1">
+      
+      <!-- Columna Principal (Izquierda) -->
+      <div class="col-12 col-xl-8">
+        
+        <!-- Préstamos Activos -->
+        <div class="bn-card p-4 mb-4 shadow-sm border-0 bg-white">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-book-half text-primary me-2"></i>Tus Préstamos Activos</h4>
+            <a routerLink="/mis-prestamos" class="text-decoration-none fw-semibold">Ver todos &rarr;</a>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-12 col-md-6" *ngFor="let libro of librosPrestados">
+              <div class="border rounded-3 p-3 d-flex align-items-center bg-light">
+                <div class="bg-primary-subtle text-primary rounded-3 d-flex justify-content-center align-items-center me-3" style="width: 60px; height: 80px;">
+                  <i class="bi bi-book fs-3"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <h6 class="fw-bold mb-1 text-truncate" style="max-width: 180px;">{{ libro.titulo }}</h6>
+                  <p class="text-muted small mb-2"><i class="bi bi-clock me-1"></i>Vence: {{ libro.fechaDevolucion }}</p>
+                  <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-warning" [style.width]="libro.progreso + '%'"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12" *ngIf="librosPrestados.length === 0">
+              <div class="text-center text-muted p-4 bg-light rounded-3 border border-dashed">
+                <i class="bi bi-inbox fs-1 mb-2"></i>
+                <p class="m-0">No tienes libros prestados actualmente.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!-- Carrusel más grande -->
-      <div id="carouselExampleIndicators" class="carousel slide w-100 mb-4" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+        <!-- Recomendados para ti -->
+        <div class="bn-card p-4 shadow-sm border-0 bg-white">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-stars text-secondary me-2"></i>Recomendados para ti</h4>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-12 col-sm-6 col-md-4" *ngFor="let rec of recomendaciones">
+              <div class="rec-card border rounded-3 overflow-hidden h-100 bg-light d-flex flex-column shadow-sm">
+                <div class="rec-cover bg-dark text-white d-flex align-items-center justify-content-center text-center p-3" style="height: 140px; background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));">
+                  <span class="fw-bold fs-6 lh-sm text-shadow-sm">{{ rec.titulo }}</span>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <h6 class="fw-bold mb-1 text-truncate">{{ rec.titulo }}</h6>
+                  <p class="text-muted small mb-3"><i class="bi bi-person me-1"></i> {{ rec.autor }}</p>
+                  <button class="btn btn-sm btn-outline-primary w-100 mt-auto rounded-pill fw-semibold">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="carousel-inner rounded-3 shadow-lg" style="max-height: 500px;">
-          <div class="carousel-item active">
-            <img src="assets/images/Car2.png" class="d-block w-100" alt="Imagen 1">
-          </div>
-          <div class="carousel-item">
-            <img src="assets/images/Car1.jpg" class="d-block w-100" alt="Imagen 2">
-          </div>
-          <div class="carousel-item">
-            <img src="assets/images/Car3.jpg" class="d-block w-100" alt="Imagen 3">
-          </div>
-        </div>
+
       </div>
 
-      <!-- Texto debajo del carrusel -->
-      <h3 class="text-center fw-bold text-primary">
-        Bienvenido a nuestra Biblioteca Digital 
-      </h3>
-      <p class="text-center mt-2 text-secondary">
-        Explora, busca y disfruta de miles de libros en línea.  
-        Inicia sesión o regístrate para comenzar tu viaje de lectura.
-      </p>
+      <!-- Columna Secundaria (Derecha) -->
+      <div class="col-12 col-xl-4 d-flex flex-column gap-4">
+        
+        <!-- Tarjeta de Perfil Rápido -->
+        <div class="bn-card p-4 shadow-sm border-0 bg-white text-center">
+          <div class="avatar-large mx-auto mb-3 position-relative">
+            <img [src]="usuario.fotoPerfil" class="rounded-circle object-fit-cover border border-4 border-white shadow" style="width: 90px; height: 90px;">
+          </div>
+          <h5 class="fw-bold mb-1">{{ usuario.nombre }}</h5>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1 fw-medium mb-3">Estudiante</span>
+          
+          <div class="d-flex justify-content-center gap-4 text-start border-top pt-3 mt-2">
+            <div>
+              <p class="text-muted small text-uppercase fw-bold m-0 tracking-wide">Leídos</p>
+              <h3 class="font-display fw-bold text-primary m-0">14</h3>
+            </div>
+            <div class="border-start"></div>
+            <div>
+              <p class="text-muted small text-uppercase fw-bold m-0 tracking-wide">Reseñas</p>
+              <h3 class="font-display fw-bold text-accent m-0">3</h3>
+            </div>
+          </div>
+        </div>
 
+        <!-- Notificaciones -->
+        <div class="bn-card p-4 shadow-sm border-0 bg-white flex-grow-1">
+          <h5 class="font-display fw-bold text-dark mb-4"><i class="bi bi-bell text-warning me-2"></i>Notificaciones</h5>
+          
+          <div class="d-flex align-items-start mb-3 pb-3 border-bottom">
+            <div class="bg-warning-subtle text-warning rounded-circle p-2 me-3">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-1 fs-6">Devolución próxima</h6>
+              <p class="text-muted small mb-1">El libro "El Quijote" vence en 2 días.</p>
+              <span class="text-primary small fw-semibold cursor-pointer">Renovar préstamo</span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-start">
+            <div class="bg-success-subtle text-success rounded-circle p-2 me-3">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-1 fs-6">Reserva disponible</h6>
+              <p class="text-muted small m-0">"Clean Code" ya está disponible para recoger.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+
   </div>
 </div>
 
-<footer class="bg-dark text-white text-center p-4 mt-5">
-  <div class="container">
-    <p class="mb-1">Contacto: +52 123 456 7890</p>
-    <p class="mb-2">Email: contacto@biblioteca.com</p>
-    <div>
-      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
-    </div>
+<footer class="bn-footer mt-auto">
+  <div class="container text-center">
+    <p class="m-0">© 2026 BiblioNexus — Todos los derechos reservados.</p>
   </div>
 </footer>

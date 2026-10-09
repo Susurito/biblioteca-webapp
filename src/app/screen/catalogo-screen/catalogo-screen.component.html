@@ -1,48 +1,4 @@
-<!-- ====== NAVBAR ====== -->
-<nav class="navbar navbar-expand-lg bn-navbar">
-  <div class="container-fluid px-3">
-    <a class="navbar-brand" routerLink="/">
-      <span class="brand-icon"><i class="bi bi-book-half"></i></span>
-      BiblioNexus
-    </a>
-
-    <button class="navbar-toggler border-0" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navCatalogo">
-      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navCatalogo">
-      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="bi bi-house me-1"></i>Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" routerLink="/catalogo"><i class="bi bi-grid me-1"></i>Catálogo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contacto"><i class="bi bi-envelope me-1"></i>Contacto</a>
-        </li>
-      </ul>
-
-      <!-- Búsqueda -->
-      <form class="d-flex align-items-center me-3 bn-search" (ngSubmit)="onSearch()">
-        <i class="bi bi-search search-icon"></i>
-        <input type="search" placeholder="Buscar título, autor..."
-               [(ngModel)]="searchTerm" name="search">
-      </form>
-
-      <!-- Botones -->
-      <div class="d-flex gap-2">
-        <a class="btn btn-bn-primary btn-sm" routerLink="/cuenta" *ngIf="isLoggedIn" id="nav-btn-cuenta">
-          <i class="bi bi-person-circle me-1"></i>Mi Cuenta
-        </a>
-        <a class="btn btn-bn-gold btn-sm" routerLink="/registrar-libro" *ngIf="isAdmin" id="nav-btn-registrar">
-          <i class="bi bi-plus-circle me-1"></i>Registrar Libro
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+<app-navbar></app-navbar>
 
 <!-- ====== HERO PEQUEÑO ====== -->
 <div class="catalogo-hero">

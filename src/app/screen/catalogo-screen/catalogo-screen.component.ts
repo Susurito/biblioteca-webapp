@@ -26,28 +26,10 @@ export class CatalogoScreenComponent implements OnInit {
   selectedGenero: string = 'Todos';
   disponibilidad: string = 'Todos';
 
-  // Estado de usuario
-  searchTerm: string = '';
-  isLoggedIn: boolean = false;
-  isAdmin: boolean = false;
-  token: string | null = null;
-
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.recuperarSesion();
     this.cargarLibros();
-  }
-
-  // Recupera sesión desde localStorage - CORREGIDO
-  recuperarSesion() {
-    // Usa 'token' en lugar de 'access_token'
-    const token = localStorage.getItem('token');  // CAMBIÉ ESTA LÍNEA
-    const rol = localStorage.getItem('rol');
-
-    this.token = token;
-    this.isLoggedIn = !!token;
-    this.isAdmin = rol === 'admin';  // Ajusta según tu backend
   }
 
   // Cargar libros desde backend
@@ -84,29 +66,6 @@ export class CatalogoScreenComponent implements OnInit {
   // Ver detalles de libro
   verDetalles(libro: Libro) {
     alert(`📘 ${libro.titulo}\nAutor: ${libro.autor}\nGénero: ${libro.genero}`);
-  }
-
-  // Cerrar sesión - CORREGIDO
-  logout() {
-    localStorage.removeItem('token');  // CAMBIÉ ESTA LÍNEA
-    localStorage.removeItem('rol');
-    this.isLoggedIn = false;
-    this.isAdmin = false;
-    this.token = null;
-    alert('Sesión cerrada correctamente.');
-  }
-
-  // Buscar libros
-  onSearch() {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      this.librosFiltrados = this.libros;
-    } else {
-      this.librosFiltrados = this.libros.filter(libro =>
-        libro.titulo.toLowerCase().includes(term) ||
-        libro.autor.toLowerCase().includes(term)
-      );
-    }
   }
 
   // Obtener portada

@@ -32,6 +32,12 @@
             <span class="nav-link-text">Catálogo</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contacto" routerLinkActive="active" (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-envelope"></i></span>
+            <span class="nav-link-text">Contáctanos</span>
+          </a>
+        </li>
         <!-- Pestaña Dashboard (Solo Alumnos) -->
         <li class="nav-item" *ngIf="isAlumno">
           <a class="nav-link" routerLink="/alumnos" routerLinkActive="active" id="nav-dashboard" (click)="closeNav()">
@@ -41,22 +47,18 @@
         </li>
         <!-- Pestaña Ejemplares para Administrador -->
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active" id="nav-ejemplares" (click)="closeNav()">
+          <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active" id="nav-ejemplares"
+            (click)="closeNav()">
             <span class="nav-icon-badge"><i class="bi bi-journal-bookmark"></i></span>
             <span class="nav-link-text">Ejemplares</span>
           </a>
         </li>
         <!-- Pestaña Préstamos para Administrador -->
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin" (click)="closeNav()">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin"
+            (click)="closeNav()">
             <span class="nav-icon-badge"><i class="bi bi-arrow-left-right"></i></span>
             <span class="nav-link-text">Préstamos</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contacto" routerLinkActive="active" (click)="closeNav()">
-            <span class="nav-icon-badge"><i class="bi bi-envelope"></i></span>
-            <span class="nav-link-text">Contáctanos</span>
           </a>
         </li>
       </ul>
@@ -81,7 +83,8 @@
         <!-- Si SÍ está logueado -->
         <ng-container *ngIf="isLoggedIn">
           <!-- Si es admin -->
-          <a *ngIf="isAdmin" class="btn btn-bn-gold btn-sm me-lg-2 fw-semibold shadow-sm" routerLink="/registrar-libro" (click)="closeNav()">
+          <a *ngIf="isAdmin" class="btn btn-bn-gold btn-sm me-lg-2 fw-semibold shadow-sm" routerLink="/registrar-libro"
+            (click)="closeNav()">
             <i class="bi bi-plus-circle me-1"></i>Registrar Libro
           </a>
 

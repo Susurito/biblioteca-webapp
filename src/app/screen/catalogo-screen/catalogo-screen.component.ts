@@ -226,7 +226,7 @@ export class CatalogoScreenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           console.log('✅ Solicitud de préstamo enviada correctamente', res);
-          this.libroPrestadoExitoso = libro;
+          this.libroPrestadoExitoso = libroObj;
           this.mostrarPrestamoModal = true;
           this.cargarLibros();
         },

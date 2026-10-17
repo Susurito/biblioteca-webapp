@@ -13,8 +13,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
+  isAlumno: boolean = false;
   isMenuOpen: boolean = false;
-
 
   usuario: Usuario = {
     nombre: '',
@@ -28,17 +28,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private suscripcion!: Subscription;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    // Inicialización inmediata para evitar parpadeos
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.isAdmin = this.authService.isAdmin();
+    this.isAlumno = this.authService.isAlumno();
+
     this.suscripcion = this.authService.usuario$.subscribe(usuario => {
+      this.isLoggedIn = this.authService.isLoggedIn();
+      this.isAdmin = this.authService.isAdmin();
+      this.isAlumno = this.authService.isAlumno();
+
       if (usuario) {
-        this.isLoggedIn = true;
-        this.isAdmin = this.authService.isAdmin();
         this.usuario = usuario;
-      } else {
-        this.isLoggedIn = false;
-        this.isAdmin = false;
+      } else if (!this.isLoggedIn) {
         this.usuario = {
           nombre: '',
           apellido_paterno: '',
@@ -70,6 +75,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   cerrarSesion(): void {
     this.authService.logout();
+    this.isLoggedIn = false;
+    this.isAdmin = false;
+    this.isAlumno = false;
     this.isMenuOpen = false;
   }
 
@@ -84,4 +92,3 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 }
-

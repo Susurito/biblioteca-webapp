@@ -1,6 +1,6 @@
-<app-navbar></app-navbar>
+﻿<app-navbar></app-navbar>
 
-<!-- ====== HERO PEQUEÑO ====== -->
+<!-- ====== HERO ====== -->
 <div class="catalogo-hero">
   <div class="catalogo-hero-overlay"></div>
   <div class="catalogo-hero-content anim-fade-up">
@@ -34,16 +34,16 @@
       </select>
     </div>
 
-    <!-- Filtro por Autor -->
+    <!-- Filtro por Búsqueda (Título, Autor, ISBN) -->
     <div class="filter-group">
       <label class="filter-label">
-        <i class="bi bi-person me-2"></i>Autor
+        <i class="bi bi-search me-2"></i>Búsqueda
       </label>
       <div style="position:relative">
         <input type="text" class="bn-input-plain ps-4"
                style="padding-left:2.4rem"
                [(ngModel)]="autorBusqueda"
-               placeholder="Nombre del autor..."
+               placeholder="Título, autor o ISBN..."
                (input)="aplicarFiltro()"
                id="input-autor">
         <i class="bi bi-search" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.85rem;pointer-events:none"></i>
@@ -105,7 +105,12 @@
 
         <!-- Info -->
         <div class="libro-info">
-          <div class="libro-genero">{{ libro.genero }}</div>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="libro-genero">{{ libro.genero }}</span>
+            <span class="badge text-secondary border bg-light font-monospace" style="font-size:0.7rem" *ngIf="libro.isbn" title="ISBN">
+              <i class="bi bi-upc-scan me-1"></i>{{ libro.isbn }}
+            </span>
+          </div>
           <h3 class="libro-titulo">{{ libro.titulo }}</h3>
           <p class="libro-autor"><i class="bi bi-person me-1"></i>{{ libro.autor }}</p>
 

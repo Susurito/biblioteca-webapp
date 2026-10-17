@@ -1,19 +1,19 @@
 <!-- ====== NAVBAR COMPARTIDA ====== -->
 <nav class="navbar navbar-expand-lg bn-navbar">
-  <div class="container-fluid px-3">
+  <div class="container-fluid px-3 px-lg-4">
     <!-- Marca -->
     <a class="navbar-brand" routerLink="/">
       <span class="brand-icon"><i class="bi bi-book-half"></i></span>
       BiblioNexus
     </a>
 
-    <!-- Botón colapsable -->
+    <!-- Boton colapsable -->
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navGlobal">
       <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
     </button>
 
     <div class="collapse navbar-collapse" id="navGlobal">
-      <!-- Navegación -->
+      <!-- Navegacion -->
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
@@ -25,61 +25,85 @@
             <i class="bi bi-grid me-1"></i>Catálogo
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contactanos" routerLinkActive="active">
-            <i class="bi bi-grid me-1"></i>Contactanos
+        <!-- Pestaña Dashboard (Alumnos) -->
+        <li class="nav-item" *ngIf="isAlumno">
+          <a class="nav-link" routerLink="/alumnos" routerLinkActive="active" id="nav-dashboard">
+            <i class="bi bi-person-workspace me-1"></i>Dashboard
           </a>
         </li>
-        <li class="nav-item" *ngIf="isLoggedIn">
-          <a class="nav-link" routerLink="/alumnos" routerLinkActive="active">
-            <i class="bi bi-person-workspace me-1"></i>Dashboard
+        <!-- Pestaña Ejemplares para Administrador -->
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active" id="nav-ejemplares">
+            <i class="bi bi-journal-bookmark me-1"></i>Ejemplares
+          </a>
+        </li>
+        <!-- Pestaña Préstamos para Administrador -->
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin">
+            <i class="bi bi-arrow-left-right me-1"></i>Préstamos
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contactanos" routerLinkActive="active">
+            <i class="bi bi-envelope me-1"></i>Contáctanos
           </a>
         </li>
       </ul>
 
-      <!-- Búsqueda -->
+      <!-- Busqueda -->
       <form class="d-flex align-items-center me-3 bn-search" (ngSubmit)="onSearch()">
         <i class="bi bi-search search-icon"></i>
         <input type="search" placeholder="Buscar título, autor..." [(ngModel)]="searchTerm" name="search">
       </form>
 
       <!-- Botones o Perfil de Usuario -->
-      <div class="d-flex gap-2 align-items-center">
-        <!-- Si NO está logueado -->
+      <div class="d-flex gap-2 align-items-center flex-shrink-0">
+        <!-- Si NO esta logueado -->
         <ng-container *ngIf="!isLoggedIn">
-          <a class="btn btn-bn-secondary btn-sm" routerLink="/login">Iniciar Sesión</a>
-          <a class="btn btn-bn-primary btn-sm" routerLink="/registro">Registrarse</a>
+          <a class="btn btn-bn-secondary btn-sm px-3" routerLink="/login">Iniciar Sesión</a>
+          <a class="btn btn-bn-primary btn-sm px-3" routerLink="/registro">Registrarse</a>
         </ng-container>
 
-        <!-- Si SÍ está logueado -->
+        <!-- Si SI esta logueado -->
         <ng-container *ngIf="isLoggedIn">
           <!-- Si es admin -->
-          <a *ngIf="isAdmin" class="btn btn-bn-gold btn-sm me-2" routerLink="/registrar-libro">
+          <a *ngIf="isAdmin" class="btn btn-bn-gold btn-sm me-2 fw-semibold shadow-sm" routerLink="/registrar-libro">
             <i class="bi bi-plus-circle me-1"></i>Registrar Libro
           </a>
 
-          <!-- Perfil Desplegable -->
-          <div class="nav-item dropdown user-profile">
-            <a class="nav-link d-flex align-items-center gap-2 text-dark" style="cursor: pointer;"
-              id="navbarUserDropdown" role="button" aria-expanded="false" (click)="toggleMenu()">
+          <!-- Perfil Desplegable Estilizado como Pill -->
+          <div class="nav-item dropdown user-profile" [class.open]="isMenuOpen">
+            <a class="user-profile-pill d-flex align-items-center" id="navbarUserDropdown" role="button"
+              aria-expanded="false" (click)="toggleMenu()">
+
+              <!-- Contenedor del Avatar con dimensiones fijas -->
               <div class="avatar-container position-relative">
-                <ng-container *ngIf="usuario.fotoPerfil !== 'assets/images/default-avatar.png'">
-                  <img [src]="usuario.fotoPerfil" alt="Avatar" class="user-avatar rounded-circle object-fit-cover shadow-sm">
-                </ng-container>
-                <ng-container *ngIf="usuario.fotoPerfil === 'assets/images/default-avatar.png'">
-                  <i class="bi bi-person-circle fs-4 text-primary"></i>
-                </ng-container>
+                <img *ngIf="usuario.fotoPerfil && usuario.fotoPerfil !== 'assets/images/default-avatar.png'"
+                  [src]="usuario.fotoPerfil" alt="Foto de perfil" class="user-avatar">
+
+                <div *ngIf="!usuario.fotoPerfil || usuario.fotoPerfil === 'assets/images/default-avatar.png'"
+                  class="default-avatar-placeholder">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+
                 <label class="upload-badge" title="Cambiar foto">
                   <i class="bi bi-camera-fill"></i>
                   <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)">
                 </label>
               </div>
-              <span class="fw-semibold d-none d-lg-inline">Hola, {{ usuario.nombre.split(' ')[0] }}</span>
-              <i class="bi bi-chevron-down ms-1 fs-6 d-none d-lg-inline text-muted" style="font-size: 0.8rem;"></i>
+
+              <!-- Saludo con espaciado amplio y estetico -->
+              <span class="user-greeting d-none d-lg-inline-block">
+                Hola, {{ usuario.nombre ? usuario.nombre.split(' ')[0] : 'Usuario' }}
+              </span>
+
+              <i class="bi bi-chevron-down chevron-icon d-none d-lg-inline-block"></i>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow-bn border-0 mt-2" [class.show]="isMenuOpen" aria-labelledby="navbarUserDropdown">
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-bn border-0 mt-2" [class.show]="isMenuOpen"
+              aria-labelledby="navbarUserDropdown">
               <li>
-                <div class="dropdown-header text-muted">Matrícula: {{ usuario.matricula }}</div>
+                <div class="dropdown-header text-muted">Matrícula: {{ usuario.matricula || 'N/A' }}</div>
               </li>
               <li><a class="dropdown-item" routerLink="/cuenta"><i class="bi bi-person me-2"></i> Mi Perfil</a></li>
               <li><a class="dropdown-item" routerLink="/cuenta" fragment="ajustes"><i class="bi bi-gear me-2"></i>

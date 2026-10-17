@@ -41,7 +41,8 @@
               <i class="bi bi-person-fill"></i>
             </div>
             <div class="perfil-rol-badge" [class.admin-badge]="esAdministrador()">
-              <i class="bi" [class.bi-shield-fill]="esAdministrador()" [class.bi-mortarboard-fill]="!esAdministrador()"></i>
+              <i class="bi" [class.bi-shield-fill]="esAdministrador()"
+                [class.bi-mortarboard-fill]="!esAdministrador()"></i>
               {{ esAdministrador() ? 'Administrador' : 'Alumno' }}
             </div>
           </div>
@@ -59,7 +60,7 @@
             </p>
           </div>
 
-          <!-- Stats rápidas solo para alumnos -->
+          <!-- Stats rÃ¡pidas solo para alumnos -->
           <div class="perfil-quick-stats" *ngIf="!esAdministrador()">
             <div class="quick-stat">
               <span class="qs-num">{{ prestamosActivos.length }}</span>
@@ -88,7 +89,7 @@
         </div>
       </div>
 
-      <!-- ---- COLUMNA DERECHA: Panel de préstamos ---- -->
+      <!-- ---- COLUMNA DERECHA: Panel de prÃ©stamos ---- -->
       <div class="col-12 col-lg-9 anim-slide-r">
 
         <!-- ===== PANEL ADMIN ===== -->
@@ -96,28 +97,28 @@
           <div class="panel-header admin-header">
             <div>
               <span class="panel-eyebrow">Panel de Control</span>
-              <h2><i class="bi bi-shield-fill me-2"></i>Administración</h2>
+              <h2><i class="bi bi-shield-fill me-2"></i>Administrador</h2>
             </div>
           </div>
 
           <!-- Tabs Admin -->
           <div class="bn-tabs">
-            <button class="bn-tab" [class.active]="activeTab === 'pendientes'"
-                    (click)="cambiarTab('pendientes')" id="tab-pendientes">
+            <button class="bn-tab" [class.active]="activeTab === 'pendientes'" (click)="cambiarTab('pendientes')"
+              id="tab-pendientes">
               <i class="bi bi-clock me-1"></i>Solicitudes Pendientes
               <span class="tab-badge warning" *ngIf="prestamosPendientes.length > 0">
                 {{ prestamosPendientes.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'historial'"
-                    (click)="cambiarTab('historial')" id="tab-historial-admin">
+            <button class="bn-tab" [class.active]="activeTab === 'historial'" (click)="cambiarTab('historial')"
+              id="tab-historial-admin">
               <i class="bi bi-bar-chart me-1"></i>Historial Completo
               <span class="tab-badge muted" *ngIf="historialPrestamos.length > 0">
                 {{ historialPrestamos.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'ajustes'"
-                    (click)="cambiarTab('ajustes')" id="tab-ajustes-admin">
+            <button class="bn-tab" [class.active]="activeTab === 'ajustes'" (click)="cambiarTab('ajustes')"
+              id="tab-ajustes-admin">
               <i class="bi bi-gear me-1"></i>Ajustes
             </button>
           </div>
@@ -155,14 +156,12 @@
                     <td>{{ p.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
                     <td>
                       <div class="d-flex gap-2">
-                        <button class="btn-action aprobar"
-                                (click)="revisarPrestamo(p, 'aprobar')"
-                                [id]="'btn-aprobar-' + p.id">
+                        <button class="btn-action aprobar" (click)="revisarPrestamo(p, 'aprobar')"
+                          [id]="'btn-aprobar-' + p.id">
                           <i class="bi bi-check-lg"></i> Aprobar
                         </button>
-                        <button class="btn-action rechazar"
-                                (click)="revisarPrestamo(p, 'rechazar')"
-                                [id]="'btn-rechazar-' + p.id">
+                        <button class="btn-action rechazar" (click)="revisarPrestamo(p, 'rechazar')"
+                          [id]="'btn-rechazar-' + p.id">
                           <i class="bi bi-x-lg"></i> Rechazar
                         </button>
                       </div>
@@ -182,8 +181,8 @@
           <!-- Tab: Historial completo (Admin) -->
           <div class="tab-content-panel" *ngIf="activeTab === 'historial'">
             <div class="panel-section-header">
-              <h4>Historial de Préstamos</h4>
-              <p>Todos los préstamos registrados en el sistema</p>
+              <h4>Historial de PrÃ©stamos</h4>
+              <p>Todos los prÃ©stamos registrados en el sistema</p>
             </div>
 
             <div class="tabla-wrapper" *ngIf="historialPrestamos.length > 0">
@@ -194,7 +193,7 @@
                     <th>Libro</th>
                     <th>Autor</th>
                     <th>Solicitud</th>
-                    <th>Devolución</th>
+                    <th>DevoluciÃ³n</th>
                     <th>Estado</th>
                   </tr>
                 </thead>
@@ -211,7 +210,7 @@
                     <td>{{ p.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
                     <td>
                       <span *ngIf="p.fecha_devolucion">{{ p.fecha_devolucion | date:'dd/MM/yyyy' }}</span>
-                      <span *ngIf="!p.fecha_devolucion" class="text-muted">—</span>
+                      <span *ngIf="!p.fecha_devolucion" class="text-muted">â€”</span>
                     </td>
                     <td>
                       <span class="estado-badge" [class]="obtenerClaseEstado(obtenerEstadoPrestamo(p))">
@@ -226,7 +225,7 @@
             <div class="panel-empty" *ngIf="historialPrestamos.length === 0">
               <i class="bi bi-clock-history"></i>
               <h5>Sin historial</h5>
-              <p>No se han registrado préstamos en el sistema.</p>
+              <p>No se han registrado prÃ©stamos en el sistema.</p>
             </div>
           </div>
 
@@ -248,30 +247,30 @@
 
           <!-- Tabs Alumno -->
           <div class="bn-tabs">
-            <button class="bn-tab" [class.active]="activeTab === 'activos'"
-                    (click)="cambiarTab('activos')" id="tab-activos">
+            <button class="bn-tab" [class.active]="activeTab === 'activos'" (click)="cambiarTab('activos')"
+              id="tab-activos">
               <i class="bi bi-book me-1"></i>Préstamos Activos
               <span class="tab-badge success" *ngIf="prestamosActivos.length > 0">
                 {{ prestamosActivos.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'historial'"
-                    (click)="cambiarTab('historial')" id="tab-historial-alumno">
+            <button class="bn-tab" [class.active]="activeTab === 'historial'" (click)="cambiarTab('historial')"
+              id="tab-historial-alumno">
               <i class="bi bi-clock-history me-1"></i>Historial
               <span class="tab-badge muted" *ngIf="historialCompleto.length > 0">
                 {{ historialCompleto.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'ajustes'"
-                    (click)="cambiarTab('ajustes')" id="tab-ajustes-alumno">
+            <button class="bn-tab" [class.active]="activeTab === 'ajustes'" (click)="cambiarTab('ajustes')"
+              id="tab-ajustes-alumno">
               <i class="bi bi-gear me-1"></i>Ajustes
             </button>
           </div>
 
-          <!-- Tab: Préstamos activos (Alumno) -->
+          <!-- Tab: PrÃ©stamos activos (Alumno) -->
           <div class="tab-content-panel" *ngIf="activeTab === 'activos'">
             <div class="panel-section-header">
-              <h4>Libros en préstamo activo</h4>
+              <h4>Libros en prestamos activo</h4>
               <p>Los libros que tienes actualmente</p>
             </div>
 
@@ -281,9 +280,8 @@
                   <tr>
                     <th>Libro</th>
                     <th>Autor</th>
-                    <th>Fecha Préstamo</th>
+                    <th>Fecha PrÃ©stamo</th>
                     <th>Estado</th>
-                    <th>Acción</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -296,13 +294,6 @@
                         {{ obtenerEstadoPrestamo(prestamo) }}
                       </span>
                     </td>
-                    <td>
-                      <button class="btn-action devolver"
-                              (click)="devolverLibro(prestamo.id, prestamo.libro_titulo)"
-                              [id]="'btn-devolver-' + prestamo.id">
-                        <i class="bi bi-arrow-return-left me-1"></i>Devolver
-                      </button>
-                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -310,10 +301,10 @@
 
             <div class="panel-empty" *ngIf="prestamosActivos.length === 0">
               <i class="bi bi-book"></i>
-              <h5>Sin préstamos activos</h5>
-              <p>Ve al catálogo y solicita tu próximo libro.</p>
+              <h5>Sin prÃ©stamos activos</h5>
+              <p>Ve al catÃ¡logo y solicita tu prÃ³ximo libro.</p>
               <a routerLink="/catalogo" class="btn btn-bn-primary mt-3" id="link-ir-catalogo">
-                <i class="bi bi-grid me-2"></i>Explorar Catálogo
+                <i class="bi bi-grid me-2"></i>Explorar CatÃ¡logo
               </a>
             </div>
           </div>
@@ -343,7 +334,7 @@
                     <td>{{ prestamo.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
                     <td>
                       <span *ngIf="prestamo.fecha_devolucion">{{ prestamo.fecha_devolucion | date:'dd/MM/yyyy' }}</span>
-                      <span *ngIf="!prestamo.fecha_devolucion" class="text-muted">—</span>
+                      <span *ngIf="!prestamo.fecha_devolucion" class="text-muted">â€”</span>
                     </td>
                     <td>
                       <span class="estado-badge" [class]="obtenerClaseEstado(obtenerEstadoPrestamo(prestamo))">
@@ -358,7 +349,7 @@
             <div class="panel-empty" *ngIf="historialCompleto.length === 0">
               <i class="bi bi-clock-history"></i>
               <h5>Sin historial</h5>
-              <p>Aún no tienes préstamos registrados.</p>
+              <p>AÃºn no tienes prÃ©stamos registrados.</p>
             </div>
           </div>
 
@@ -378,10 +369,10 @@
   <div class="tab-content-panel">
     <div class="panel-section-header mb-4 border-bottom pb-3">
       <h4><i class="bi bi-gear-fill text-primary me-2"></i>Ajustes de Perfil</h4>
-      <p>Modifica tu información personal y credenciales</p>
+      <p>Modifica tu informaciÃ³n personal y credenciales</p>
     </div>
 
-    <!-- Toast de éxito (Success Alert temporal) -->
+    <!-- Toast de Ã©xito (Success Alert temporal) -->
     <div class="alert alert-success d-flex align-items-center mb-4 anim-fade-up" role="alert" *ngIf="mostrarToastExito">
       <i class="bi bi-check-circle-fill flex-shrink-0 me-2 fs-4"></i>
       <div>Tus datos han sido actualizados correctamente.</div>
@@ -392,28 +383,34 @@
         <!-- Columna Izquierda: Datos Personales -->
         <div class="col-12 col-md-6">
           <h6 class="fw-bold mb-3 text-secondary">Datos Personales</h6>
-          
+
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">NOMBRE</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-person position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="nombre" placeholder="Tu nombre">
+              <i class="bi bi-person position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="nombre"
+                placeholder="Tu nombre">
             </div>
           </div>
 
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">APELLIDO PATERNO</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-person-lines-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="apellido_paterno" placeholder="Apellido Paterno">
+              <i class="bi bi-person-lines-fill position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="apellido_paterno" placeholder="Apellido Paterno">
             </div>
           </div>
 
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">APELLIDO MATERNO</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-person-lines-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="apellido_materno" placeholder="Apellido Materno">
+              <i class="bi bi-person-lines-fill position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="apellido_materno" placeholder="Apellido Materno">
             </div>
           </div>
         </div>
@@ -423,29 +420,37 @@
           <h6 class="fw-bold mb-3 text-secondary">Credenciales</h6>
 
           <div class="bn-input-group mb-3">
-            <label class="form-label text-muted small fw-bold">CORREO ELECTRÓNICO</label>
+            <label class="form-label text-muted small fw-bold">CORREO ELECTRÃ“NICO</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-envelope position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="email" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="email" placeholder="correo@ejemplo.com">
+              <i class="bi bi-envelope position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="email" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="email"
+                placeholder="correo@ejemplo.com">
             </div>
           </div>
 
           <div class="bn-input-group mb-3">
-            <label class="form-label text-muted small fw-bold">CAMBIAR CONTRASEÑA <span class="fw-normal text-muted">(Opcional)</span></label>
+            <label class="form-label text-muted small fw-bold">CAMBIAR CONTRASEÃ‘A <span
+                class="fw-normal text-muted">(Opcional)</span></label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-lock position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="password" placeholder="Nueva contraseña">
+              <i class="bi bi-lock position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="password" placeholder="Nueva contraseÃ±a">
             </div>
           </div>
 
           <div class="bn-input-group mb-4">
-            <label class="form-label text-muted small fw-bold">CONFIRMAR CONTRASEÑA</label>
+            <label class="form-label text-muted small fw-bold">CONFIRMAR CONTRASEÃ‘A</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-lock-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="confirmPassword" placeholder="Confirma nueva contraseña">
+              <i class="bi bi-lock-fill position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="confirmPassword" placeholder="Confirma nueva contraseÃ±a">
             </div>
-            <div class="text-danger small mt-1" *ngIf="perfilForm.errors?.['notMatching'] && (perfilForm.get('confirmPassword')?.touched || perfilForm.get('password')?.touched)">
-              Las contraseñas no coinciden.
+            <div class="text-danger small mt-1"
+              *ngIf="perfilForm.errors?.['notMatching'] && (perfilForm.get('confirmPassword')?.touched || perfilForm.get('password')?.touched)">
+              Las contraseÃ±as no coinciden.
             </div>
           </div>
         </div>
@@ -455,7 +460,8 @@
       <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
         <button type="submit" class="btn btn-bn-primary px-5 py-2 fw-bold" [disabled]="perfilForm.invalid || isSaving">
           <span *ngIf="!isSaving"><i class="bi bi-save me-2"></i>Guardar Cambios</span>
-          <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando...</span>
+          <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2" role="status"
+              aria-hidden="true"></span>Guardando...</span>
         </button>
       </div>
     </form>
@@ -476,14 +482,14 @@
         </div>
       </div>
       <div class="col-6 col-md-2">
-        <h6>Navegación</h6>
+        <h6>NavegaciÃ³n</h6>
         <a routerLink="/">Inicio</a>
-        <a routerLink="/catalogo">Catálogo</a>
+        <a routerLink="/catalogo">CatÃ¡logo</a>
         <a routerLink="/contacto">Contacto</a>
       </div>
       <div class="col-6 col-md-2">
         <h6>Acceso</h6>
-        <a routerLink="/login">Iniciar Sesión</a>
+        <a routerLink="/login">Iniciar SesiÃ³n</a>
         <a routerLink="/registro">Registrarse</a>
         <a routerLink="/cuenta">Mi Cuenta</a>
       </div>
@@ -492,11 +498,11 @@
         <p style="color:rgba(255,255,255,0.6); font-size:0.875rem; line-height:1.7">
           <i class="bi bi-telephone me-2" style="color:var(--secondary-light)"></i>+52 123 456 7890<br>
           <i class="bi bi-envelope me-2" style="color:var(--secondary-light)"></i>contacto@biblionexus.mx<br>
-          <i class="bi bi-geo-alt me-2" style="color:var(--secondary-light)"></i>BUAP, Puebla, México
+          <i class="bi bi-geo-alt me-2" style="color:var(--secondary-light)"></i>BUAP, Puebla, MÃ©xico
         </p>
       </div>
     </div>
     <hr class="footer-divider">
-    <p class="footer-bottom">© 2026 BiblioNexus — Todos los derechos reservados.</p>
+    <p class="footer-bottom">Â© 2026 BiblioNexus â€” Todos los derechos reservados.</p>
   </div>
 </footer>

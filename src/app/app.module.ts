@@ -57,8 +57,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     MatIconModule,    // <-- Agregado
     MatSelectModule,   // <-- agregado
     MatOptionModule,    // <-- agregado
-     FormsModule,
-     HttpClientModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

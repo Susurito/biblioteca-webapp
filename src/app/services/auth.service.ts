@@ -86,6 +86,12 @@ export class AuthService {
           fotoPerfil: 'assets/images/default-avatar.png'
         };
 
+        // Guardar id del alumno si viene en el perfil
+        if (res.id || res.alumno_id) {
+          const alumnoId = (res.alumno_id || res.id).toString();
+          localStorage.setItem('alumno_id', alumnoId);
+        }
+
         // Actualizar rol en localStorage si viene del perfil
         if (res.rol) {
           let rol = res.rol.toLowerCase().trim();
@@ -112,6 +118,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
+    localStorage.removeItem('alumno_id');
     this.usuarioSubject.next(null);
     this.router.navigate(['/login']);
   }
@@ -139,9 +146,17 @@ export class AuthService {
    */
   isAdmin(): boolean {
     const usuario = this.usuarioSubject.getValue();
-    if (!usuario) return false;
-    const rol = usuario.rol?.toLowerCase() || '';
+    const rol = (usuario?.rol || localStorage.getItem('rol') || '').toLowerCase().trim();
     return rol === 'administrador' || rol === 'admin' || rol === 'administradores' || rol === 'administrator';
+  }
+
+  /**
+   * Verifica si el usuario actual es alumno.
+   */
+  isAlumno(): boolean {
+    const usuario = this.usuarioSubject.getValue();
+    const rol = (usuario?.rol || localStorage.getItem('rol') || '').toLowerCase().trim();
+    return rol === 'alumno' || rol === 'alumnos';
   }
 
   /**

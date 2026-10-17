@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginScreenComponent } from './screen/login-screen/login-screen.component';
 import { RegistroUsuarioScreenComponent } from './screen/registro-usuario-screen/registro-usuario-screen.component';
@@ -13,7 +13,7 @@ import { PerfilScreenComponent } from './screen/perfil-screen/perfil-screen.comp
 
 
 const routes: Routes = [
-   { path: '', component: LoginScreenComponent, pathMatch: 'full' },
+  { path: '', component: LoginScreenComponent, pathMatch: 'full' },
   { path: 'registro', component: RegistroUsuarioScreenComponent, pathMatch: 'full' },
   { path: 'alumnos', component: AlumnosScreenComponent, pathMatch: 'full' },
   { path: 'admin', component: AdminScreenComponent, pathMatch: 'full' },
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'registrar-libro', component: RegistroScreenComponent },
 
   // app-routing.module.ts
-{ path: 'cuenta', component: PerfilScreenComponent },
+  { path: 'cuenta', component: PerfilScreenComponent },
 
   { path: '**', redirectTo: '' } // fallback
 ];

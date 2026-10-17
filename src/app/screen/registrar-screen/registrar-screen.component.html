@@ -1,4 +1,4 @@
-<app-navbar></app-navbar>
+﻿<app-navbar></app-navbar>
 
 <!-- ====== LAYOUT PRINCIPAL ====== -->
 <div class="registrar-page">
@@ -17,6 +17,10 @@
         <p>Agrega libros al catálogo de BiblioNexus para que los alumnos puedan explorarlos y solicitarlos en préstamo.</p>
 
         <div class="registrar-tips">
+          <div class="tip-item">
+            <i class="bi bi-upc-scan"></i>
+            <span>Ingresa el ISBN para una identificación única</span>
+          </div>
           <div class="tip-item">
             <i class="bi bi-lightbulb-fill"></i>
             <span>Completa todos los campos obligatorios</span>
@@ -61,6 +65,17 @@
       </div>
 
       <form [formGroup]="libroForm" (ngSubmit)="registrarLibro()" id="form-registrar-libro">
+
+        <!-- ISBN -->
+        <div class="bn-input-group">
+          <label for="isbn-input">ISBN (Código Internacional) *</label>
+          <i class="bi bi-upc-scan input-icon"></i>
+          <input type="text" id="isbn-input" formControlName="isbn"
+                 placeholder="Ej. 978-0307474728">
+          <div class="field-error" *ngIf="libroForm.get('isbn')?.invalid && libroForm.get('isbn')?.touched">
+            <i class="bi bi-exclamation-circle"></i> El ISBN es obligatorio
+          </div>
+        </div>
 
         <!-- Título -->
         <div class="bn-input-group">
@@ -141,7 +156,7 @@
           <button
             type="button"
             class="btn btn-bn-secondary py-3 px-4"
-            (click)="libroForm.reset({disponible: true})"
+            (click)="libroForm.reset({disponible: true, isbn: ''})"
             id="btn-limpiar-form">
             <i class="bi bi-arrow-counterclockwise"></i>
           </button>

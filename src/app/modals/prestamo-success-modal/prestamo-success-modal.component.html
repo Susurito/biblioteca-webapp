@@ -1,0 +1,97 @@
+<!-- ====== MODAL DE PRÉSTAMO SOLICITADO EXITOSAMENTE ====== -->
+<div class="prestamo-modal-overlay" *ngIf="isOpen">
+  <!-- Fondo desenfocado -->
+  <div class="prestamo-modal-backdrop" (click)="onClose()"></div>
+
+  <!-- Contenedor centrado -->
+  <div class="prestamo-modal-container" (click)="onBackdropClick($event)">
+    <div class="prestamo-modal-card anim-modal-enter" (click)="$event.stopPropagation()">
+
+      <!-- Botón de cierre (X) -->
+      <button class="btn-modal-close" (click)="onClose()" aria-label="Cerrar modal de éxito" id="btn-close-prestamo-modal">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Icono central de éxito animado con halo luminoso -->
+      <div class="modal-success-icon-wrapper">
+        <div class="icon-orb-glow"></div>
+        <div class="icon-orb-ring"></div>
+        <div class="icon-orb">
+          <i class="bi bi-check-lg"></i>
+        </div>
+      </div>
+
+      <!-- Cabecera del modal -->
+      <div class="modal-content-body text-center">
+        <span class="modal-badge-eyebrow">
+          <i class="bi bi-patch-check-fill me-1"></i>Solicitud Registrada
+        </span>
+
+        <h3 class="modal-title font-display">¡Préstamo Solicitado con Éxito!</h3>
+
+        <p class="modal-subtitle">
+          Tu solicitud fue registrada en el sistema de <strong>BiblioNexus</strong>. El ejemplar ha sido apartado para ti.
+        </p>
+
+        <!-- Tarjeta de resumen del libro solicitado -->
+        <div class="libro-resumen-card" *ngIf="libro">
+          <div class="libro-resumen-cover">
+            <img [src]="getPortada(libro)" [alt]="libro.titulo" class="cover-thumb"
+              (error)="$any($event.target).src='assets/images/libro.jpg'" />
+          </div>
+
+          <div class="libro-resumen-info text-start">
+            <span class="resumen-genero" *ngIf="libro.genero">{{ libro.genero }}</span>
+            <h5 class="resumen-titulo">{{ libro.titulo }}</h5>
+            <p class="resumen-autor">
+              <i class="bi bi-person me-1"></i>{{ libro.autor }}
+            </p>
+            <div class="resumen-status-pill">
+              <span class="pulse-dot"></span>
+              <span>Estado: Pendiente de entrega</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guía de siguientes pasos ("¿Qué debo hacer ahora?") -->
+        <div class="pasos-guia-box text-start">
+          <h6 class="pasos-titulo">
+            <i class="bi bi-compass-fill me-2"></i>¿Qué debes hacer ahora?
+          </h6>
+          <ul class="pasos-lista">
+            <li>
+              <div class="paso-num">1</div>
+              <div class="paso-desc">
+                <strong>Pasa al mostrador:</strong> Acude al módulo de atención de biblioteca.
+              </div>
+            </li>
+            <li>
+              <div class="paso-num">2</div>
+              <div class="paso-desc">
+                <strong>Identifícate:</strong> Presenta tu credencial de estudiante o matrícula.
+              </div>
+            </li>
+            <li>
+              <div class="paso-num">3</div>
+              <div class="paso-desc">
+                <strong>Monitorea:</strong> Puedes revisar la fecha de devolución en tu perfil.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="modal-actions-list">
+          <button class="btn btn-bn-primary w-100 btn-action-main" (click)="goToMisPrestamos()" id="btn-modal-mis-prestamos">
+            <i class="bi bi-journal-bookmark-fill me-2"></i>Ver en Mis Préstamos
+          </button>
+
+          <button class="btn btn-link btn-action-cancel w-100" (click)="onClose()" id="btn-modal-seguir-explorando">
+            Continuar explorando el catálogo
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

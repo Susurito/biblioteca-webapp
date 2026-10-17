@@ -1,0 +1,390 @@
+/* ====== MODAL DE PRÉSTAMO SOLICITADO EXITOSAMENTE ====== */
+
+.prestamo-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* Fondo con blur */
+.prestamo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fadeInBackdrop 0.25s ease forwards;
+}
+
+/* Contenedor y tarjeta */
+.prestamo-modal-container {
+  position: relative;
+  z-index: 2001;
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+.prestamo-modal-card {
+  position: relative;
+  width: 100%;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  padding: 2.25rem 2rem 2rem;
+  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(44, 74, 110, 0.15);
+    border-radius: 999px;
+  }
+}
+
+/* Animaciones */
+.anim-modal-enter {
+  animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Botón cerrar superior (X) */
+.btn-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(44, 74, 110, 0.06);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 10;
+
+  &:hover {
+    background: rgba(44, 74, 110, 0.14);
+    color: var(--text);
+    transform: rotate(90deg);
+  }
+}
+
+/* Icono central de éxito animado */
+.modal-success-icon-wrapper {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon-orb-glow {
+    position: absolute;
+    inset: -8px;
+    background: radial-gradient(circle, rgba(74, 124, 89, 0.45) 0%, rgba(74, 124, 89, 0) 70%);
+    border-radius: 50%;
+    filter: blur(8px);
+    animation: pulseGlow 2.5s ease-in-out infinite;
+  }
+
+  .icon-orb-ring {
+    position: absolute;
+    inset: -3px;
+    border: 2px dashed rgba(74, 124, 89, 0.4);
+    border-radius: 50%;
+    animation: rotateRing 12s linear infinite;
+  }
+
+  .icon-orb {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #4a7c59 0%, #35583f 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    box-shadow: 0 8px 24px rgba(74, 124, 89, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Encabezado */
+.modal-badge-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(74, 124, 89, 0.12);
+  border: 1px solid rgba(74, 124, 89, 0.3);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-xl);
+  margin-bottom: 0.75rem;
+}
+
+.modal-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  line-height: 1.25;
+}
+
+.modal-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 1.35rem;
+
+  strong {
+    color: var(--text);
+  }
+}
+
+/* Tarjeta resumen del libro */
+.libro-resumen-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-sm);
+
+  .libro-resumen-cover {
+    width: 48px;
+    height: 64px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+
+    .cover-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .libro-resumen-info {
+    flex: 1;
+    min-width: 0;
+
+    .resumen-genero {
+      display: inline-block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: var(--secondary);
+      margin-bottom: 0.15rem;
+    }
+
+    .resumen-titulo {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .resumen-autor {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin: 0.15rem 0 0.4rem;
+    }
+
+    .resumen-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(74, 124, 89, 0.1);
+      border: 1px solid rgba(74, 124, 89, 0.25);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-xl);
+
+      .pulse-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 0 rgba(74, 124, 89, 0.7);
+        animation: pulsePoint 1.8s infinite;
+      }
+    }
+  }
+}
+
+@keyframes pulsePoint {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 124, 89, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(74, 124, 89, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 124, 89, 0); }
+}
+
+/* Guía informativa de siguientes pasos */
+.pasos-guia-box {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem;
+  margin-bottom: 1.5rem;
+
+  .pasos-titulo {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text);
+    margin: 0 0 0.75rem;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: var(--primary);
+    }
+  }
+
+  .pasos-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+
+      .paso-num {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(44, 74, 110, 0.1);
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.72rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+      }
+
+      .paso-desc strong {
+        color: var(--text);
+      }
+    }
+  }
+}
+
+/* Acciones */
+.modal-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  .btn-action-main {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: var(--radius-md);
+  }
+
+  .btn-action-cancel {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.5rem;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .prestamo-modal-card {
+    padding: 1.75rem 1.25rem 1.5rem;
+  }
+
+  .modal-title {
+    font-size: 1.35rem;
+  }
+
+  .modal-success-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+
+    .icon-orb {
+      width: 56px;
+      height: 56px;
+      font-size: 1.75rem;
+    }
+  }
+}

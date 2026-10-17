@@ -211,3 +211,8 @@
 <app-libro-detail-modal [isOpen]="mostrarDetalleModal" [libro]="libroSeleccionado"
   (close)="mostrarDetalleModal = false" (solicitarPrestamo)="solicitarPrestamoDesdeModal($event)">
 </app-libro-detail-modal>
+
+<!-- ====== MODAL DE PRÉSTAMO SOLICITADO EXITOSAMENTE ====== -->
+<app-prestamo-success-modal [isOpen]="mostrarPrestamoModal" [libro]="libroPrestadoExitoso"
+  (close)="mostrarPrestamoModal = false">
+</app-prestamo-success-modal>

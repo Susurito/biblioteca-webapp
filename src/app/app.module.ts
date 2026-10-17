@@ -31,6 +31,7 @@ import { DatePipe } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AuthModalComponent } from './modals/auth-modal/auth-modal.component';
 import { LibroDetailModalComponent } from './modals/libro-detail-modal/libro-detail-modal.component';
+import { PrestamoSuccessModalComponent } from './modals/prestamo-success-modal/prestamo-success-modal.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { LibroDetailModalComponent } from './modals/libro-detail-modal/libro-det
     PerfilScreenComponent,
     NavbarComponent,
     AuthModalComponent,
-    LibroDetailModalComponent
+    LibroDetailModalComponent,
+    PrestamoSuccessModalComponent
   ],
   imports: [
     BrowserModule,

@@ -39,6 +39,10 @@ export class CatalogoScreenComponent implements OnInit, OnDestroy {
   mostrarDetalleModal: boolean = false;
   libroSeleccionado: Libro | null = null;
 
+  // Modal de confirmación de préstamo exitoso
+  mostrarPrestamoModal: boolean = false;
+  libroPrestadoExitoso: Libro | null = null;
+
   // Filtros en vista móvil
   isFilterOpenMobile: boolean = false;
 
@@ -222,7 +226,8 @@ export class CatalogoScreenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           console.log('✅ Solicitud de préstamo enviada correctamente', res);
-          alert('Préstamo solicitado exitosamente. Tu solicitud está en revisión.');
+          this.libroPrestadoExitoso = libro;
+          this.mostrarPrestamoModal = true;
           this.cargarLibros();
         },
         error: (err) => {

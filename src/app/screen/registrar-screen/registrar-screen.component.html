@@ -1,4 +1,4 @@
-﻿<app-navbar></app-navbar>
+<app-navbar></app-navbar>
 
 <!-- ====== LAYOUT PRINCIPAL ====== -->
 <div class="registrar-page">
@@ -14,7 +14,8 @@
           <i class="bi bi-book-fill"></i>
         </div>
         <h2>Registrar<br><em>Nuevo Libro</em></h2>
-        <p>Agrega libros al catálogo de BiblioNexus para que los alumnos puedan explorarlos y solicitarlos en préstamo.</p>
+        <p>Agrega libros al catálogo de BiblioNexus para que los alumnos puedan explorarlos y solicitarlos en préstamo.
+        </p>
 
         <div class="registrar-tips">
           <div class="tip-item">
@@ -81,8 +82,7 @@
         <div class="bn-input-group">
           <label for="titulo-input">Título del Libro *</label>
           <i class="bi bi-journal-text input-icon"></i>
-          <input type="text" id="titulo-input" formControlName="titulo"
-                 placeholder="Ej. El Quijote de la Mancha">
+          <input type="text" id="titulo-input" formControlName="titulo" placeholder="Ej. El Quijote de la Mancha">
           <div class="field-error" *ngIf="libroForm.get('titulo')?.invalid && libroForm.get('titulo')?.touched">
             <i class="bi bi-exclamation-circle"></i> El título es obligatorio
           </div>
@@ -92,8 +92,7 @@
         <div class="bn-input-group">
           <label for="autor-input">Autor *</label>
           <i class="bi bi-person-fill input-icon"></i>
-          <input type="text" id="autor-input" formControlName="autor"
-                 placeholder="Nombre del autor">
+          <input type="text" id="autor-input" formControlName="autor" placeholder="Nombre del autor">
           <div class="field-error" *ngIf="libroForm.get('autor')?.invalid && libroForm.get('autor')?.touched">
             <i class="bi bi-exclamation-circle"></i> El autor es obligatorio
           </div>
@@ -104,7 +103,7 @@
           <label for="genero-input">Género Literario *</label>
           <i class="bi bi-tag input-icon"></i>
           <input type="text" id="genero-input" formControlName="genero"
-                 placeholder="Ej. Novela, Ciencia Ficción, Historia...">
+            placeholder="Ej. Novela, Ciencia Ficción, Historia...">
           <div class="field-error" *ngIf="libroForm.get('genero')?.invalid && libroForm.get('genero')?.touched">
             <i class="bi bi-exclamation-circle"></i> El género es obligatorio
           </div>
@@ -113,10 +112,9 @@
         <!-- Detalles -->
         <div class="bn-input-group no-icon">
           <label for="detalles-input">Descripción / Detalles</label>
-          <textarea id="detalles-input" formControlName="detalles"
-                    rows="4"
-                    placeholder="Breve descripción del libro, sinopsis, notas adicionales..."
-                    style="padding-left:1rem; resize:vertical; min-height:100px"></textarea>
+          <textarea id="detalles-input" formControlName="detalles" rows="4"
+            placeholder="Breve descripción del libro, sinopsis, notas adicionales..."
+            style="padding-left:1rem; resize:vertical; min-height:100px"></textarea>
         </div>
 
         <!-- Toggle disponible -->
@@ -133,10 +131,9 @@
           </label>
         </div>
         <p class="disponible-status">
-          <i class="bi me-1"
-             [class.bi-check-circle-fill]="libroForm.get('disponible')?.value"
-             [class.bi-x-circle-fill]="!libroForm.get('disponible')?.value"
-             [style.color]="libroForm.get('disponible')?.value ? 'var(--accent)' : 'var(--danger)'"></i>
+          <i class="bi me-1" [class.bi-check-circle-fill]="libroForm.get('disponible')?.value"
+            [class.bi-x-circle-fill]="!libroForm.get('disponible')?.value"
+            [style.color]="libroForm.get('disponible')?.value ? 'var(--accent)' : 'var(--danger)'"></i>
           El libro está
           <strong [style.color]="libroForm.get('disponible')?.value ? 'var(--accent)' : 'var(--danger)'">
             {{ libroForm.get('disponible')?.value ? 'disponible' : 'no disponible' }}
@@ -145,10 +142,7 @@
 
         <!-- Botones -->
         <div class="d-flex gap-3 mt-4">
-          <button
-            type="submit"
-            class="btn btn-bn-primary flex-grow-1 py-3"
-            [disabled]="libroForm.invalid"
+          <button type="submit" class="btn btn-bn-primary flex-grow-1 py-3" [disabled]="libroForm.invalid"
             id="btn-guardar-libro">
             <i class="bi bi-plus-circle me-2"></i>
             Registrar Libro
@@ -168,6 +162,7 @@
 </div>
 
 <!-- Footer mínimo -->
-<footer style="background:var(--primary-dark); color:rgba(255,255,255,0.4); text-align:center; padding:1rem; font-size:0.8rem;">
+<footer
+  style="background:var(--primary-dark); color:rgba(255,255,255,0.4); text-align:center; padding:1rem; font-size:0.8rem;">
   <p style="margin:0">© 2026 BiblioNexus — Panel de Administración</p>
 </footer>

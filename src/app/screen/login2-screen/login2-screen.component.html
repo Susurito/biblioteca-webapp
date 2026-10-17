@@ -51,13 +51,7 @@
         <div class="bn-input-group">
           <label for="email-input">Correo Electrónico</label>
           <i class="bi bi-envelope input-icon"></i>
-          <input
-            type="email"
-            id="email-input"
-            name="email"
-            [(ngModel)]="email"
-            placeholder="tu@correo.com"
-            required
+          <input type="email" id="email-input" name="email" [(ngModel)]="email" placeholder="tu@correo.com" required
             autocomplete="email">
         </div>
 
@@ -65,15 +59,8 @@
         <div class="bn-input-group">
           <label for="password-input">Contraseña</label>
           <i class="bi bi-lock input-icon"></i>
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            id="password-input"
-            name="password"
-            [(ngModel)]="password"
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-            class="pe-5">
+          <input [type]="showPassword ? 'text' : 'password'" id="password-input" name="password" [(ngModel)]="password"
+            placeholder="••••••••" required autocomplete="current-password" class="pe-5">
           <button type="button" class="password-toggle" (click)="togglePassword()" id="btn-toggle-password">
             <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
           </button>
@@ -86,21 +73,14 @@
         </div>
 
         <!-- Botón principal -->
-        <button
-          class="btn btn-bn-primary w-100 py-3 mt-2"
-          type="submit"
-          [disabled]="!loginForm.form.valid"
+        <button class="btn btn-bn-primary w-100 py-3 mt-2" type="submit" [disabled]="!loginForm.form.valid"
           id="btn-login-submit">
           <i class="bi bi-box-arrow-in-right me-2"></i>
           Iniciar Sesión
         </button>
 
         <!-- Volver -->
-        <button
-          type="button"
-          class="btn btn-bn-secondary w-100 py-2 mt-3"
-          (click)="volver()"
-          id="btn-login-volver">
+        <button type="button" class="btn btn-bn-secondary w-100 py-2 mt-3" (click)="volver()" id="btn-login-volver">
           <i class="bi bi-arrow-left me-2"></i>Volver al inicio
         </button>
 

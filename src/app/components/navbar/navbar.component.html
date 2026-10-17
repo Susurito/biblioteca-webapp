@@ -2,77 +2,91 @@
 <nav class="navbar navbar-expand-lg bn-navbar">
   <div class="container-fluid px-3 px-lg-4">
     <!-- Marca -->
-    <a class="navbar-brand" routerLink="/">
+    <a class="navbar-brand" routerLink="/" (click)="closeNav()">
       <span class="brand-icon"><i class="bi bi-book-half"></i></span>
       BiblioNexus
     </a>
 
-    <!-- Boton colapsable -->
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navGlobal">
-      <i class="bi bi-list fs-4" style="color:var(--primary)"></i>
+    <!-- Boton colapsable móvil -->
+    <button class="navbar-toggler border-0 shadow-none d-lg-none" type="button" (click)="toggleNav()"
+      [attr.aria-expanded]="!isNavCollapsed" aria-label="Abrir menú de navegación">
+      <i class="bi" [ngClass]="isNavCollapsed ? 'bi-list' : 'bi-x-lg'"></i>
     </button>
 
-    <div class="collapse navbar-collapse" id="navGlobal">
+    <div class="collapse navbar-collapse" [class.show]="!isNavCollapsed" id="navGlobal">
+      <!-- Indicador decorativo táctil móvil -->
+      <div class="mobile-menu-handle d-lg-none"></div>
+
       <!-- Navegacion -->
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-            <i class="bi bi-house me-1"></i>Inicio
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+            (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-house"></i></span>
+            <span class="nav-link-text">Inicio</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/catalogo" routerLinkActive="active">
-            <i class="bi bi-grid me-1"></i>Catálogo
+          <a class="nav-link" routerLink="/catalogo" routerLinkActive="active" (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-grid"></i></span>
+            <span class="nav-link-text">Catálogo</span>
           </a>
         </li>
-        <!-- Pestaña Dashboard (Alumnos) -->
+        <!-- Pestaña Dashboard (Solo Alumnos) -->
         <li class="nav-item" *ngIf="isAlumno">
-          <a class="nav-link" routerLink="/alumnos" routerLinkActive="active" id="nav-dashboard">
-            <i class="bi bi-person-workspace me-1"></i>Dashboard
+          <a class="nav-link" routerLink="/alumnos" routerLinkActive="active" id="nav-dashboard" (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-person-workspace"></i></span>
+            <span class="nav-link-text">Dashboard</span>
           </a>
         </li>
         <!-- Pestaña Ejemplares para Administrador -->
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active" id="nav-ejemplares">
-            <i class="bi bi-journal-bookmark me-1"></i>Ejemplares
+          <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active" id="nav-ejemplares" (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-journal-bookmark"></i></span>
+            <span class="nav-link-text">Ejemplares</span>
           </a>
         </li>
         <!-- Pestaña Préstamos para Administrador -->
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin">
-            <i class="bi bi-arrow-left-right me-1"></i>Préstamos
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin" (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-arrow-left-right"></i></span>
+            <span class="nav-link-text">Préstamos</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/contactanos" routerLinkActive="active">
-            <i class="bi bi-envelope me-1"></i>Contáctanos
+          <a class="nav-link" routerLink="/contacto" routerLinkActive="active" (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-envelope"></i></span>
+            <span class="nav-link-text">Contáctanos</span>
           </a>
         </li>
       </ul>
 
-      <!-- Busqueda -->
-      <form class="d-flex align-items-center me-3 bn-search" (ngSubmit)="onSearch()">
-        <i class="bi bi-search search-icon"></i>
-        <input type="search" placeholder="Buscar título, autor..." [(ngModel)]="searchTerm" name="search">
+      <!-- Búsqueda -->
+      <form class="d-flex align-items-center me-lg-3 bn-search" (ngSubmit)="onSearch()">
+        <button type="submit" class="search-submit-btn" aria-label="Buscar libro">
+          <i class="bi bi-search search-icon"></i>
+        </button>
+        <input type="search" placeholder="Buscar título, autor..." [(ngModel)]="searchTerm" name="search"
+          (input)="onSearchInput()" id="navbar-search-input" autocomplete="off">
       </form>
 
       <!-- Botones o Perfil de Usuario -->
-      <div class="d-flex gap-2 align-items-center flex-shrink-0">
-        <!-- Si NO esta logueado -->
+      <div class="d-flex gap-2 align-items-center bn-nav-actions">
+        <!-- Si NO está logueado -->
         <ng-container *ngIf="!isLoggedIn">
-          <a class="btn btn-bn-secondary btn-sm px-3" routerLink="/login">Iniciar Sesión</a>
-          <a class="btn btn-bn-primary btn-sm px-3" routerLink="/registro">Registrarse</a>
+          <a class="btn btn-bn-secondary btn-sm" routerLink="/login" (click)="closeNav()">Iniciar Sesión</a>
+          <a class="btn btn-bn-primary btn-sm" routerLink="/registro" (click)="closeNav()">Registrarse</a>
         </ng-container>
 
-        <!-- Si SI esta logueado -->
+        <!-- Si SÍ está logueado -->
         <ng-container *ngIf="isLoggedIn">
           <!-- Si es admin -->
-          <a *ngIf="isAdmin" class="btn btn-bn-gold btn-sm me-2 fw-semibold shadow-sm" routerLink="/registrar-libro">
+          <a *ngIf="isAdmin" class="btn btn-bn-gold btn-sm me-lg-2 fw-semibold shadow-sm" routerLink="/registrar-libro" (click)="closeNav()">
             <i class="bi bi-plus-circle me-1"></i>Registrar Libro
           </a>
 
           <!-- Perfil Desplegable Estilizado como Pill -->
-          <div class="nav-item dropdown user-profile" [class.open]="isMenuOpen">
+          <div class="nav-item dropdown user-profile w-100-mobile" [class.open]="isMenuOpen">
             <a class="user-profile-pill d-flex align-items-center" id="navbarUserDropdown" role="button"
               aria-expanded="false" (click)="toggleMenu()">
 
@@ -92,7 +106,7 @@
                 </label>
               </div>
 
-              <!-- Saludo con espaciado amplio y estetico -->
+              <!-- Saludo -->
               <span class="user-greeting d-none d-lg-inline-block">
                 Hola, {{ usuario.nombre ? usuario.nombre.split(' ')[0] : 'Usuario' }}
               </span>
@@ -105,8 +119,10 @@
               <li>
                 <div class="dropdown-header text-muted">Matrícula: {{ usuario.matricula || 'N/A' }}</div>
               </li>
-              <li><a class="dropdown-item" routerLink="/cuenta"><i class="bi bi-person me-2"></i> Mi Perfil</a></li>
-              <li><a class="dropdown-item" routerLink="/cuenta" fragment="ajustes"><i class="bi bi-gear me-2"></i>
+              <li><a class="dropdown-item" routerLink="/cuenta" (click)="closeNav(); isMenuOpen=false"><i
+                    class="bi bi-person me-2"></i> Mi Perfil</a></li>
+              <li><a class="dropdown-item" routerLink="/cuenta" fragment="ajustes"
+                  (click)="closeNav(); isMenuOpen=false"><i class="bi bi-gear me-2"></i>
                   Configuración</a></li>
               <li>
                 <hr class="dropdown-divider">

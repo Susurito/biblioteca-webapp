@@ -23,13 +23,13 @@
       </div>
     </div>
 
-    <!-- Layout Asimetrico (Grid / Bento-box) -->
+    <!-- Layout Asimétrico (Grid / Bento-box) -->
     <div class="row g-4 anim-fade-up delay-1">
 
       <!-- Columna Principal (Izquierda) -->
       <div class="col-12 col-xl-8">
 
-        <!-- Prestamos Activos -->
+        <!-- Préstamos Activos -->
         <div class="bn-card p-4 mb-4 shadow-sm border-0 bg-white">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-book-half text-primary me-2"></i>Tus
@@ -139,7 +139,7 @@
                     <i class="bi bi-upc-scan me-1"></i> ISBN: {{ rec.isbn }}
                   </p>
 
-                  <!-- Botones de Accion -->
+                  <!-- Botones de Acción -->
                   <div class="mt-auto d-flex gap-2 pt-2">
                     <button
                       *ngIf="rec.disponible"
@@ -184,7 +184,7 @@
       <!-- Columna Secundaria (Derecha) -->
       <div class="col-12 col-xl-4 d-flex flex-column gap-4">
 
-        <!-- Tarjeta de Perfil Rapido -->
+        <!-- Tarjeta de Perfil Rápido -->
         <div class="bn-card p-4 shadow-sm border-0 bg-white text-center">
           <div class="avatar-large mx-auto mb-3 position-relative">
             <img [src]="usuario.fotoPerfil" class="rounded-circle object-fit-cover border border-4 border-white shadow"
@@ -206,7 +206,7 @@
           </div>
         </div>
 
-        <!-- Acceso Rapido -->
+        <!-- Acciones Rápidas -->
         <div class="bn-card p-4 shadow-sm border-0 bg-white">
           <h5 class="font-display fw-bold mb-3 text-dark">Acciones Rápidas</h5>
           <div class="d-grid gap-2">
@@ -227,8 +227,30 @@
           </div>
         </div>
 
+        <!-- Notificaciones -->
+        <div class="bn-card p-4 shadow-sm border-0 bg-white flex-grow-1">
+          <h5 class="font-display fw-bold text-dark mb-4"><i class="bi bi-bell text-warning me-2"></i>Notificaciones</h5>
+
+          <div class="d-flex align-items-start mb-3 pb-3 border-bottom">
+            <div class="bg-warning-subtle text-warning rounded-circle p-2 me-3">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-1 fs-6">Biblioteca BiblioNexus</h6>
+              <p class="text-muted small mb-1">Recuerda devolver tus préstamos a tiempo para evitar sanciones.</p>
+              <a routerLink="/catalogo" class="text-primary small fw-semibold text-decoration-none">Ver novedades</a>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
   </div>
 </div>
+
+<footer class="bn-footer mt-auto">
+  <div class="container text-center">
+    <p class="m-0">© 2026 BiblioNexus — Todos los derechos reservados.</p>
+  </div>
+</footer>

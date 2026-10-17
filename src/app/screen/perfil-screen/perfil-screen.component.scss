@@ -76,6 +76,10 @@
   position: sticky;
   top: 80px;
 
+  @media (max-width: 991px) {
+    position: static;
+  }
+
   .perfil-avatar {
     background: linear-gradient(135deg, var(--primary-dark), var(--primary));
     padding: 2.5rem 1.5rem 1.5rem;
@@ -226,6 +230,11 @@
   padding: 0 1.5rem;
   gap: 0.25rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 576px) {
+    padding: 0 0.75rem;
+  }
 
   .bn-tab {
     display: inline-flex;
@@ -274,6 +283,10 @@
   padding: 2rem;
   animation: fadeInUp 0.3s ease both;
 
+  @media (max-width: 768px) {
+    padding: 1.25rem 1rem;
+  }
+
   .panel-section-header {
     margin-bottom: 1.5rem;
 
@@ -297,6 +310,7 @@
   overflow-x: auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
 }
 
 .bn-table {

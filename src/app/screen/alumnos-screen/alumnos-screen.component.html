@@ -3,19 +3,22 @@
 <!-- Dashboard Main Content -->
 <div class="dashboard-page bg-bn min-vh-100 py-4">
   <div class="container-fluid px-4">
-    
+
     <!-- Header del Dashboard (Hero) -->
     <div class="dashboard-hero position-relative rounded-4 overflow-hidden mb-5 anim-fade-up shadow-sm">
       <div class="hero-bg"></div>
-      <div class="hero-content p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between align-items-md-center position-relative z-1 text-white">
+      <div
+        class="hero-content p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between align-items-md-center position-relative z-1 text-white">
         <div>
           <span class="badge bg-white text-primary mb-2 fw-bold px-3 py-2 rounded-pill">
             <i class="bi bi-calendar-event me-1"></i> {{ defaultDate | date:'fullDate' }}
           </span>
-          <h1 class="font-display fw-bold display-5 mb-1 text-shadow">¡Hola de nuevo, {{ usuario.nombre.split(' ')[0] }}!</h1>
+          <h1 class="font-display fw-bold display-5 mb-1 text-shadow">¡Hola de nuevo, {{ usuario.nombre.split(' ')[0]
+            }}!</h1>
           <p class="fs-5 opacity-75 mb-0 text-shadow">Listo para continuar tu viaje literario hoy?</p>
         </div>
-        <button class="btn btn-light text-primary btn-lg mt-4 mt-md-0 shadow-sm fw-bold px-4 rounded-pill" routerLink="/catalogo">
+        <button class="btn btn-light text-primary btn-lg mt-4 mt-md-0 shadow-sm fw-bold px-4 rounded-pill"
+          routerLink="/catalogo">
           <i class="bi bi-compass me-2"></i> Descubrir Libros
         </button>
       </div>
@@ -23,33 +26,37 @@
 
     <!-- Layout Asimétrico (Grid / Bento-box) -->
     <div class="row g-4 anim-fade-up delay-1">
-      
+
       <!-- Columna Principal (Izquierda) -->
       <div class="col-12 col-xl-8">
-        
+
         <!-- Préstamos Activos -->
         <div class="bn-card p-4 mb-4 shadow-sm border-0 bg-white">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-book-half text-primary me-2"></i>Tus Préstamos Activos</h4>
+            <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-book-half text-primary me-2"></i>Tus
+              Préstamos Activos</h4>
             <a routerLink="/mis-prestamos" class="text-decoration-none fw-semibold">Ver todos &rarr;</a>
           </div>
-          
+
           <div class="row g-3">
             <div class="col-12 col-md-6" *ngFor="let libro of librosPrestados">
               <div class="border rounded-3 p-3 d-flex align-items-center bg-light">
-                <div class="bg-primary-subtle text-primary rounded-3 d-flex justify-content-center align-items-center me-3" style="width: 60px; height: 80px;">
+                <div
+                  class="bg-primary-subtle text-primary rounded-3 d-flex justify-content-center align-items-center me-3"
+                  style="width: 60px; height: 80px;">
                   <i class="bi bi-book fs-3"></i>
                 </div>
                 <div class="flex-grow-1">
                   <h6 class="fw-bold mb-1 text-truncate" style="max-width: 180px;">{{ libro.titulo }}</h6>
-                  <p class="text-muted small mb-2"><i class="bi bi-clock me-1"></i>Vence: {{ libro.fechaDevolucion }}</p>
+                  <p class="text-muted small mb-2"><i class="bi bi-clock me-1"></i>Vence: {{ libro.fechaDevolucion }}
+                  </p>
                   <div class="progress" style="height: 6px;">
                     <div class="progress-bar bg-warning" [style.width]="libro.progreso + '%'"></div>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div class="col-12" *ngIf="librosPrestados.length === 0">
               <div class="text-center text-muted p-4 bg-light rounded-3 border border-dashed">
                 <i class="bi bi-inbox fs-1 mb-2"></i>
@@ -62,19 +69,23 @@
         <!-- Recomendados para ti -->
         <div class="bn-card p-4 shadow-sm border-0 bg-white">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-stars text-secondary me-2"></i>Recomendados para ti</h4>
+            <h4 class="font-display fw-bold text-dark m-0"><i class="bi bi-stars text-secondary me-2"></i>Recomendados
+              para ti</h4>
           </div>
-          
+
           <div class="row g-3">
             <div class="col-12 col-sm-6 col-md-4" *ngFor="let rec of recomendaciones">
               <div class="rec-card border rounded-3 overflow-hidden h-100 bg-light d-flex flex-column shadow-sm">
-                <div class="rec-cover bg-dark text-white d-flex align-items-center justify-content-center text-center p-3" style="height: 140px; background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));">
+                <div
+                  class="rec-cover bg-dark text-white d-flex align-items-center justify-content-center text-center p-3"
+                  style="height: 140px; background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));">
                   <span class="fw-bold fs-6 lh-sm text-shadow-sm">{{ rec.titulo }}</span>
                 </div>
                 <div class="p-3 d-flex flex-column flex-grow-1">
                   <h6 class="fw-bold mb-1 text-truncate">{{ rec.titulo }}</h6>
                   <p class="text-muted small mb-3"><i class="bi bi-person me-1"></i> {{ rec.autor }}</p>
-                  <button class="btn btn-sm btn-outline-primary w-100 mt-auto rounded-pill fw-semibold">Ver detalles</button>
+                  <button class="btn btn-sm btn-outline-primary w-100 mt-auto rounded-pill fw-semibold">Ver
+                    detalles</button>
                 </div>
               </div>
             </div>
@@ -85,15 +96,16 @@
 
       <!-- Columna Secundaria (Derecha) -->
       <div class="col-12 col-xl-4 d-flex flex-column gap-4">
-        
+
         <!-- Tarjeta de Perfil Rápido -->
         <div class="bn-card p-4 shadow-sm border-0 bg-white text-center">
           <div class="avatar-large mx-auto mb-3 position-relative">
-            <img [src]="usuario.fotoPerfil" class="rounded-circle object-fit-cover border border-4 border-white shadow" style="width: 90px; height: 90px;">
+            <img [src]="usuario.fotoPerfil" class="rounded-circle object-fit-cover border border-4 border-white shadow"
+              style="width: 90px; height: 90px;">
           </div>
           <h5 class="fw-bold mb-1">{{ usuario.nombre }}</h5>
           <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1 fw-medium mb-3">Estudiante</span>
-          
+
           <div class="d-flex justify-content-center gap-4 text-start border-top pt-3 mt-2">
             <div>
               <p class="text-muted small text-uppercase fw-bold m-0 tracking-wide">Leídos</p>
@@ -109,8 +121,9 @@
 
         <!-- Notificaciones -->
         <div class="bn-card p-4 shadow-sm border-0 bg-white flex-grow-1">
-          <h5 class="font-display fw-bold text-dark mb-4"><i class="bi bi-bell text-warning me-2"></i>Notificaciones</h5>
-          
+          <h5 class="font-display fw-bold text-dark mb-4"><i class="bi bi-bell text-warning me-2"></i>Notificaciones
+          </h5>
+
           <div class="d-flex align-items-start mb-3 pb-3 border-bottom">
             <div class="bg-warning-subtle text-warning rounded-circle p-2 me-3">
               <i class="bi bi-exclamation-triangle-fill"></i>

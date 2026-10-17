@@ -1,0 +1,97 @@
+<!-- ====== MODAL DE DETALLES DEL LIBRO ====== -->
+<div class="libro-modal-overlay" *ngIf="isOpen && libro">
+  <!-- Fondo desenfocado -->
+  <div class="libro-modal-backdrop" (click)="onClose()"></div>
+
+  <!-- Contenedor centrado -->
+  <div class="libro-modal-container" (click)="onBackdropClick($event)">
+    <div class="libro-modal-card anim-modal-enter" (click)="$event.stopPropagation()">
+
+      <!-- Botón de cierre (X) -->
+      <button class="btn-modal-close" (click)="onClose()" aria-label="Cerrar detalles del libro" id="btn-close-libro-detail-modal">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Layout en dos columnas: Portada | Información -->
+      <div class="libro-modal-grid">
+
+        <!-- Columna 1: Portada -->
+        <div class="libro-cover-col">
+          <div class="libro-cover-wrapper">
+            <div class="cover-glow"></div>
+            <img [src]="getPortada(libro)" [alt]="libro.titulo" class="libro-cover-img"
+              (error)="$any($event.target).src='assets/images/libro.jpg'" />
+            <div class="cover-badge" [class.disponible]="libro.disponible" [class.no-disponible]="!libro.disponible">
+              <i class="bi" [class.bi-check-circle-fill]="libro.disponible" [class.bi-x-circle-fill]="!libro.disponible"></i>
+              <span>{{ libro.disponible ? 'Disponible' : 'No disponible' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna 2: Información del Libro -->
+        <div class="libro-info-col">
+          <!-- Eyebrow: Género / Categoría -->
+          <div class="libro-header-tags">
+            <span class="genre-pill">
+              <i class="bi bi-tag-fill me-1"></i>{{ libro.genero }}
+            </span>
+            <span class="catalog-id-pill" *ngIf="libro.id">
+              <i class="bi bi-upc-scan me-1"></i>ID #{{ libro.id }}
+            </span>
+          </div>
+
+          <!-- Título del Libro -->
+          <h2 class="libro-title font-display">{{ libro.titulo }}</h2>
+
+          <!-- Autor -->
+          <div class="libro-author">
+            <div class="author-avatar-icon">
+              <i class="bi bi-person"></i>
+            </div>
+            <div class="author-info">
+              <span class="author-label">Autor / Creador</span>
+              <span class="author-name">{{ libro.autor }}</span>
+            </div>
+          </div>
+
+          <!-- Divisor sutil -->
+          <hr class="modal-divider" />
+
+          <!-- Sección: Sinopsis o Detalles -->
+          <div class="libro-synopsis-section">
+            <h4 class="synopsis-heading">
+              <i class="bi bi-body-text me-2"></i>Sinopsis y Detalles
+            </h4>
+
+            <div class="synopsis-content-box" *ngIf="libro.detalles; else sinDetalles">
+              <p class="synopsis-text">{{ libro.detalles }}</p>
+            </div>
+
+            <ng-template #sinDetalles>
+              <div class="synopsis-empty-box">
+                <i class="bi bi-info-circle me-2"></i>
+                <span>Este ejemplar no incluye una sinopsis detallada registrada en el catálogo. Puedes consultar su disponibilidad en sala o solicitar el préstamo directamente.</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="libro-modal-actions">
+            <button class="btn btn-solicitar-prestamo" [class.btn-solicitar-active]="libro.disponible"
+              [class.btn-solicitar-disabled]="!libro.disponible" [disabled]="!libro.disponible"
+              (click)="onSolicitarPrestamo()" id="btn-modal-solicitar-prestamo">
+              <i class="bi me-2" [class.bi-arrow-left-right]="libro.disponible" [class.bi-lock-fill]="!libro.disponible"></i>
+              <span>{{ libro.disponible ? 'Solicitar Préstamo' : 'No disponible para préstamo' }}</span>
+            </button>
+
+            <button class="btn btn-modal-dismiss" (click)="onClose()" id="btn-modal-dismiss-libro">
+              Cerrar
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

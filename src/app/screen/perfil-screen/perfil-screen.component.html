@@ -41,7 +41,8 @@
               <i class="bi bi-person-fill"></i>
             </div>
             <div class="perfil-rol-badge" [class.admin-badge]="esAdministrador()">
-              <i class="bi" [class.bi-shield-fill]="esAdministrador()" [class.bi-mortarboard-fill]="!esAdministrador()"></i>
+              <i class="bi" [class.bi-shield-fill]="esAdministrador()"
+                [class.bi-mortarboard-fill]="!esAdministrador()"></i>
               {{ esAdministrador() ? 'Administrador' : 'Alumno' }}
             </div>
           </div>
@@ -102,22 +103,22 @@
 
           <!-- Tabs Admin -->
           <div class="bn-tabs">
-            <button class="bn-tab" [class.active]="activeTab === 'pendientes'"
-                    (click)="cambiarTab('pendientes')" id="tab-pendientes">
+            <button class="bn-tab" [class.active]="activeTab === 'pendientes'" (click)="cambiarTab('pendientes')"
+              id="tab-pendientes">
               <i class="bi bi-clock me-1"></i>Solicitudes Pendientes
               <span class="tab-badge warning" *ngIf="prestamosPendientes.length > 0">
                 {{ prestamosPendientes.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'historial'"
-                    (click)="cambiarTab('historial')" id="tab-historial-admin">
+            <button class="bn-tab" [class.active]="activeTab === 'historial'" (click)="cambiarTab('historial')"
+              id="tab-historial-admin">
               <i class="bi bi-bar-chart me-1"></i>Historial Completo
               <span class="tab-badge muted" *ngIf="historialPrestamos.length > 0">
                 {{ historialPrestamos.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'ajustes'"
-                    (click)="cambiarTab('ajustes')" id="tab-ajustes-admin">
+            <button class="bn-tab" [class.active]="activeTab === 'ajustes'" (click)="cambiarTab('ajustes')"
+              id="tab-ajustes-admin">
               <i class="bi bi-gear me-1"></i>Ajustes
             </button>
           </div>
@@ -155,14 +156,12 @@
                     <td>{{ p.fecha_solicitud | date:'dd/MM/yyyy' }}</td>
                     <td>
                       <div class="d-flex gap-2">
-                        <button class="btn-action aprobar"
-                                (click)="revisarPrestamo(p, 'aprobar')"
-                                [id]="'btn-aprobar-' + p.id">
+                        <button class="btn-action aprobar" (click)="revisarPrestamo(p, 'aprobar')"
+                          [id]="'btn-aprobar-' + p.id">
                           <i class="bi bi-check-lg"></i> Aprobar
                         </button>
-                        <button class="btn-action rechazar"
-                                (click)="revisarPrestamo(p, 'rechazar')"
-                                [id]="'btn-rechazar-' + p.id">
+                        <button class="btn-action rechazar" (click)="revisarPrestamo(p, 'rechazar')"
+                          [id]="'btn-rechazar-' + p.id">
                           <i class="bi bi-x-lg"></i> Rechazar
                         </button>
                       </div>
@@ -248,22 +247,22 @@
 
           <!-- Tabs Alumno -->
           <div class="bn-tabs">
-            <button class="bn-tab" [class.active]="activeTab === 'activos'"
-                    (click)="cambiarTab('activos')" id="tab-activos">
+            <button class="bn-tab" [class.active]="activeTab === 'activos'" (click)="cambiarTab('activos')"
+              id="tab-activos">
               <i class="bi bi-book me-1"></i>Préstamos Activos
               <span class="tab-badge success" *ngIf="prestamosActivos.length > 0">
                 {{ prestamosActivos.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'historial'"
-                    (click)="cambiarTab('historial')" id="tab-historial-alumno">
+            <button class="bn-tab" [class.active]="activeTab === 'historial'" (click)="cambiarTab('historial')"
+              id="tab-historial-alumno">
               <i class="bi bi-clock-history me-1"></i>Historial
               <span class="tab-badge muted" *ngIf="historialCompleto.length > 0">
                 {{ historialCompleto.length }}
               </span>
             </button>
-            <button class="bn-tab" [class.active]="activeTab === 'ajustes'"
-                    (click)="cambiarTab('ajustes')" id="tab-ajustes-alumno">
+            <button class="bn-tab" [class.active]="activeTab === 'ajustes'" (click)="cambiarTab('ajustes')"
+              id="tab-ajustes-alumno">
               <i class="bi bi-gear me-1"></i>Ajustes
             </button>
           </div>
@@ -297,9 +296,8 @@
                       </span>
                     </td>
                     <td>
-                      <button class="btn-action devolver"
-                              (click)="devolverLibro(prestamo.id, prestamo.libro_titulo)"
-                              [id]="'btn-devolver-' + prestamo.id">
+                      <button class="btn-action devolver" (click)="devolverLibro(prestamo.id, prestamo.libro_titulo)"
+                        [id]="'btn-devolver-' + prestamo.id">
                         <i class="bi bi-arrow-return-left me-1"></i>Devolver
                       </button>
                     </td>
@@ -392,28 +390,34 @@
         <!-- Columna Izquierda: Datos Personales -->
         <div class="col-12 col-md-6">
           <h6 class="fw-bold mb-3 text-secondary">Datos Personales</h6>
-          
+
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">NOMBRE</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-person position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="nombre" placeholder="Tu nombre">
+              <i class="bi bi-person position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="nombre"
+                placeholder="Tu nombre">
             </div>
           </div>
 
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">APELLIDO PATERNO</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-person-lines-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="apellido_paterno" placeholder="Apellido Paterno">
+              <i class="bi bi-person-lines-fill position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="apellido_paterno" placeholder="Apellido Paterno">
             </div>
           </div>
 
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">APELLIDO MATERNO</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-person-lines-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="apellido_materno" placeholder="Apellido Materno">
+              <i class="bi bi-person-lines-fill position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="text" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="apellido_materno" placeholder="Apellido Materno">
             </div>
           </div>
         </div>
@@ -425,26 +429,34 @@
           <div class="bn-input-group mb-3">
             <label class="form-label text-muted small fw-bold">CORREO ELECTRÓNICO</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-envelope position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="email" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="email" placeholder="correo@ejemplo.com">
+              <i class="bi bi-envelope position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="email" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="email"
+                placeholder="correo@ejemplo.com">
             </div>
           </div>
 
           <div class="bn-input-group mb-3">
-            <label class="form-label text-muted small fw-bold">CAMBIAR CONTRASEÑA <span class="fw-normal text-muted">(Opcional)</span></label>
+            <label class="form-label text-muted small fw-bold">CAMBIAR CONTRASEÑA <span
+                class="fw-normal text-muted">(Opcional)</span></label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-lock position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="password" placeholder="Nueva contraseña">
+              <i class="bi bi-lock position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="password" placeholder="Nueva contraseña">
             </div>
           </div>
 
           <div class="bn-input-group mb-4">
             <label class="form-label text-muted small fw-bold">CONFIRMAR CONTRASEÑA</label>
             <div class="position-relative bn-input-wrapper">
-              <i class="bi bi-lock-fill position-absolute text-muted" style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
-              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;" formControlName="confirmPassword" placeholder="Confirma nueva contraseña">
+              <i class="bi bi-lock-fill position-absolute text-muted"
+                style="top: 50%; transform: translateY(-50%); left: 1rem;"></i>
+              <input type="password" class="form-control bg-light" style="padding-left: 2.5rem;"
+                formControlName="confirmPassword" placeholder="Confirma nueva contraseña">
             </div>
-            <div class="text-danger small mt-1" *ngIf="perfilForm.errors?.['notMatching'] && (perfilForm.get('confirmPassword')?.touched || perfilForm.get('password')?.touched)">
+            <div class="text-danger small mt-1"
+              *ngIf="perfilForm.errors?.['notMatching'] && (perfilForm.get('confirmPassword')?.touched || perfilForm.get('password')?.touched)">
               Las contraseñas no coinciden.
             </div>
           </div>
@@ -455,7 +467,8 @@
       <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
         <button type="submit" class="btn btn-bn-primary px-5 py-2 fw-bold" [disabled]="perfilForm.invalid || isSaving">
           <span *ngIf="!isSaving"><i class="bi bi-save me-2"></i>Guardar Cambios</span>
-          <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando...</span>
+          <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2" role="status"
+              aria-hidden="true"></span>Guardando...</span>
         </button>
       </div>
     </form>

@@ -29,6 +29,8 @@ import { PerfilScreenComponent } from './screen/perfil-screen/perfil-screen.comp
 
 import { DatePipe } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AuthModalComponent } from './modals/auth-modal/auth-modal.component';
+import { LibroDetailModalComponent } from './modals/libro-detail-modal/libro-detail-modal.component';
 
 
 @NgModule({
@@ -43,7 +45,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     ContactoScreenComponent,
     RegistroScreenComponent,
     PerfilScreenComponent,
-    NavbarComponent
+    NavbarComponent,
+    AuthModalComponent,
+    LibroDetailModalComponent
   ],
   imports: [
     BrowserModule,
@@ -57,8 +61,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     MatIconModule,    // <-- Agregado
     MatSelectModule,   // <-- agregado
     MatOptionModule,    // <-- agregado
-     FormsModule,
-     HttpClientModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

@@ -41,18 +41,18 @@ export class PerfilScreenComponent implements OnInit {
   errorMessage: string | null = null;
   activeTab: string = 'pendientes';
   token: string | null = null;
-  
+
   // Propiedades para Ajustes
   perfilForm!: FormGroup;
   mostrarToastExito: boolean = false;
   isSaving: boolean = false;
 
   constructor(
-    private http: HttpClient, 
-    private router: Router, 
+    private http: HttpClient,
+    private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -110,17 +110,17 @@ export class PerfilScreenComponent implements OnInit {
             apellido_materno: res.apellido_materno || '',
             email: res.email || ''
           });
-          
-          
+
+
           const esAdmin = this.esAdministrador();
-          
+
           console.log('🔍 Rol detectado:', res.rol, 'Es admin:', esAdmin);
-          
+
           // Si NO es admin, por defecto activos (a menos que la ruta diga ajustes)
           if (!esAdmin && this.activeTab !== 'ajustes') {
             this.activeTab = 'activos';
           }
-          
+
           // Después de cargar el perfil, cargar los préstamos
           this.cargarTodosLosPrestamos(token, esAdmin);
         },
@@ -151,7 +151,7 @@ export class PerfilScreenComponent implements OnInit {
             console.log(`📄 Cargando página: ${url}`);
             const prestamosPagina = res.results || [];
             const todosLosPrestamos = [...prestamosAcumulados, ...prestamosPagina];
-            
+
             if (res.next) {
               cargarTodasLasPaginas(res.next, todosLosPrestamos)
                 .then(resolve)
@@ -170,35 +170,35 @@ export class PerfilScreenComponent implements OnInit {
     cargarTodasLasPaginas('http://localhost:8000/prestamos/', [])
       .then((todosLosPrestamos: Prestamo[]) => {
         console.log('✅ TODOS los préstamos cargados:', todosLosPrestamos.length);
-        
+
         if (esAdmin) {
           console.log('👨‍💼 Configurando vista para ADMINISTRADOR');
-          
+
           // Para administrador: cargar préstamos pendientes
           this.prestamosPendientes = todosLosPrestamos.filter((p: Prestamo) => {
             const estado = p.estado?.toLowerCase() || '';
-            const esPendiente = estado.includes('pendiente') || 
-                               estado.includes('solicitado') ||
-                               (!p.devuelto && 
-                                !estado.includes('aceptado') && 
-                                !estado.includes('aprobado') && 
-                                !estado.includes('rechazado'));
-            
+            const esPendiente = estado.includes('pendiente') ||
+              estado.includes('solicitado') ||
+              (!p.devuelto &&
+                !estado.includes('aceptado') &&
+                !estado.includes('aprobado') &&
+                !estado.includes('rechazado'));
+
             console.log(`Préstamo ${p.id} - Estado: "${p.estado}" - Devuelto: ${p.devuelto} - Es pendiente: ${esPendiente}`);
             return esPendiente;
           });
 
           // Historial para admin: todos los préstamos ordenados
-          this.historialPrestamos = [...todosLosPrestamos].sort((a: Prestamo, b: Prestamo) => 
+          this.historialPrestamos = [...todosLosPrestamos].sort((a: Prestamo, b: Prestamo) =>
             new Date(b.fecha_solicitud).getTime() - new Date(a.fecha_solicitud).getTime()
           );
-          
+
           console.log('📋 Préstamos pendientes para admin:', this.prestamosPendientes);
           console.log('📊 Historial para admin:', this.historialPrestamos.length);
-          
+
         } else {
           console.log('👨‍🎓 Configurando vista para ALUMNO');
-          
+
           // Para alumno: cargar préstamos activos
           this.prestamosActivos = todosLosPrestamos.filter((p: Prestamo) => {
             const estado = p.estado?.toLowerCase() || '';
@@ -208,14 +208,14 @@ export class PerfilScreenComponent implements OnInit {
           });
 
           // Historial para alumno: todos los préstamos ordenados
-          this.historialCompleto = [...todosLosPrestamos].sort((a: Prestamo, b: Prestamo) => 
+          this.historialCompleto = [...todosLosPrestamos].sort((a: Prestamo, b: Prestamo) =>
             new Date(b.fecha_solicitud).getTime() - new Date(a.fecha_solicitud).getTime()
           );
-          
+
           console.log('📚 Préstamos activos para alumno:', this.prestamosActivos);
           console.log('📖 Historial para alumno:', this.historialCompleto.length);
         }
-        
+
         this.isLoading = false;
       })
       .catch((err) => {
@@ -231,7 +231,7 @@ export class PerfilScreenComponent implements OnInit {
 
   obtenerEstadoPrestamo(prestamo: Prestamo): string {
     const estado = prestamo.estado?.toLowerCase() || '';
-    
+
     if (estado.includes('rechazado')) {
       return 'Rechazado';
     } else if (prestamo.devuelto) {
@@ -292,7 +292,7 @@ export class PerfilScreenComponent implements OnInit {
     }
 
     const accionTexto = accion === 'aprobar' ? 'aprobar' : 'rechazar';
-    
+
     if (!confirm(`¿Estás seguro de que quieres ${accionTexto} el préstamo de "${prestamo.libro_titulo}" solicitado por ${prestamo.alumno_nombre}?`)) {
       return;
     }
@@ -334,13 +334,13 @@ export class PerfilScreenComponent implements OnInit {
     }
 
     this.isSaving = true;
-    
+
     // Aquí simulamos la petición HTTP para guardar
     // Como el endpoint real podría ser distinto, por ahora es una simulación visual
     setTimeout(() => {
       this.isSaving = false;
       this.mostrarToastExito = true;
-      
+
       // Actualizar el perfil visualmente
       const val = this.perfilForm.value;
       if (this.perfil) {
@@ -349,7 +349,7 @@ export class PerfilScreenComponent implements OnInit {
         this.perfil.apellido_materno = val.apellido_materno;
         this.perfil.email = val.email;
       }
-      
+
       // Limpiar las contraseñas
       this.perfilForm.get('password')?.setValue('');
       this.perfilForm.get('confirmPassword')?.setValue('');

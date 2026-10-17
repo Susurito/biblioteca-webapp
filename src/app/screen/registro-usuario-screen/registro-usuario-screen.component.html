@@ -128,8 +128,8 @@
               <label for="matricula-input">Matrícula</label>
               <div class="bn-input-wrapper">
                 <i class="bi bi-hash input-icon"></i>
-                <input type="text" id="matricula-input" formControlName="matricula" placeholder="000000000" maxlength="9"
-                  (keypress)="soloNumeros($event)">
+                <input type="text" id="matricula-input" formControlName="matricula" placeholder="000000000"
+                  maxlength="9" (keypress)="soloNumeros($event)">
               </div>
               <div class="field-error"
                 *ngIf="registerForm.get('matricula')?.invalid && registerForm.get('matricula')?.touched">
@@ -164,7 +164,8 @@
                 <i class="bi bi-lock input-icon"></i>
                 <input [type]="hidePassword ? 'password' : 'text'" id="pwd-input" formControlName="password"
                   placeholder="Mín. 6 caracteres" class="pe-5">
-                <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword" id="btn-toggle-pwd">
+                <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword"
+                  id="btn-toggle-pwd">
                   <i [class]="hidePassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
                 </button>
               </div>
@@ -181,8 +182,8 @@
               <label for="confirm-pwd-input">Confirmar Contraseña</label>
               <div class="bn-input-wrapper">
                 <i class="bi bi-lock-fill input-icon"></i>
-                <input [type]="hideConfirm ? 'password' : 'text'" id="confirm-pwd-input" formControlName="confirmPassword"
-                  placeholder="Repite tu contraseña" class="pe-5">
+                <input [type]="hideConfirm ? 'password' : 'text'" id="confirm-pwd-input"
+                  formControlName="confirmPassword" placeholder="Repite tu contraseña" class="pe-5">
                 <button type="button" class="password-toggle" (click)="hideConfirm = !hideConfirm"
                   id="btn-toggle-confirm">
                   <i [class]="hideConfirm ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
@@ -237,7 +238,8 @@
 
 <!-- Modal de Registro Exitoso -->
 <div class="modal-backdrop fade show" *ngIf="mostrarModalExito"></div>
-<div class="modal fade show d-block" tabindex="-1" *ngIf="mostrarModalExito" aria-labelledby="registroModalLabel" aria-hidden="true" role="dialog">
+<div class="modal fade show d-block" tabindex="-1" *ngIf="mostrarModalExito" aria-labelledby="registroModalLabel"
+  aria-hidden="true" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bn-card-glass border-0">
       <div class="modal-header border-0 text-center flex-column pb-0">
@@ -247,7 +249,8 @@
         <h4 class="modal-title font-display w-100" id="registroModalLabel">¡Usuario Registrado!</h4>
       </div>
       <div class="modal-body text-center pt-2">
-        <p class="text-muted">Tu cuenta ha sido creada exitosamente. Ya puedes acceder a la biblioteca digital sin límites.</p>
+        <p class="text-muted">Tu cuenta ha sido creada exitosamente. Ya puedes acceder a la biblioteca digital sin
+          límites.</p>
       </div>
       <div class="modal-footer border-0 justify-content-center pt-0 pb-4">
         <button type="button" class="btn btn-bn-primary px-5" (click)="irAlLogin()">

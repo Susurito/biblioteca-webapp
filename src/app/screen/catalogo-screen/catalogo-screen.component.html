@@ -13,12 +13,23 @@
 <!-- ====== LAYOUT PRINCIPAL ====== -->
 <div class="catalogo-layout">
 
+  <!-- Barra superior móvil para alternar filtros -->
+  <div class="catalogo-mobile-toolbar d-lg-none">
+    <button class="btn btn-bn-secondary btn-sm" (click)="toggleFiltrosMobile()" id="btn-toggle-filtros-mobile">
+      <i class="bi" [class.bi-funnel-fill]="!isFilterOpenMobile" [class.bi-x-lg]="isFilterOpenMobile"></i>
+      <span class="ms-1">{{ isFilterOpenMobile ? 'Cerrar Filtros' : 'Filtros y Búsqueda' }}</span>
+    </button>
+    <span class="mobile-count-text text-muted small">
+      {{ librosFiltrados.length }} libro{{ librosFiltrados.length !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
   <!-- ---- SIDEBAR FILTROS ---- -->
-  <aside class="catalogo-sidebar anim-slide-l">
+  <aside class="catalogo-sidebar anim-slide-l" [class.mobile-open]="isFilterOpenMobile">
 
     <div class="sidebar-header">
       <h5><i class="bi bi-funnel-fill me-2"></i>Filtros</h5>
-      <button class="btn-reset-filters" (click)="selectedGenero='Todos'; autorBusqueda=''; disponibilidad='Todos'; aplicarFiltro()" id="btn-limpiar-filtros">
+      <button class="btn-reset-filters" (click)="limpiarFiltros()" id="btn-limpiar-filtros">
         <i class="bi bi-x-circle me-1"></i>Limpiar
       </button>
     </div>
@@ -39,14 +50,10 @@
       <label class="filter-label">
         <i class="bi bi-person me-2"></i>Autor
       </label>
-      <div style="position:relative">
-        <input type="text" class="bn-input-plain ps-4"
-               style="padding-left:2.4rem"
-               [(ngModel)]="autorBusqueda"
-               placeholder="Nombre del autor..."
-               (input)="aplicarFiltro()"
-               id="input-autor">
-        <i class="bi bi-search" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.85rem;pointer-events:none"></i>
+      <div class="author-search-box">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" class="bn-input-plain" [(ngModel)]="autorBusqueda" placeholder="Nombre del autor..."
+          (input)="aplicarFiltro()" id="input-autor">
       </div>
     </div>
 
@@ -73,32 +80,45 @@
       </div>
     </div>
 
-    <button class="btn btn-bn-primary w-100 mt-3" (click)="aplicarFiltro()" id="btn-aplicar-filtros">
-      <i class="bi bi-funnel me-2"></i>Aplicar Filtros
-    </button>
 
     <!-- Contador de resultados -->
     <div class="filter-results-count">
       <i class="bi bi-grid me-1"></i>
-      <span>{{ librosFiltrados.length }} libro{{ librosFiltrados.length !== 1 ? 's' : '' }} encontrado{{ librosFiltrados.length !== 1 ? 's' : '' }}</span>
+      <span>{{ librosFiltrados.length }} libro{{ librosFiltrados.length !== 1 ? 's' : '' }} encontrado{{
+        librosFiltrados.length !== 1 ? 's' : '' }}</span>
     </div>
   </aside>
 
   <!-- ---- GRID DE LIBROS ---- -->
   <main class="catalogo-main">
 
+    <!-- Banner de búsqueda activa desde el Navbar -->
+    <div class="active-search-alert anim-fade-up mb-4" *ngIf="queryBusqueda">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <span class="search-badge-icon"><i class="bi bi-search"></i></span>
+          <span>Búsqueda: <strong>"{{ queryBusqueda }}"</strong></span>
+          <span class="results-pill ms-2">{{ librosFiltrados.length }} libro{{ librosFiltrados.length !== 1 ? 's' : ''
+            }}</span>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Grid de libros -->
     <div class="libros-grid" *ngIf="librosFiltrados.length > 0">
       <div class="libro-card anim-fade-up" *ngFor="let libro of librosFiltrados; let i = index"
-           [style.animation-delay]="(i % 6 * 0.07) + 's'">
+        [style.animation-delay]="(i % 6 * 0.07) + 's'">
 
         <!-- Portada -->
         <div class="libro-portada">
           <img [src]="getPortada(libro)" [alt]="libro.titulo"
-               (error)="$any($event.target).src='assets/images/libro.jpg'">
+            (error)="$any($event.target).src='assets/images/libro.jpg'">
           <!-- Badge disponibilidad -->
-          <span class="disponibilidad-badge" [class.disponible]="libro.disponible" [class.no-disponible]="!libro.disponible">
-            <i class="bi" [class.bi-check-circle-fill]="libro.disponible" [class.bi-x-circle-fill]="!libro.disponible"></i>
+          <span class="disponibilidad-badge" [class.disponible]="libro.disponible"
+            [class.no-disponible]="!libro.disponible">
+            <i class="bi" [class.bi-check-circle-fill]="libro.disponible"
+              [class.bi-x-circle-fill]="!libro.disponible"></i>
             {{ libro.disponible ? 'Disponible' : 'No disponible' }}
           </span>
         </div>
@@ -111,18 +131,15 @@
 
           <!-- Acciones -->
           <div class="libro-acciones">
-            <button class="btn btn-bn-secondary btn-sm w-100 mb-2"
-                    (click)="verDetalles(libro)"
-                    [id]="'btn-detalles-' + libro.id">
+            <button class="btn btn-bn-secondary btn-sm w-100 mb-2" (click)="verDetalles(libro)"
+              [id]="'btn-detalles-' + libro.id">
               <i class="bi bi-eye me-1"></i>Ver Detalles
             </button>
-            <button class="btn btn-prestamo btn-sm w-100"
-                    [class.disponible-btn]="libro.disponible"
-                    [class.no-disponible-btn]="!libro.disponible"
-                    [disabled]="!libro.disponible || libro.id === undefined"
-                    (click)="libro.id !== undefined && solicitarPrestamo(libro.id)"
-                    [id]="'btn-prestamo-' + libro.id">
-              <i class="bi me-1" [class.bi-arrow-left-right]="libro.disponible" [class.bi-lock-fill]="!libro.disponible"></i>
+            <button class="btn btn-prestamo btn-sm w-100" [class.disponible-btn]="libro.disponible"
+              [class.no-disponible-btn]="!libro.disponible" [disabled]="!libro.disponible || libro.id === undefined"
+              (click)="libro.id !== undefined && solicitarPrestamo(libro)" [id]="'btn-prestamo-' + libro.id">
+              <i class="bi me-1" [class.bi-arrow-left-right]="libro.disponible"
+                [class.bi-lock-fill]="!libro.disponible"></i>
               {{ libro.disponible ? 'Solicitar Préstamo' : 'No Disponible' }}
             </button>
           </div>
@@ -135,9 +152,7 @@
       <div class="empty-icon"><i class="bi bi-search"></i></div>
       <h3>Sin resultados</h3>
       <p>No encontramos libros con los filtros seleccionados.<br>Intenta con otros criterios de búsqueda.</p>
-      <button class="btn btn-bn-primary mt-3"
-              (click)="selectedGenero='Todos'; autorBusqueda=''; disponibilidad='Todos'; aplicarFiltro()"
-              id="btn-limpiar-empty">
+      <button class="btn btn-bn-primary mt-3" (click)="limpiarFiltros()" id="btn-limpiar-empty">
         <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar Filtros
       </button>
     </div>
@@ -182,3 +197,12 @@
     <p class="footer-bottom">© 2026 BiblioNexus — Todos los derechos reservados.</p>
   </div>
 </footer>
+
+<!-- ====== MODAL DE AUTENTICACIÓN REQUERIDA ====== -->
+<app-auth-modal [isOpen]="mostrarAuthModal" [libro]="libroParaModal" (close)="mostrarAuthModal = false">
+</app-auth-modal>
+
+<!-- ====== MODAL DE DETALLES DEL LIBRO ====== -->
+<app-libro-detail-modal [isOpen]="mostrarDetalleModal" [libro]="libroSeleccionado"
+  (close)="mostrarDetalleModal = false" (solicitarPrestamo)="solicitarPrestamoDesdeModal($event)">
+</app-libro-detail-modal>

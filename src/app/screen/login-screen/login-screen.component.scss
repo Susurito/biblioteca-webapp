@@ -12,19 +12,22 @@
     object-position: center;
     display: block;
 
-    @media (max-width: 768px) { height: 420px; }
-    @media (max-width: 480px) { height: 320px; }
+    @media (max-width: 768px) {
+      height: 480px;
+    }
+
+    @media (max-width: 480px) {
+      height: 460px;
+    }
   }
 
   .carousel-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(26,35,50,0.3) 0%,
-      rgba(26,35,50,0.65) 60%,
-      rgba(26,35,50,0.85) 100%
-    );
+    background: linear-gradient(to bottom,
+        rgba(26, 35, 50, 0.3) 0%,
+        rgba(26, 35, 50, 0.65) 60%,
+        rgba(26, 35, 50, 0.85) 100%);
     z-index: 1;
   }
 
@@ -39,8 +42,8 @@
 
     .hero-eyebrow {
       display: inline-block;
-      background: rgba(200,135,58,0.25);
-      border: 1px solid rgba(200,135,58,0.5);
+      background: rgba(200, 135, 58, 0.25);
+      border: 1px solid rgba(200, 135, 58, 0.5);
       color: var(--secondary-light);
       font-size: 0.75rem;
       font-weight: 700;
@@ -58,7 +61,7 @@
       font-weight: 800;
       color: white;
       line-height: 1.15;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
       margin-bottom: 1rem;
 
       em {
@@ -69,7 +72,7 @@
 
     p {
       font-size: 1.05rem;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 255, 0.8);
       max-width: 520px;
       margin: 0 auto;
     }
@@ -82,9 +85,9 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     color: white;
     font-size: 1.1rem;
@@ -110,7 +113,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     border: none;
     transition: var(--transition);
 
@@ -126,7 +129,7 @@
 .btn-hero-outline {
   background: transparent;
   color: white;
-  border: 2px solid rgba(255,255,255,0.6);
+  border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-md);
   padding: 0.75rem 1.75rem;
   font-weight: 600;
@@ -134,7 +137,7 @@
   transition: var(--transition);
 
   &:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     border-color: white;
     color: white;
   }
@@ -193,7 +196,9 @@
     color: var(--secondary);
     margin-bottom: 0.75rem;
 
-    &.light { color: rgba(255,255,255,0.7); }
+    &.light {
+      color: rgba(255, 255, 255, 0.7);
+    }
   }
 
   h2 {
@@ -227,8 +232,13 @@
       transform: translateY(-6px);
       box-shadow: var(--shadow-lg);
 
-      &::before { opacity: 1; }
-      .feature-icon-wrap { transform: scale(1.1); }
+      &::before {
+        opacity: 1;
+      }
+
+      .feature-icon-wrap {
+        transform: scale(1.1);
+      }
     }
 
     .feature-icon-wrap {
@@ -280,7 +290,7 @@
       right: -80px;
       width: 280px;
       height: 280px;
-      background: rgba(200,135,58,0.15);
+      background: rgba(200, 135, 58, 0.15);
       border-radius: 50%;
     }
 
@@ -291,11 +301,13 @@
       left: -60px;
       width: 200px;
       height: 200px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 50%;
     }
 
-    .section-eyebrow { color: var(--secondary-light); }
+    .section-eyebrow {
+      color: var(--secondary-light);
+    }
 
     .cta-title {
       font-size: clamp(1.6rem, 3vw, 2.4rem);
@@ -305,18 +317,87 @@
 
     .cta-text {
       font-size: 1rem;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       margin: 0;
     }
 
     .cta-link {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       text-decoration: none;
       font-size: 0.875rem;
       transition: var(--transition);
 
-      strong { color: var(--secondary-light); }
-      &:hover { color: var(--secondary-light); }
+      strong {
+        color: var(--secondary-light);
+      }
+
+      &:hover {
+        color: var(--secondary-light);
+      }
     }
+  }
+}
+
+/* ====== RESPONSIVIDAD MÓVIL ====== */
+@media (max-width: 768px) {
+  .hero-caption {
+    padding: 2rem 1rem !important;
+
+    h1 {
+      font-size: 1.85rem !important;
+    }
+
+    p {
+      font-size: 0.9rem !important;
+    }
+  }
+
+  .stats-section {
+    padding: 2.25rem 0;
+
+    .stat-card {
+      padding: 1rem 0.5rem;
+
+      .stat-number {
+        font-size: 1.75rem;
+      }
+
+      .stat-label {
+        font-size: 0.78rem;
+      }
+    }
+  }
+
+  .cta-card {
+    padding: 2rem 1.25rem !important;
+    text-align: center;
+
+    .btn-bn-gold {
+      width: 100%;
+      padding-left: 2rem !important;
+      padding-right: 1.5rem !important;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+    margin: 1.25rem auto 0 !important;
+    gap: 0.65rem !important;
+
+    .btn {
+      width: 100%;
+      font-size: 0.9rem;
+      padding: 0.65rem 1rem;
+    }
+  }
+
+  .carousel-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
   }
 }

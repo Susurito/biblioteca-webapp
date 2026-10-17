@@ -1,0 +1,71 @@
+<!-- ====== MODAL DE AUTENTICACIÓN REQUERIDA ====== -->
+<div class="auth-modal-overlay" *ngIf="isOpen">
+  <!-- Fondo con blur -->
+  <div class="auth-modal-backdrop" (click)="onClose()"></div>
+
+  <!-- Contenedor centrado -->
+  <div class="auth-modal-container" (click)="onBackdropClick($event)">
+    <div class="auth-modal-card anim-modal-enter" (click)="$event.stopPropagation()">
+
+      <!-- Botón de cierre superior -->
+      <button class="btn-modal-close" (click)="onClose()" aria-label="Cerrar modal" id="btn-close-auth-modal">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Icono central con aura brillante -->
+      <div class="modal-icon-wrapper">
+        <div class="icon-orb-glow"></div>
+        <div class="icon-orb">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+      </div>
+
+      <!-- Contenido descriptivo -->
+      <div class="modal-content-body text-center">
+        <span class="modal-badge-eyebrow">
+          <i class="bi bi-bookmark-star-fill me-1"></i>Acceso a Préstamos
+        </span>
+
+        <h3 class="modal-title font-display">Inicia sesión para continuar</h3>
+
+        <p class="modal-text">
+          Para solicitar el préstamo de este libro necesitas contar con una cuenta activa en
+          <strong>BiblioNexus</strong>.
+        </p>
+
+        <!-- Tarjeta de libro preseleccionado -->
+        <div class="libro-preview-card" *ngIf="libro">
+          <div class="libro-mini-icon">
+            <i class="bi bi-book-half"></i>
+          </div>
+          <div class="libro-mini-details text-start">
+            <h5 class="libro-mini-title">{{ libro.titulo }}</h5>
+            <p class="libro-mini-author mb-1">
+              <i class="bi bi-person me-1"></i>{{ libro.autor }}
+            </p>
+            <span class="mini-status-badge">
+              <i class="bi bi-check-circle-fill me-1"></i>Disponible para préstamo
+            </span>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="modal-actions-list">
+          <button class="btn btn-bn-primary w-100 btn-action-main" (click)="goToLogin()" id="btn-modal-login">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+          </button>
+
+          <button class="btn btn-bn-secondary w-100 btn-action-secondary" (click)="goToRegister()"
+            id="btn-modal-registro">
+            <i class="bi bi-person-plus me-2"></i>Crear Cuenta Gratis
+          </button>
+
+          <button class="btn btn-link btn-action-cancel w-100" (click)="onClose()" id="btn-modal-cancel">
+            Continuar explorando el catálogo
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

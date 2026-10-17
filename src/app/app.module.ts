@@ -26,6 +26,7 @@ import { Login2ScreenComponent } from './screen/login2-screen/login2-screen.comp
 import { ContactoScreenComponent } from './screen/contacto-screen/contacto-screen.component';
 import { RegistroScreenComponent } from './screen/registrar-screen/registrar-screen.component';
 import { PerfilScreenComponent } from './screen/perfil-screen/perfil-screen.component';
+import { EjemplaresScreenComponent } from './screen/ejemplares-screen/ejemplares-screen.component';
 
 import { DatePipe } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -46,6 +47,7 @@ import { PrestamoSuccessModalComponent } from './modals/prestamo-success-modal/p
     ContactoScreenComponent,
     RegistroScreenComponent,
     PerfilScreenComponent,
+    EjemplaresScreenComponent,
     NavbarComponent,
     AuthModalComponent,
     LibroDetailModalComponent,

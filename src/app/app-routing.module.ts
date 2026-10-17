@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginScreenComponent } from './screen/login-screen/login-screen.component';
 import { RegistroUsuarioScreenComponent } from './screen/registro-usuario-screen/registro-usuario-screen.component';
@@ -10,6 +10,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { ContactoScreenComponent } from './screen/contacto-screen/contacto-screen.component';
 import { RegistroScreenComponent } from './screen/registrar-screen/registrar-screen.component';
 import { PerfilScreenComponent } from './screen/perfil-screen/perfil-screen.component';
+import { EjemplaresScreenComponent } from './screen/ejemplares-screen/ejemplares-screen.component';
+import { AdminGuard } from './guards/admin.guard';
 
 
 const routes: Routes = [
@@ -17,6 +19,7 @@ const routes: Routes = [
   { path: 'registro', component: RegistroUsuarioScreenComponent, pathMatch: 'full' },
   { path: 'alumnos', component: AlumnosScreenComponent, pathMatch: 'full' },
   { path: 'admin', component: AdminScreenComponent, pathMatch: 'full' },
+  { path: 'ejemplares', component: EjemplaresScreenComponent, canActivate: [AdminGuard] },
   { path: 'catalogo', component: CatalogoScreenComponent },
   { path: 'contacto', component: ContactoScreenComponent },
   { path: 'login', component: Login2ScreenComponent },

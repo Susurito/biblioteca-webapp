@@ -1,0 +1,397 @@
+<app-navbar></app-navbar>
+
+<div class="ejemplares-page">
+  <div class="container-fluid px-3 px-md-4 py-4">
+
+    <!-- Notificación Toast -->
+    <div *ngIf="notificacion" class="ejemplares-toast alert" [ngClass]="'alert-' + notificacion.tipo" role="alert">
+      <i class="bi" [ngClass]="{
+        'bi-check-circle-fill': notificacion.tipo === 'success',
+        'bi-exclamation-triangle-fill': notificacion.tipo === 'danger',
+        'bi-info-circle-fill': notificacion.tipo === 'info'
+      }"></i>
+      <span>{{ notificacion.mensaje }}</span>
+      <button type="button" class="btn-close ms-auto" (click)="notificacion = null"></button>
+    </div>
+
+    <!-- Tarjeta Principal del Panel -->
+    <div class="ejemplares-card shadow-sm">
+
+      <!-- Encabezado del Panel -->
+      <div class="card-header-panel">
+        <div>
+          <span class="panel-eyebrow">PANEL DE CONTROL</span>
+          <h1 class="panel-title">Ejemplares</h1>
+        </div>
+
+        <a routerLink="/registrar-libro" class="btn-registrar-header" id="btn-registrar-header">
+          <i class="bi bi-plus-lg me-1"></i>
+          Registrar Libro
+        </a>
+      </div>
+
+      <!-- Barra de Pestañas de Estado -->
+      <div class="tabs-bar">
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="tabActiva === 'activos'"
+          (click)="cambiarTab('activos')"
+          id="tab-activos">
+          Activos
+          <span class="tab-badge" [class.active-badge]="tabActiva === 'activos'">{{ estadisticas.activos }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="tabActiva === 'sin_stock'"
+          (click)="cambiarTab('sin_stock')"
+          id="tab-sin-stock">
+          Sin stock
+          <span class="tab-badge" [class.active-badge]="tabActiva === 'sin_stock'">{{ estadisticas.sin_stock }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="tabActiva === 'dados_de_baja'"
+          (click)="cambiarTab('dados_de_baja')"
+          id="tab-dados-baja">
+          Dados de baja
+          <span class="tab-badge" [class.active-badge]="tabActiva === 'dados_de_baja'">{{ estadisticas.dados_de_baja }}</span>
+        </button>
+      </div>
+
+      <!-- Barra de Búsqueda y Filtros -->
+      <div class="filter-toolbar">
+        <div class="search-input-wrapper">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar por ISBN, título o autor"
+            [(ngModel)]="busqueda"
+            (input)="aplicarFiltros()"
+            id="input-buscar-ejemplar">
+          <button *ngIf="busqueda" class="clear-search-btn" (click)="busqueda = ''; aplicarFiltros()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+
+        <div class="category-select-wrapper">
+          <select
+            class="category-select"
+            [(ngModel)]="categoriaSeleccionada"
+            (change)="aplicarFiltros()"
+            id="select-categoria-ejemplar">
+            <option *ngFor="let cat of categorias" [value]="cat">
+              Categoría: {{ cat }}
+            </option>
+          </select>
+          <i class="bi bi-chevron-down select-chevron"></i>
+        </div>
+      </div>
+
+      <!-- Spinner de Carga -->
+      <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando ejemplares...</span>
+        </div>
+        <p class="text-muted small mt-2">Cargando información de ejemplares...</p>
+      </div>
+
+      <!-- Tabla de Ejemplares -->
+      <div class="table-responsive" *ngIf="!cargando && librosPaginados.length > 0">
+        <table class="ejemplares-table">
+          <thead>
+            <tr>
+              <th class="th-isbn">ISBN</th>
+              <th class="th-titulo">TÍTULO / AUTOR</th>
+              <th class="th-categoria">CATEGORÍA</th>
+              <th class="th-num">TOTAL</th>
+              <th class="th-num">DISPONIBLE</th>
+              <th class="th-estado">ESTADO</th>
+              <th class="th-acciones text-end">ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let libro of librosPaginados" [class.row-baja]="libro.baja">
+              <!-- ISBN -->
+              <td class="td-isbn">
+                <span class="isbn-text">{{ libro.isbn || 'Sin ISBN' }}</span>
+              </td>
+
+              <!-- Título y Autor -->
+              <td class="td-titulo">
+                <div class="book-info">
+                  <span class="book-title" [title]="libro.titulo">{{ libro.titulo }}</span>
+                  <span class="book-author">{{ libro.autor }}</span>
+                </div>
+              </td>
+
+              <!-- Categoría -->
+              <td class="td-categoria">
+                <span class="category-text">{{ libro.genero }}</span>
+              </td>
+
+              <!-- Total de Ejemplares -->
+              <td class="td-num">
+                <span class="num-text fw-semibold">{{ libro.total_ejemplares || 1 }}</span>
+              </td>
+
+              <!-- Disponibles -->
+              <td class="td-num">
+                <span class="num-text fw-semibold" [class.text-danger]="(libro.disponibles ?? 0) <= 0">
+                  {{ libro.disponibles !== undefined ? libro.disponibles : (libro.disponible ? (libro.total_ejemplares || 1) : 0) }}
+                </span>
+              </td>
+
+              <!-- Estado Badge -->
+              <td class="td-estado">
+                <span
+                  class="estado-pill"
+                  [ngClass]="{
+                    'disponible': obtenerEstado(libro) === 'Disponible',
+                    'sin-stock': obtenerEstado(libro) === 'Sin stock',
+                    'dado-baja': obtenerEstado(libro) === 'Dado de baja'
+                  }">
+                  {{ obtenerEstado(libro) }}
+                </span>
+              </td>
+
+              <!-- Acciones -->
+              <td class="td-acciones text-end">
+                <div class="d-inline-flex gap-2">
+                  <button
+                    type="button"
+                    class="btn-action-editar"
+                    (click)="abrirEditar(libro)"
+                    [id]="'btn-editar-' + libro.id"
+                    title="Editar ejemplar">
+                    Editar
+                  </button>
+
+                  <button
+                    *ngIf="!libro.baja"
+                    type="button"
+                    class="btn-action-baja"
+                    (click)="confirmarAccion(libro, 'baja')"
+                    [id]="'btn-baja-' + libro.id"
+                    title="Dar de baja ejemplar">
+                    Dar de baja
+                  </button>
+
+                  <button
+                    *ngIf="libro.baja"
+                    type="button"
+                    class="btn-action-alta"
+                    (click)="confirmarAccion(libro, 'alta')"
+                    [id]="'btn-alta-' + libro.id"
+                    title="Reactivar ejemplar">
+                    Dar de alta
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Estado Vacío -->
+      <div *ngIf="!cargando && librosPaginados.length === 0" class="empty-state-panel text-center py-5">
+        <i class="bi bi-journal-x fs-1 text-muted mb-2 d-block"></i>
+        <h5 class="fw-bold text-dark mb-1">No se encontraron ejemplares</h5>
+        <p class="text-muted small mb-3" *ngIf="tabActiva === 'activos'">
+          No hay ejemplares activos que coincidan con los criterios de búsqueda.
+        </p>
+        <p class="text-muted small mb-3" *ngIf="tabActiva === 'sin_stock'">
+          No hay ejemplares sin stock actualmente.
+        </p>
+        <p class="text-muted small mb-3" *ngIf="tabActiva === 'dados_de_baja'">
+          No hay ejemplares dados de baja en el registro.
+        </p>
+        <button
+          *ngIf="busqueda || categoriaSeleccionada !== 'Todas'"
+          class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+          (click)="busqueda = ''; categoriaSeleccionada = 'Todas'; aplicarFiltros()">
+          Limpiar filtros
+        </button>
+      </div>
+
+      <!-- Paginación estilo Pill -->
+      <div class="pagination-footer" *ngIf="!cargando && totalPaginas > 1">
+        <div class="pagination-container">
+          <button
+            type="button"
+            class="page-nav-btn"
+            [disabled]="paginaActual === 1"
+            (click)="irAPagina(paginaActual - 1)"
+            aria-label="Página anterior">
+            &lsaquo;
+          </button>
+
+          <button
+            type="button"
+            *ngFor="let pag of paginasArray"
+            class="page-number-btn"
+            [class.active]="pag === paginaActual"
+            (click)="irAPagina(pag)">
+            {{ pag }}
+          </button>
+
+          <button
+            type="button"
+            class="page-nav-btn"
+            [disabled]="paginaActual === totalPaginas"
+            (click)="irAPagina(paginaActual + 1)"
+            aria-label="Página siguiente">
+            &rsaquo;
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: EDITAR EJEMPLAR ================= -->
+<div class="modal-backdrop-custom" *ngIf="modalEditarAbierto" (click)="cerrarEditar()"></div>
+<div class="modal-dialog-custom" *ngIf="modalEditarAbierto">
+  <div class="modal-content-custom">
+
+    <div class="modal-header-custom">
+      <div>
+        <span class="modal-eyebrow">ADMINISTRACIÓN DE EJEMPLARES</span>
+        <h4 class="modal-title-custom">Editar Ejemplar</h4>
+      </div>
+      <button type="button" class="btn-close-custom" (click)="cerrarEditar()">&times;</button>
+    </div>
+
+    <form [formGroup]="formEdicion" (ngSubmit)="guardarEdicion()">
+      <div class="modal-body-custom">
+
+        <!-- Título -->
+        <div class="mb-3">
+          <label class="form-label-custom">Título del Libro *</label>
+          <input type="text" class="form-control-custom" formControlName="titulo" placeholder="Ej. Cien años de soledad">
+          <div class="text-danger small mt-1" *ngIf="formEdicion.get('titulo')?.touched && formEdicion.get('titulo')?.invalid">
+            El título es obligatorio.
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <!-- Autor -->
+          <div class="col-md-6">
+            <label class="form-label-custom">Autor *</label>
+            <input type="text" class="form-control-custom" formControlName="autor" placeholder="Ej. Gabriel García Márquez">
+            <div class="text-danger small mt-1" *ngIf="formEdicion.get('autor')?.touched && formEdicion.get('autor')?.invalid">
+              El autor es obligatorio.
+            </div>
+          </div>
+
+          <!-- Categoría -->
+          <div class="col-md-6">
+            <label class="form-label-custom">Categoría / Género *</label>
+            <input type="text" class="form-control-custom" formControlName="genero" placeholder="Ej. Novela, Clásicos">
+            <div class="text-danger small mt-1" *ngIf="formEdicion.get('genero')?.touched && formEdicion.get('genero')?.invalid">
+              La categoría es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <!-- ISBN -->
+          <div class="col-md-6">
+            <label class="form-label-custom">ISBN</label>
+            <input type="text" class="form-control-custom" formControlName="isbn" placeholder="Ej. 978-0307474728">
+          </div>
+
+          <!-- Total de Ejemplares (Stock) -->
+          <div class="col-md-6">
+            <label class="form-label-custom">Total de Ejemplares (Stock) *</label>
+            <input type="number" class="form-control-custom" formControlName="total_ejemplares" min="1" placeholder="Ej. 5">
+            <div class="text-danger small mt-1" *ngIf="formEdicion.get('total_ejemplares')?.touched && formEdicion.get('total_ejemplares')?.invalid">
+              Debe ingresar un número mayor a 0.
+            </div>
+          </div>
+        </div>
+
+        <!-- Disponibilidad -->
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="checkDisponible" formControlName="disponible">
+          <label class="form-check-label small fw-semibold" for="checkDisponible">
+            Habilitado para préstamos en catálogo
+          </label>
+        </div>
+
+        <!-- Detalles / Descripción -->
+        <div class="mb-3">
+          <label class="form-label-custom">Detalles o Notas adicionales</label>
+          <textarea class="form-control-custom" formControlName="detalles" rows="3" placeholder="Información de la edición, estantería, etc."></textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-footer-custom">
+        <button type="button" class="btn-cancelar" (click)="cerrarEditar()" [disabled]="guardandoEdicion">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-guardar" [disabled]="formEdicion.invalid || guardandoEdicion">
+          <span *ngIf="guardandoEdicion" class="spinner-border spinner-border-sm me-1"></span>
+          Guardar Cambios
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<!-- ================= MODAL: CONFIRMAR BAJA / ALTA ================= -->
+<div class="modal-backdrop-custom" *ngIf="modalConfirmacionAbierto" (click)="cerrarConfirmacion()"></div>
+<div class="modal-dialog-custom modal-sm-custom" *ngIf="modalConfirmacionAbierto">
+  <div class="modal-content-custom">
+
+    <div class="modal-header-custom">
+      <h5 class="modal-title-custom">
+        {{ tipoAccion === 'baja' ? '¿Dar de baja este ejemplar?' : '¿Reactivar este ejemplar?' }}
+      </h5>
+      <button type="button" class="btn-close-custom" (click)="cerrarConfirmacion()">&times;</button>
+    </div>
+
+    <div class="modal-body-custom">
+      <p class="text-muted small mb-3">
+        <span *ngIf="tipoAccion === 'baja'">
+          El libro <strong>"{{ libroAccion?.titulo }}"</strong> será marcado como <strong>dado de baja</strong> y ya no estará disponible para préstamos en el catálogo de alumnos.
+        </span>
+        <span *ngIf="tipoAccion === 'alta'">
+          El libro <strong>"{{ libroAccion?.titulo }}"</strong> será <strong>reactivado</strong> y volverá a figurar en la lista de ejemplares activos.
+        </span>
+      </p>
+
+      <div class="p-3 bg-light rounded-3 mb-2 small text-muted">
+        <div><strong>ISBN:</strong> {{ libroAccion?.isbn || 'Sin ISBN' }}</div>
+        <div><strong>Autor:</strong> {{ libroAccion?.autor }}</div>
+        <div><strong>Total ejemplares:</strong> {{ libroAccion?.total_ejemplares || 1 }}</div>
+      </div>
+    </div>
+
+    <div class="modal-footer-custom">
+      <button type="button" class="btn-cancelar" (click)="cerrarConfirmacion()" [disabled]="procesandoAccion">
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn-confirmar-accion"
+        [class.btn-peligro]="tipoAccion === 'baja'"
+        [class.btn-exito]="tipoAccion === 'alta'"
+        (click)="ejecutarAccion()"
+        [disabled]="procesandoAccion">
+        <span *ngIf="procesandoAccion" class="spinner-border spinner-border-sm me-1"></span>
+        {{ tipoAccion === 'baja' ? 'Sí, dar de baja' : 'Sí, reactivar' }}
+      </button>
+    </div>
+
+  </div>
+</div>

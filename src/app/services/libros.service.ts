@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Libro {
@@ -10,8 +10,20 @@ export interface Libro {
   genero: string;
   detalles?: string;
   disponible?: boolean;
+  total_ejemplares?: number;
+  baja?: boolean;
+  disponibles?: number;
+  prestados?: number;
+  estado_ejemplar?: 'disponible' | 'sin_stock' | 'dado_de_baja';
   creado?: string;
   actualizado?: string;
+}
+
+export interface EstadisticasEjemplares {
+  activos: number;
+  sin_stock: number;
+  dados_de_baja: number;
+  total: number;
 }
 
 @Injectable({
@@ -31,10 +43,26 @@ export class LibrosService {
   }
 
   /**
-   * Obtiene la lista de libros (catalogo).
+   * Obtiene la lista de libros (catálogo / ejemplares).
    */
-  getLibros(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '/libros/');
+  getLibros(queryParams?: any): Observable<any> {
+    let params = new HttpParams();
+    if (queryParams) {
+      Object.keys(queryParams).forEach(key => {
+        if (queryParams[key] !== null && queryParams[key] !== undefined && queryParams[key] !== '') {
+          params = params.set(key, queryParams[key]);
+        }
+      });
+    }
+    return this.http.get<any>(this.apiUrl + '/libros/', { params });
+  }
+
+  /**
+   * Obtiene estadísticas agregadas de ejemplares (activos, sin stock, dados de baja).
+   */
+  getEjemplaresEstadisticas(): Observable<EstadisticasEjemplares> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<EstadisticasEjemplares>(this.apiUrl + '/libros/estadisticas/', { headers });
   }
 
   /**
@@ -59,7 +87,23 @@ export class LibrosService {
    */
   actualizarLibro(id: number, libro: Partial<Libro>): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.put<any>(this.apiUrl + '/libros/' + id + '/', libro, { headers });
+    return this.http.patch<any>(this.apiUrl + '/libros/' + id + '/', libro, { headers });
+  }
+
+  /**
+   * Da de baja un libro/ejemplar.
+   */
+  darDeBaja(id: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(this.apiUrl + '/libros/' + id + '/dar-de-baja/', {}, { headers });
+  }
+
+  /**
+   * Reactiva (da de alta) un libro/ejemplar previamente dado de baja.
+   */
+  darDeAlta(id: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(this.apiUrl + '/libros/' + id + '/dar-de-alta/', {}, { headers });
   }
 
   /**

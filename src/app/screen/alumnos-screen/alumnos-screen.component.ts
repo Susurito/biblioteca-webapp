@@ -39,6 +39,11 @@ export class AlumnosScreenComponent implements OnInit, OnDestroy {
   cargandoRecomendaciones: boolean = true;
   solicitandoLibroId: number | null = null;
 
+  // Estado de bloqueo RN-04
+  estaBloqueado: boolean = false;
+  bloqueoMotivo: string = '';
+  bloqueoHasta: string = '';
+
   constructor(
     private authService: AuthService,
     private librosService: LibrosService,
@@ -53,8 +58,27 @@ export class AlumnosScreenComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.cargarEstadoBloqueo();
     this.cargarPrestamosActivos();
     this.cargarRecomendaciones();
+  }
+
+  cargarEstadoBloqueo(): void {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const headers = new HttpHeaders({ 'Authorization': `Token ${token}` });
+    this.http.get<any>('http://127.0.0.1:8000/perfil/', { headers }).subscribe({
+      next: (res) => {
+        if (res && res.bloqueado) {
+          this.estaBloqueado = true;
+          this.bloqueoMotivo = res.bloqueo_motivo || 'Cuenta suspendida por retraso mayor a 7 días (RN-04).';
+          this.bloqueoHasta = res.bloqueo_hasta || '';
+        } else {
+          this.estaBloqueado = false;
+        }
+      },
+      error: (err) => console.error('Error al verificar estado de bloqueo:', err)
+    });
   }
 
   cargarRecomendaciones() {
@@ -85,6 +109,10 @@ export class AlumnosScreenComponent implements OnInit, OnDestroy {
 
   solicitarPrestamo(libro: Libro) {
     if (!libro.id) return;
+    if (this.estaBloqueado) {
+      alert(`Acceso denegado: ${this.bloqueoMotivo || 'Tu cuenta está suspendida por retraso en devolución de libro (RN-04).'}`);
+      return;
+    }
     const token = localStorage.getItem('token');
     if (!token) {
       alert('Debes iniciar sesión para solicitar un préstamo.');

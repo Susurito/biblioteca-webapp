@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg bn-navbar">
   <div class="container-fluid px-3 px-lg-4">
     <!-- Marca -->
-    <a class="navbar-brand" routerLink="/" (click)="closeNav()">
+    <a class="navbar-brand" [routerLink]="(isLoggedIn && !isAdmin) ? '/alumnos' : (isAdmin ? '/admin' : '/')" (click)="closeNav()">
       <span class="brand-icon"><i class="bi bi-book-half"></i></span>
       BiblioNexus
     </a>
@@ -19,7 +19,17 @@
 
       <!-- Navegacion -->
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
-        <li class="nav-item">
+        <!-- Pestaña Dashboard para Alumnos -->
+        <li class="nav-item" *ngIf="isLoggedIn && !isAdmin">
+          <a class="nav-link" routerLink="/alumnos" routerLinkActive="active" id="nav-dashboard-alumno"
+            (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-speedometer2"></i></span>
+            <span class="nav-link-text">Dashboard</span>
+          </a>
+        </li>
+
+        <!-- Pestaña Inicio para usuarios no logueados o administradores -->
+        <li class="nav-item" *ngIf="!isLoggedIn || isAdmin">
           <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
             (click)="closeNav()">
             <span class="nav-icon-badge"><i class="bi bi-house"></i></span>
@@ -32,20 +42,20 @@
             <span class="nav-link-text">Catálogo</span>
           </a>
         </li>
-        <li class="nav-item">
+                <li class="nav-item" *ngIf="!isAdmin">
           <a class="nav-link" routerLink="/contacto" routerLinkActive="active" (click)="closeNav()">
             <span class="nav-icon-badge"><i class="bi bi-envelope"></i></span>
             <span class="nav-link-text">Contáctanos</span>
           </a>
         </li>
-        <!-- Pestaña Dashboard (Solo Alumnos) -->
-        <li class="nav-item" *ngIf="isAlumno">
-          <a class="nav-link" routerLink="/alumnos" routerLinkActive="active" id="nav-dashboard" (click)="closeNav()">
-            <span class="nav-icon-badge"><i class="bi bi-person-workspace"></i></span>
-            <span class="nav-link-text">Dashboard</span>
+                <!-- Pestañas para Administrador -->
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin"
+            (click)="closeNav()">
+            <span class="nav-icon-badge"><i class="bi bi-arrow-left-right"></i></span>
+            <span class="nav-link-text">Préstamos</span>
           </a>
         </li>
-        <!-- Pestaña Ejemplares para Administrador -->
         <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active" id="nav-ejemplares"
             (click)="closeNav()">
@@ -53,12 +63,11 @@
             <span class="nav-link-text">Ejemplares</span>
           </a>
         </li>
-        <!-- Pestaña Préstamos para Administrador -->
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="nav-prestamos-admin"
+          <a class="nav-link" routerLink="/usuarios" routerLinkActive="active" id="nav-usuarios"
             (click)="closeNav()">
-            <span class="nav-icon-badge"><i class="bi bi-arrow-left-right"></i></span>
-            <span class="nav-link-text">Préstamos</span>
+            <span class="nav-icon-badge"><i class="bi bi-people"></i></span>
+            <span class="nav-link-text">Usuarios</span>
           </a>
         </li>
       </ul>

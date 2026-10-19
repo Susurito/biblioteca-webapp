@@ -1,4 +1,4 @@
-﻿/* Fondo general de la pagina de administracion */
+/* Fondo general de la pagina de administracion */
 .admin-prestamos-page {
   background-color: #f8fafc;
   min-height: calc(100vh - 70px);
@@ -75,6 +75,11 @@
     padding: 2px 8px;
     font-size: 0.72rem;
     font-weight: 700;
+  }
+
+  .badge-warning-pill {
+    background: #d97706;
+    color: #ffffff;
   }
 
   .badge-dark-pill {
@@ -228,6 +233,65 @@
     color: #ffffff;
     transform: translateY(-1px);
   }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* Boton de accion Aprobar */
+.btn-aprobar-pill {
+  background-color: #059669;
+  border: 1.5px solid #059669;
+  color: #ffffff;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 5px 14px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #047857;
+    border-color: #047857;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* Boton de accion Rechazar */
+.btn-rechazar-pill {
+  background-color: #ffffff;
+  border: 1.5px solid #dc2626;
+  color: #dc2626;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 5px 14px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #fef2f2;
+    border-color: #b91c1c;
+    color: #b91c1c;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 /* Toast flotante */
@@ -297,3 +361,321 @@
     height: 0;
   }
 }
+
+/* ===================================================
+   Modales Personalizados (Confirmación y Devolución Registrada)
+   =================================================== */
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-dialog-custom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1060;
+  width: 92%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.modal-confirm-custom {
+    max-width: 480px;
+  }
+
+  &.modal-devolucion-registrada-dialog {
+    max-width: 540px;
+  }
+}
+
+@keyframes modalScale {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.modal-content-custom {
+  background-color: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.16);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+/* --- Modal Confirmación Previa --- */
+.modal-header-custom {
+  padding: 1.4rem 1.75rem 1.1rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  .modal-eyebrow {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+  }
+
+  .modal-title-custom {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .btn-close-custom {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.2rem;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: #0f172a;
+    }
+  }
+}
+
+.modal-body-custom {
+  padding: 1.4rem 1.75rem;
+}
+
+.modal-footer-custom {
+  padding: 1rem 1.75rem 1.4rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  .btn-cancelar {
+    background-color: #f1f5f9;
+    border: none;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.55rem 1.35rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+  }
+
+  .btn-confirmar-devolucion {
+    background-color: #0f172a;
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.55rem 1.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #1e293b;
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* --- Modal Devolución Registrada (Diseño Fiel a la Captura) --- */
+.modal-devolucion-registrada-dialog {
+  max-width: 520px;
+  width: 90%;
+  margin: 1.75rem auto;
+}
+
+.modal-devolucion-card {
+  padding: 2rem 2.25rem 1.75rem 2.25rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+}
+
+.modal-devolucion-title {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.modal-devolucion-divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  width: calc(100% + 4.5rem);
+  margin: 1rem -2.25rem 1.25rem -2.25rem;
+}
+
+.devolucion-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.15rem;
+
+  .avatar-devolucion-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid #1e293b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    background-color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .devolucion-item-text {
+    font-size: 0.95rem;
+    color: #0f172a;
+
+    .student-name {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .dot-separator {
+      margin: 0 0.35rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .book-title {
+      color: #334155;
+      font-weight: 400;
+    }
+  }
+}
+
+.table-responsive-devolucion {
+  width: 100%;
+}
+
+.devolucion-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  tr {
+    border-bottom: 1px solid #f1f5f9;
+
+    &:first-child {
+      border-top: 1px solid #f1f5f9;
+    }
+  }
+
+  td {
+    padding: 0.75rem 0;
+    font-size: 0.93rem;
+    vertical-align: middle;
+  }
+
+  .col-label {
+    color: #64748b;
+    font-weight: 400;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+
+  .col-value {
+    color: #0f172a;
+    font-weight: 400;
+    text-align: right;
+
+    &.fw-bold {
+      font-weight: 700;
+    }
+  }
+
+  .badge-pill-yellow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: #eab308;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    margin-left: 0.45rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+}
+
+/* Recuadro punteado con información de stock */
+.stock-actualizado-box {
+  border: 1.25px dashed #64748b;
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  text-align: center;
+  margin: 1.35rem 0 1.35rem;
+  background-color: transparent;
+  font-size: 0.88rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.devolucion-footer-action {
+  display: flex;
+  justify-content: flex-end;
+
+  .btn-aceptar-devolucion {
+    background-color: #1e293b;
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    padding: 0.55rem 2.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #0f172a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+    }
+  }
+}
+

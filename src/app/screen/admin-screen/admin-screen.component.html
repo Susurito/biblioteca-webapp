@@ -27,8 +27,18 @@
             <h1 class="panel-title">Prestamos</h1>
           </div>
 
-          <!-- Pestanas Superiores -->
+          <!-- Pestañas Superiores -->
           <div class="custom-tabs-container mb-4">
+            <button
+              type="button"
+              class="tab-btn"
+              [class.active]="tabActiva === 'por_aprobar'"
+              (click)="cambiarTab('por_aprobar')"
+              id="tab-por-aprobar">
+              Por aprobar
+              <span class="tab-badge badge-warning-pill" *ngIf="prestamosPorAprobarList.length > 0">{{ prestamosPorAprobarList.length }}</span>
+            </button>
+
             <button
               type="button"
               class="tab-btn"
@@ -60,16 +70,29 @@
             </button>
           </div>
 
-          <!-- Subtitulo de la seccion de la pestana -->
+          <!-- Subtítulo de la sección de la pestaña -->
           <div class="tab-section-description mb-3">
-            <h5 class="fw-bold mb-1" *ngIf="tabActiva === 'activos'">Prestamos activos</h5>
-            <p class="text-muted small mb-0" *ngIf="tabActiva === 'activos'">Libros que estan fuera de la biblioteca</p>
+            <div *ngIf="tabActiva === 'por_aprobar'">
+              <h5 class="fw-bold mb-1 text-dark">
+                <i class="bi bi-clock-history me-1 text-warning"></i> Solicitudes por aprobar
+              </h5>
+              <p class="text-muted small mb-0">Solicitudes de préstamo realizadas por alumnos pendientes de aprobación</p>
+            </div>
 
-            <h5 class="fw-bold mb-1 text-danger" *ngIf="tabActiva === 'vencidos'">Prestamos vencidos</h5>
-            <p class="text-muted small mb-0" *ngIf="tabActiva === 'vencidos'">Prestamos cuya fecha limite de devolucion ha expirado</p>
+            <div *ngIf="tabActiva === 'activos'">
+              <h5 class="fw-bold mb-1">Préstamos activos</h5>
+              <p class="text-muted small mb-0">Libros que están actualmente fuera de la biblioteca en posesión de los alumnos</p>
+            </div>
 
-            <h5 class="fw-bold mb-1" *ngIf="tabActiva === 'historial'">Historial de prestamos</h5>
-            <p class="text-muted small mb-0" *ngIf="tabActiva === 'historial'">Registro de libros devueltos o prestamos concluidos</p>
+            <div *ngIf="tabActiva === 'vencidos'">
+              <h5 class="fw-bold mb-1 text-danger">Préstamos vencidos</h5>
+              <p class="text-muted small mb-0">Préstamos cuya fecha límite de devolución ha expirado sin registrar entrega</p>
+            </div>
+
+            <div *ngIf="tabActiva === 'historial'">
+              <h5 class="fw-bold mb-1">Historial de préstamos</h5>
+              <p class="text-muted small mb-0">Registro histórico de libros devueltos o solicitudes rechazadas</p>
+            </div>
           </div>
 
           <!-- Buscador en tiempo real de la tabla -->
@@ -99,10 +122,10 @@
                   <th scope="col" class="th-id">#</th>
                   <th scope="col" class="th-usuario">USUARIO</th>
                   <th scope="col" class="th-libro">LIBRO</th>
-                  <th scope="col" class="th-fecha">PRESTADO</th>
+                  <th scope="col" class="th-fecha">{{ tabActiva === 'por_aprobar' ? 'SOLICITADO' : 'PRESTADO' }}</th>
                   <th scope="col" class="th-fecha">VENCE</th>
                   <th scope="col" class="th-estado">ESTADO</th>
-                  <th scope="col" class="th-accion text-end">ACCION</th>
+                  <th scope="col" class="th-accion text-end">ACCIÓN</th>
                 </tr>
               </thead>
               <tbody>
@@ -129,14 +152,15 @@
                     <small class="text-muted" *ngIf="p.libro_isbn">ISBN: {{ p.libro_isbn }}</small>
                   </td>
 
-                  <!-- Prestado (dd/MM) -->
+                  <!-- Prestado / Solicitado (dd/MM) -->
                   <td class="td-fecha">
                     {{ formatearFechaCorta(p.fecha_solicitud) }}
                   </td>
 
                   <!-- Vence (dd/MM) -->
                   <td class="td-fecha">
-                    {{ formatearFechaCorta(p.fecha_vencimiento) }}
+                    <span *ngIf="p.estado === 'pendiente'" class="text-muted fst-italic small">Por definir</span>
+                    <span *ngIf="p.estado !== 'pendiente'">{{ formatearFechaCorta(p.fecha_vencimiento) }}</span>
                   </td>
 
                   <!-- Estado -->
@@ -152,13 +176,13 @@
                     </span>
 
                     <!-- Si esta activo en tiempo -->
-                    <span class="status-pill status-activo" *ngIf="!p.devuelto && !p.es_vencido && p.estado === 'aceptado'">
+                    <span class="status-pill status-activo" *ngIf="!p.devuelto && !p.es_vencido && (p.estado === 'aceptado' || p.estado === 'aprobado')">
                       Activo
                     </span>
 
-                    <!-- Si esta pendiente -->
+                    <!-- Si esta pendiente (Por aprobar) -->
                     <span class="status-pill status-pendiente" *ngIf="!p.devuelto && p.estado === 'pendiente'">
-                      Pendiente
+                      <i class="bi bi-clock-history me-1"></i>Por aprobar
                     </span>
 
                     <!-- Si esta rechazado -->
@@ -167,20 +191,57 @@
                     </span>
                   </td>
 
-                  <!-- Accion Devolucion -->
+                  <!-- Acciones -->
                   <td class="td-accion text-end">
-                    <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="!p.devuelto">
+                    <!-- Si está por aprobar: Botones Aprobar y Rechazar -->
+                    <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="!p.devuelto && p.estado === 'pendiente'">
+                      <button
+                        type="button"
+                        class="btn-aprobar-pill"
+                        (click)="aprobarPrestamo(p)"
+                        [disabled]="procesandoId === p.id"
+                        [id]="'btn-aprobar-' + p.id"
+                        title="Aprobar préstamo">
+                        <span *ngIf="procesandoId === p.id" class="spinner-border spinner-border-sm me-1"></span>
+                        <i *ngIf="procesandoId !== p.id" class="bi bi-check-lg me-1"></i>
+                        Aprobar
+                      </button>
+
+                      <button
+                        type="button"
+                        class="btn-rechazar-pill"
+                        (click)="rechazarPrestamo(p)"
+                        [disabled]="procesandoId === p.id"
+                        [id]="'btn-rechazar-' + p.id"
+                        title="Rechazar solicitud">
+                        <span *ngIf="procesandoId === p.id" class="spinner-border spinner-border-sm me-1"></span>
+                        <i *ngIf="procesandoId !== p.id" class="bi bi-x-lg me-1"></i>
+                        Rechazar
+                      </button>
+                    </div>
+
+                    <!-- Si está activo o vencido: Botón Devolución -->
+                    <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="!p.devuelto && (p.estado === 'aceptado' || p.estado === 'aprobado')">
                       <button
                         type="button"
                         class="btn-devolucion-pill"
                         (click)="registrarDevolucion(p)"
+                        [disabled]="procesandoId === p.id"
                         [id]="'btn-devolver-' + p.id">
-                        Devolucion
+                        <span *ngIf="procesandoId === p.id" class="spinner-border spinner-border-sm me-1"></span>
+                        <i *ngIf="procesandoId !== p.id" class="bi bi-arrow-return-left me-1"></i>
+                        Devolución
                       </button>
                     </div>
 
+                    <!-- Si está devuelto -->
                     <span *ngIf="p.devuelto" class="text-muted small">
                       <i class="bi bi-check2-all text-success me-1"></i>Concluido
+                    </span>
+
+                    <!-- Si fue rechazado -->
+                    <span *ngIf="!p.devuelto && p.estado === 'rechazado'" class="text-muted small">
+                      <i class="bi bi-x-circle text-danger me-1"></i>Rechazado
                     </span>
                   </td>
                 </tr>
@@ -200,5 +261,98 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: DEVOLUCIÓN REGISTRADA (TABLA DISEÑO FIEL) ================= -->
+<div class="modal-backdrop-custom" *ngIf="modalDevolucionRegistradaAbierto" (click)="cerrarModalDevolucionRegistrada()"></div>
+<div class="modal-dialog-custom modal-devolucion-registrada-dialog" *ngIf="modalDevolucionRegistradaAbierto">
+  <div class="modal-content-custom modal-devolucion-card">
+
+    <!-- Título Principal -->
+    <h3 class="modal-devolucion-title">Devolución registrada</h3>
+
+    <!-- Línea divisoria superior -->
+    <div class="modal-devolucion-divider"></div>
+
+    <!-- Encabezado Alumno · Libro con Avatar Inicial -->
+    <div class="devolucion-item-header">
+      <div class="avatar-devolucion-circle">
+        {{ obtenerInicial(detallesDevolucionActual?.alumno_nombre_completo || detallesDevolucionActual?.alumno_nombre) }}
+      </div>
+      <div class="devolucion-item-text">
+        <strong class="student-name">{{ detallesDevolucionActual?.alumno_nombre_completo || detallesDevolucionActual?.alumno_nombre }}</strong>
+        <span class="dot-separator">·</span>
+        <span class="book-title">{{ detallesDevolucionActual?.libro_titulo }}</span>
+      </div>
+    </div>
+
+    <!-- Tabla de Detalles (Diseño de Tabla fiel a la captura) -->
+    <div class="table-responsive-devolucion">
+      <table class="devolucion-table">
+        <tbody>
+          <tr>
+            <td class="col-label">Fecha de vencimiento</td>
+            <td class="col-value">{{ detallesDevolucionActual?.fecha_vencimiento || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="col-label">Fecha de devolución</td>
+            <td class="col-value">{{ detallesDevolucionActual?.fecha_devolucion || '-' }}</td>
+          </tr>
+                    <tr>
+            <td class="col-label">
+              <span>Días de retraso</span>
+              <span class="badge-pill-yellow">1</span>
+            </td>
+            <td class="col-value fw-bold">
+              {{ detallesDevolucionActual?.dias_retraso ?? 0 }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-label">
+              <span>Multa</span>
+              <span class="badge-pill-yellow">2</span>
+            </td>
+            <td class="col-value fw-bold">
+              {{ detallesDevolucionActual?.multa || '$0' }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-label">
+              <span>Bloqueo</span>
+              <span class="badge-pill-yellow">3</span>
+            </td>
+            <td class="col-value fw-bold">
+              {{ detallesDevolucionActual?.bloqueo || '------' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    
+    <!-- Mensaje de Estado / Reglas de Negocio (RN-03 / RN-04 / A tiempo) -->
+    <div class="sancion-status-box my-3 p-3 rounded-3 text-center fw-semibold border"
+         [ngClass]="(detallesDevolucionActual?.dias_retraso ?? 0) === 0 ? 'bg-success-subtle text-success border-success' : ((detallesDevolucionActual?.dias_retraso ?? 0) <= 7 ? 'bg-warning-subtle text-dark border-warning' : 'bg-danger-subtle text-danger border-danger')">
+      <i class="bi me-2" [ngClass]="(detallesDevolucionActual?.dias_retraso ?? 0) === 0 ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+      <span>{{ detallesDevolucionActual?.mensaje_sancion || ((detallesDevolucionActual?.dias_retraso ?? 0) === 0 ? 'Devolución a tiempo, sin sanción' : 'Sanción aplicada por retraso') }}</span>
+    </div>
+
+    <!-- Banner con borde punteado de Stock Actualizado -->
+    <div class="stock-actualizado-box">
+      {{ detallesDevolucionActual?.stock_mensaje || ('Stock actualizado: ' + (detallesDevolucionActual?.stock_disponibles ?? 1) + ' de ' + (detallesDevolucionActual?.stock_total ?? 2) + ' disponibles.') }}
+    </div>
+
+    <!-- Botón Aceptar inferior derecho -->
+    <div class="devolucion-footer-action">
+      <button
+        type="button"
+        class="btn-aceptar-devolucion"
+        (click)="cerrarModalDevolucionRegistrada()"
+        id="btn-aceptar-devolucion">
+        Aceptar
+      </button>
+    </div>
+
   </div>
 </div>

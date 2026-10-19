@@ -10,6 +10,9 @@ interface Perfil {
   email: string;
   matricula?: string;
   rol: string;
+  bloqueado?: boolean;
+  bloqueo_motivo?: string;
+  bloqueo_hasta?: string;
 }
 
 interface Prestamo {

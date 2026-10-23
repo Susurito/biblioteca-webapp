@@ -336,31 +336,50 @@ export class PerfilScreenComponent implements OnInit {
       return;
     }
 
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     this.isSaving = true;
 
-    // Aquí simulamos la petición HTTP para guardar
-    // Como el endpoint real podría ser distinto, por ahora es una simulación visual
-    setTimeout(() => {
-      this.isSaving = false;
-      this.mostrarToastExito = true;
+    const val = this.perfilForm.value;
+    const body: any = {
+      nombre: val.nombre,
+      apellido_paterno: val.apellido_paterno,
+      apellido_materno: val.apellido_materno,
+      email: val.email
+    };
+    if (val.password) {
+      body.password = val.password;
+    }
 
-      // Actualizar el perfil visualmente
-      const val = this.perfilForm.value;
-      if (this.perfil) {
-        this.perfil.nombre = val.nombre;
-        this.perfil.apellido_paterno = val.apellido_paterno;
-        this.perfil.apellido_materno = val.apellido_materno;
-        this.perfil.email = val.email;
-      }
+    const headers = new HttpHeaders({
+      'Authorization': `Token ${token}`,
+      'Content-Type': 'application/json'
+    });
 
-      // Limpiar las contraseñas
-      this.perfilForm.get('password')?.setValue('');
-      this.perfilForm.get('confirmPassword')?.setValue('');
+    this.http.put<Perfil>('http://localhost:8000/perfil/', body, { headers })
+      .subscribe({
+        next: (res) => {
+          this.isSaving = false;
+          this.mostrarToastExito = true;
 
-      // Ocultar toast después de 3 segundos
-      setTimeout(() => {
-        this.mostrarToastExito = false;
-      }, 3000);
-    }, 1000);
+          // Ahora sí: datos reales que regresó el servidor, no una simulación
+          this.perfil = res;
+
+          // Limpiar las contraseñas
+          this.perfilForm.get('password')?.setValue('');
+          this.perfilForm.get('confirmPassword')?.setValue('');
+
+          // Ocultar toast después de 3 segundos
+          setTimeout(() => {
+            this.mostrarToastExito = false;
+          }, 3000);
+        },
+        error: (err) => {
+          console.error('❌ Error al guardar ajustes:', err);
+          this.isSaving = false;
+          alert('❌ Ocurrió un error al guardar los cambios.');
+        }
+      });
   }
 }

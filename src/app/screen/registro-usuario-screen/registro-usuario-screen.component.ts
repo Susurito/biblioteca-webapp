@@ -11,7 +11,8 @@ import { Router } from '@angular/router';
 export class RegistroUsuarioScreenComponent {
 
   registerForm: FormGroup;
-  tiposUsuario: string[] = ['Alumno','Administrador'];
+  // tiposUsuario: string[] = ['Alumno','Administrador'];
+  tiposUsuario: string[] = ['Alumno'];
   hidePassword = true;
   hideConfirm = true;
   mostrarModalExito = false;

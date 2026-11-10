@@ -20,7 +20,7 @@
           <div class="libro-cover-wrapper">
             <div class="cover-glow"></div>
             <img [src]="getPortada(libro)" [alt]="libro.titulo" class="libro-cover-img"
-              (error)="$any($event.target).src='assets/images/libro.jpg'" />
+              (error)="onPortadaError($event)" referrerpolicy="no-referrer" />
             <div class="cover-badge" [class.disponible]="libro.disponible" [class.no-disponible]="!libro.disponible">
               <i class="bi" [class.bi-check-circle-fill]="libro.disponible" [class.bi-x-circle-fill]="!libro.disponible"></i>
               <span>{{ libro.disponible ? 'Disponible' : 'No disponible' }}</span>

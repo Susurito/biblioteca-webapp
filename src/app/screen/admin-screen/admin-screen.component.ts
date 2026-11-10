@@ -1,6 +1,8 @@
+import { API_URL } from '../../api.config';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { OperacionService } from '../../services/operacion.service';
 
 export interface PrestamoItem {
   id: number;
@@ -45,7 +47,7 @@ export interface DetallesDevolucion {
   styleUrls: ['./admin-screen.component.scss']
 })
 export class AdminScreenComponent implements OnInit {
-  private apiUrl = 'http://localhost:8000';
+  private apiUrl = API_URL;
   token: string | null = null;
   loading: boolean = false;
 
@@ -71,7 +73,7 @@ export class AdminScreenComponent implements OnInit {
   mostrarToast: boolean = false;
   private toastTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private operaciones: OperacionService) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -89,6 +91,10 @@ export class AdminScreenComponent implements OnInit {
       return;
     }
 
+    this.operaciones.reanudar({ headers: this.headers }).subscribe({
+      next: () => { this.lanzarToast('Operación pendiente completada.', 'success'); this.cargarPrestamos(); },
+      error: err => this.lanzarToast(err.error?.detail || 'Operación pendiente de recuperación.', 'warning')
+    });
     this.cargarDatos();
   }
 
@@ -122,55 +128,16 @@ export class AdminScreenComponent implements OnInit {
   registrarDevolucion(prestamo: PrestamoItem): void {
     this.procesandoId = prestamo.id;
 
-    this.http.post<any>(`${this.apiUrl}/prestamos/${prestamo.id}/devolver/`, {}, { headers: this.headers }).subscribe({
+    this.operaciones.ejecutar(`${this.apiUrl}/prestamos/${prestamo.id}/devolver/`, {}, { headers: this.headers }).subscribe({
       next: (res) => {
         this.procesandoId = null;
 
         if (res?.detalles_devolucion) {
           this.detallesDevolucionActual = res.detalles_devolucion;
         } else {
-          // Fallback con cálculos locales precisos
-          const fDev = new Date();
-          const fVenc = prestamo.fecha_vencimiento ? new Date(prestamo.fecha_vencimiento) : fDev;
-          const diffMs = fDev.getTime() - fVenc.getTime();
-          const diasRetraso = diffMs > 0 ? Math.ceil(diffMs / (1000 * 60 * 60 * 24)) : 0;
-          const multaNum = diasRetraso * 5;
-          const fBloqueo = new Date(fDev);
-          fBloqueo.setDate(fBloqueo.getDate() + 15);
-
-          const pad = (n: number) => String(n).padStart(2, '0');
-          const fmt = (d: Date) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
-
-          let multaTexto = '$0';
-          let bloqueoTexto = '------';
-          let mensajeSancion = 'Devolución a tiempo, sin sanción';
-
-          if (diasRetraso > 7) {
-            multaTexto = `$${multaNum.toFixed(2)} MXN`;
-            bloqueoTexto = `Hasta el ${fmt(fBloqueo)}`;
-            mensajeSancion = `Multa de ${multaTexto} + Bloqueo de 15 días (RN-04)`;
-          } else if (diasRetraso >= 1) {
-            multaTexto = `$${multaNum.toFixed(2)} MXN`;
-            bloqueoTexto = '------';
-            mensajeSancion = `Multa de ${multaTexto} (RN-03). Sin bloqueo.`;
-          }
-
-          this.detallesDevolucionActual = {
-            id: prestamo.id,
-            alumno_nombre: prestamo.alumno_nombre,
-            alumno_nombre_completo: prestamo.alumno_nombre_completo || prestamo.alumno_nombre,
-            libro_titulo: prestamo.libro_titulo,
-            libro_autor: prestamo.libro_autor,
-            fecha_vencimiento: fmt(fVenc),
-            fecha_devolucion: fmt(fDev),
-            dias_retraso: diasRetraso,
-            multa: multaTexto,
-            bloqueo: bloqueoTexto,
-            mensaje_sancion: mensajeSancion,
-            stock_disponibles: 1,
-            stock_total: 2,
-            stock_mensaje: 'Stock actualizado: 1 de 2 disponibles.'
-          };
+          this.lanzarToast('Devolución procesada; consulta el historial para ver sus detalles.', 'success');
+          this.cargarPrestamos();
+          return;
         }
 
         // Abrir la pantalla modal "Devolución registrada" (mockup propuesto)
@@ -244,7 +211,7 @@ export class AdminScreenComponent implements OnInit {
     }
 
     this.procesandoId = prestamo.id;
-    this.http.post<any>(`${this.apiUrl}/prestamos/${prestamo.id}/aprobar/`, {}, { headers: this.headers }).subscribe({
+    this.operaciones.ejecutar(`${this.apiUrl}/prestamos/${prestamo.id}/aprobar/`, {}, { headers: this.headers }).subscribe({
       next: (res) => {
         this.procesandoId = null;
         this.lanzarToast(res?.message || `Préstamo #${prestamo.id} aprobado exitosamente.`, 'success');
@@ -267,7 +234,7 @@ export class AdminScreenComponent implements OnInit {
     }
 
     this.procesandoId = prestamo.id;
-    this.http.post<any>(`${this.apiUrl}/prestamos/${prestamo.id}/rechazar/`, {}, { headers: this.headers }).subscribe({
+    this.operaciones.ejecutar(`${this.apiUrl}/prestamos/${prestamo.id}/rechazar/`, {}, { headers: this.headers }).subscribe({
       next: (res) => {
         this.procesandoId = null;
         this.lanzarToast(res?.message || `Solicitud del préstamo #${prestamo.id} rechazada.`, 'warning');

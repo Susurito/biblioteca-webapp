@@ -1,3 +1,4 @@
+import { obtenerPortada, mostrarPortadaNoDisponible } from '../../shared/portadas';
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 export interface LibroDetalle {
@@ -43,7 +44,9 @@ export class LibroDetailModalComponent {
     }
   }
 
+  onPortadaError = mostrarPortadaNoDisponible;
+
   getPortada(libro: LibroDetalle): string {
-    return `assets/images/${libro.id}.jpg`;
+    return obtenerPortada(libro);
   }
 }

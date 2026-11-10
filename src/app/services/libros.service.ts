@@ -1,3 +1,4 @@
+import { API_URL } from '../api.config';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -30,7 +31,7 @@ export interface EstadisticasEjemplares {
   providedIn: 'root'
 })
 export class LibrosService {
-  private apiUrl = 'http://127.0.0.1:8000';
+  private apiUrl = API_URL;
 
   constructor(private http: HttpClient) { }
 

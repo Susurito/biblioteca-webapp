@@ -1,3 +1,4 @@
+import { API_URL } from '../../api.config';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -40,7 +41,7 @@ export class RegistroUsuarioScreenComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const url = 'http://127.0.0.1:8000/alumnos/';
+      const url = API_URL + '/alumnos/';
       this.http.post(url, this.registerForm.value).subscribe({
         next: (res) => {
           console.log('Registro exitoso:', res);

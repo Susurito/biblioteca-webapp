@@ -1,3 +1,4 @@
+import { API_URL } from '../api.config';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -50,7 +51,7 @@ export interface UsuarioItem {
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://127.0.0.1:8000';
+  private apiUrl = API_URL;
 
   constructor(private http: HttpClient) {}
 
@@ -67,11 +68,11 @@ export class UsuarioService {
   }
 
   registrarAdmin(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + '/admin/', data);
+    return this.http.post(this.apiUrl + '/admin/create/', data, { headers: this.getAuthHeaders() });
   }
 
   getAlumnos(): Observable<any> {
-    return this.http.get(this.apiUrl + '/lista-alumnos/');
+    return this.http.get(this.apiUrl + '/alumnos/all/', { headers: this.getAuthHeaders() });
   }
 
   getAdmins(): Observable<any> {

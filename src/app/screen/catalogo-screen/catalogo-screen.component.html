@@ -113,7 +113,7 @@
         <!-- Portada -->
         <div class="libro-portada">
           <img [src]="getPortada(libro)" [alt]="libro.titulo"
-            (error)="$any($event.target).src='assets/images/libro.jpg'">
+            (error)="onPortadaError($event)" referrerpolicy="no-referrer">
           <!-- Badge disponibilidad -->
           <span class="disponibilidad-badge" [class.disponible]="libro.disponible"
             [class.no-disponible]="!libro.disponible">
@@ -171,6 +171,7 @@
       <div class="col-12 col-md-4 mb-3">
         <div class="footer-brand"><i class="bi bi-book-half me-2"></i>BiblioNexus</div>
         <p class="footer-tagline">Tu biblioteca digital de confianza.<br>Conocimiento sin fronteras.</p>
+        <p class="footer-tagline">Portadas: <a href="https://openlibrary.org" target="_blank" rel="noopener noreferrer">Open Library</a></p>
         <div class="footer-social">
           <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
           <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>

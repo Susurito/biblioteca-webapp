@@ -1,3 +1,5 @@
+import { OperacionService } from '../../services/operacion.service';
+import { API_URL } from '../../api.config';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -54,7 +56,8 @@ export class PerfilScreenComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private operaciones: OperacionService
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +69,10 @@ export class PerfilScreenComponent implements OnInit {
       return;
     }
 
+    this.operaciones.reanudar({ headers: new HttpHeaders({ Authorization: `Token ${this.token}` }) }).subscribe({
+      next: () => this.cargarPerfil(this.token!),
+      error: err => this.errorMessage = err.error?.detail || 'Operación pendiente de recuperación.'
+    });
     this.initForm();
     this.cargarPerfil(this.token);
 
@@ -100,7 +107,7 @@ export class PerfilScreenComponent implements OnInit {
       'Authorization': `Token ${token}`
     });
 
-    this.http.get<Perfil>('http://localhost:8000/perfil/', { headers })
+    this.http.get<Perfil>(API_URL + '/perfil/', { headers })
       .subscribe({
         next: (res) => {
           this.perfil = res;
@@ -170,7 +177,7 @@ export class PerfilScreenComponent implements OnInit {
       });
     };
 
-    cargarTodasLasPaginas('http://localhost:8000/prestamos/', [])
+    cargarTodasLasPaginas(API_URL + '/prestamos/', [])
       .then((todosLosPrestamos: Prestamo[]) => {
         console.log('✅ TODOS los préstamos cargados:', todosLosPrestamos.length);
 
@@ -273,7 +280,7 @@ export class PerfilScreenComponent implements OnInit {
 
     const body = { devuelto: true };
 
-    this.http.patch(`http://localhost:8000/prestamos/${prestamoId}/`, body, { headers })
+    this.operaciones.ejecutar(`${API_URL}/prestamos/${prestamoId}/`, body, { headers }, 'PATCH')
       .subscribe({
         next: (res: any) => {
           console.log('✅ Libro devuelto:', res);
@@ -300,7 +307,7 @@ export class PerfilScreenComponent implements OnInit {
       return;
     }
 
-    const url = `http://localhost:8000/prestamos/${prestamo.id}/revisar/`;
+    const url = `${API_URL}/prestamos/${prestamo.id}/revisar/`;
     const headers = new HttpHeaders({
       'Authorization': `Token ${this.token}`,
       'Content-Type': 'application/json'
@@ -310,7 +317,7 @@ export class PerfilScreenComponent implements OnInit {
 
     console.log(`🔍 Enviando ${accion} para préstamo ${prestamo.id}`);
 
-    this.http.post(url, body, { headers }).subscribe({
+    this.operaciones.ejecutar(url, body, { headers }).subscribe({
       next: (res: any) => {
         console.log('✅ Respuesta:', res);
         alert(`✅ Préstamo ${accionTexto} exitosamente`);
@@ -357,7 +364,7 @@ export class PerfilScreenComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.put<Perfil>('http://localhost:8000/perfil/', body, { headers })
+    this.http.put<Perfil>(API_URL + '/perfil/', body, { headers })
       .subscribe({
         next: (res) => {
           this.isSaving = false;

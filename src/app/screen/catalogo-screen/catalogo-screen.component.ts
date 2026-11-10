@@ -1,3 +1,5 @@
+import { obtenerPortada, mostrarPortadaNoDisponible } from '../../shared/portadas';
+import { API_URL } from '../../api.config';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -89,7 +91,7 @@ export class CatalogoScreenComponent implements OnInit, OnDestroy {
 
   // Cargar libros desde backend
   cargarLibros() {
-    this.http.get<any>('http://localhost:8000/libros/').subscribe({
+    this.http.get<any>(API_URL + '/libros/').subscribe({
       next: res => {
         this.libros = res.results || res;
         this.generos = Array.from(new Set(this.libros.map(libro => libro.genero).filter(Boolean)));
@@ -182,8 +184,10 @@ export class CatalogoScreenComponent implements OnInit, OnDestroy {
   }
 
   // Obtener portada
+  onPortadaError = mostrarPortadaNoDisponible;
+
   getPortada(libro: Libro): string {
-    return `assets/images/${libro.id}.jpg`;
+    return obtenerPortada(libro);
   }
 
   // Solicitar préstamo con verificación de sesión y modal
@@ -222,7 +226,7 @@ export class CatalogoScreenComponent implements OnInit, OnDestroy {
 
     console.log('📤 Enviando solicitud con body:', body);
 
-    this.http.post('http://localhost:8000/solicitar-prestamo/', body, { headers })
+    this.http.post(API_URL + '/solicitar-prestamo/', body, { headers })
       .subscribe({
         next: (res: any) => {
           console.log('✅ Solicitud de préstamo enviada correctamente', res);

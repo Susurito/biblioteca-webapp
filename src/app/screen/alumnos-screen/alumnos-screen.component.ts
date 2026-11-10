@@ -1,3 +1,4 @@
+import { API_URL } from '../../api.config';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -67,7 +68,7 @@ export class AlumnosScreenComponent implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     if (!token) return;
     const headers = new HttpHeaders({ 'Authorization': `Token ${token}` });
-    this.http.get<any>('http://127.0.0.1:8000/perfil/', { headers }).subscribe({
+    this.http.get<any>(API_URL + '/perfil/', { headers }).subscribe({
       next: (res) => {
         if (res && res.bloqueado) {
           this.estaBloqueado = true;
@@ -130,7 +131,7 @@ export class AlumnosScreenComponent implements OnInit, OnDestroy {
       'Content-Type': 'application/json'
     });
 
-    this.http.post<any>('http://127.0.0.1:8000/solicitar-prestamo/', { libro: libro.id }, { headers }).subscribe({
+    this.http.post<any>(API_URL + '/solicitar-prestamo/', { libro: libro.id }, { headers }).subscribe({
       next: () => {
         this.solicitandoLibroId = null;
         alert(`¡Préstamo de "${libro.titulo}" solicitado exitosamente!`);
@@ -158,7 +159,7 @@ export class AlumnosScreenComponent implements OnInit, OnDestroy {
     });
 
     this.cargandoPrestamos = true;
-    this.http.get<any>('http://127.0.0.1:8000/prestamos/', { headers }).subscribe({
+    this.http.get<any>(API_URL + '/prestamos/', { headers }).subscribe({
       next: (res) => {
         const prestamos: any[] = res.results || (Array.isArray(res) ? res : []);
         

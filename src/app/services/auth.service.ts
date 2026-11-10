@@ -1,3 +1,4 @@
+import { API_URL } from '../api.config';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -17,7 +18,7 @@ export interface Usuario {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:8000';
+  private apiUrl = API_URL;
 
   private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
   public usuario$ = this.usuarioSubject.asObservable();
@@ -87,8 +88,8 @@ export class AuthService {
         };
 
         // Guardar id del alumno si viene en el perfil
-        if (res.id || res.alumno_id) {
-          const alumnoId = (res.alumno_id || res.id).toString();
+        if (res.alumno_id) {
+          const alumnoId = res.alumno_id.toString();
           localStorage.setItem('alumno_id', alumnoId);
         }
 
@@ -116,6 +117,9 @@ export class AuthService {
    * Cierra la sesión del usuario.
    */
   logout(): void {
+    const token = localStorage.getItem('token');
+    if (token) this.http.post(`${this.apiUrl}/logout/`, {}, { headers: new HttpHeaders({ Authorization: `Token ${token}` }) }).subscribe({ error: () => {} });
+    localStorage.removeItem('biblioteca.operaciones');
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
     localStorage.removeItem('alumno_id');
